@@ -15,7 +15,7 @@
 #include "Utils/Dbg.h"
 #include "WeaponSystemCharacter.generated.h"
 
-UCLASS()
+UCLASS(Blueprintable)
 class UEWEAPONSYSTEMPLUGIN_API AWeaponSystemCharacter : public ACharacter
 {
 	GENERATED_BODY()

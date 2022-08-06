@@ -135,4 +135,9 @@ void AWeaponSystemProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* O
 void AWeaponSystemProjectile::FireInDirection(const FVector& ShootDirection)
 {
     ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
+    
+//    if(ShotSound)
+//    {
+//        ShotAudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, ShotSound, GetActorLocation(), FRotator::ZeroRotator, 1.0, 1.0, 0.0f, nullptr, nullptr, true);
+//    }
 }

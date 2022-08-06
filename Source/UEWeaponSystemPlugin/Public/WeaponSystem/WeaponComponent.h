@@ -16,8 +16,12 @@
 #include "WeaponSystem/Definition/WeaponDefinition.h"
 #include "WeaponComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAlternateCrosshairDelegate, bool, Pressed);
+//RamaMeleeWeapon class .h
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+//DECLARE_DYNAMIC_DELEGATE_RetVal_ThreeParams(bool, FOnCustomStartShooting, FWeaponDefinition, WeaponDefinition, FWeaponFunctionDefinition, WeaponFunctionDefinition, EWeaponFunction, WeaponFunction);
+
+UCLASS(Blueprintable)
 class UEWEAPONSYSTEMPLUGIN_API UWeaponComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -46,6 +50,7 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System", meta=(RequiredAssetDataTags="RowStructure=WeaponDefinition"))
     UDataTable* WeaponDefinitions;
     
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
     struct FWeaponDefinition CurrentWeaponDefinition;
     
     EWeaponFunction CurrentWeaponFunction = EWeaponFunction::Primary;
@@ -62,6 +67,9 @@ public:
             return CurrentWeaponDefinition.PrimaryWeaponFunctionDefinition;
         }
     }
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+    UAudioComponent* ShotAudioComponent;
     
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
@@ -82,4 +90,17 @@ public:
     
     UFUNCTION(BlueprintCallable, Category="Weapon System")
     void FinishReloading();
+    
+    UFUNCTION(BlueprintCallable, Category="Weapon System")
+    void OnAlternateCrosshair(bool Pressed);
+    
+    UPROPERTY(BlueprintAssignable, Category="Weapon System")
+    FOnAlternateCrosshairDelegate OnAlternateCrosshairDelegate;
+    
+//    UPROPERTY(BlueprintAssignable, Category="Weapon System")
+//    FOnCustomStartShooting OnCustomStartShooting;
+    
+//    UFUNCTION(BlueprintImplementableEvent, Category="Weapon System")
+//    void OnCustomStartShooting(FWeaponDefinition WeaponDefinition, FWeaponFunctionDefinition WeaponFunctionDefinition, EWeaponFunction WeaponFunction, bool& Handled);
+    
 };

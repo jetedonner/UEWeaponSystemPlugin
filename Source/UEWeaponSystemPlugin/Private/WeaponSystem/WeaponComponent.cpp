@@ -63,6 +63,15 @@ void UWeaponComponent::StartShooting(EWeaponFunction WeaponFunction)
         return;
     }
     
+//    bool Handled = false;
+    
+//    OnCustomStartShooting(CurrentWeaponDefinition, GetWeaponFunctionDefinition(WeaponFunction), WeaponFunction, Handled);
+//    if(OnCustomStartShooting.IsBound()) //<~~~~
+//    {
+//        OnCustomStartShooting.Broadcast(CurrentWeaponDefinition, GetWeaponFunctionDefinition(WeaponFunction), WeaponFunction, Handled);
+//        
+//        return;
+//    }
 //    if(true)//CurrentWeaponDefinition)
 //    {
         CurrentWeaponFunction = WeaponFunction;
@@ -206,6 +215,13 @@ void UWeaponComponent::StopShooting()
         GetWorld()->GetTimerManager().ClearTimer(ShootingTimerHandle);
     }
     
+    if(ShotAudioComponent)
+    {
+        UDbg::DbgMsg(FString("ShotAudioComponent->Stop();"));
+        ShotAudioComponent->Stop();
+        ShotAudioComponent = nullptr;
+    }
+    
 //    if(!CurrentWeapon->ReadyForNewShot)
 //    {
 //        CurrentWeapon->ReadyForNewShot = true;
@@ -268,12 +284,18 @@ void UWeaponComponent::FireShot()
             AWeaponSystemProjectile* Projectile = World->SpawnActor<AWeaponSystemProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
             if (Projectile)
             {
-//                Projectile->WeaponFunctionDefinition = &WeaponFunctionDefinition;
                 // Set the projectile's initial trajectory.
                 FVector LaunchDirection = MuzzleRotation.Vector();
                 Projectile->FireInDirection(LaunchDirection);
                 
-                UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, WeaponFunctionDefinition.ShootingSound, GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation(), FRotator::ZeroRotator, 1.0, 1.0, 0.0f, nullptr, nullptr, true);
+                if(ShotAudioComponent)
+                {
+                    UDbg::DbgMsg(FString("ShotAudioComponent->Stop();"));
+                    ShotAudioComponent->Stop();
+                    ShotAudioComponent = nullptr;
+                }
+                
+                ShotAudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, WeaponFunctionDefinition.ShootingSound, GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation(), FRotator::ZeroRotator, 1.0, 1.0, 0.0f, nullptr, nullptr, true);
             }
 
         }
@@ -290,3 +312,7 @@ void UWeaponComponent::FinishReloading()
     
 }
 
+void UWeaponComponent::OnAlternateCrosshair(bool Pressed)
+{
+    this->OnAlternateCrosshairDelegate.Broadcast(Pressed);
+}

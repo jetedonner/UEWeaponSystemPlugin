@@ -64,8 +64,8 @@ public:
     UStaticMeshComponent* ProjectileMeshComponent;
 
     // Projectile material
-    UPROPERTY(VisibleDefaultsOnly, Category = Movement)
-    UMaterialInstanceDynamic* ProjectileMaterialInstance;
+//    UPROPERTY(VisibleDefaultsOnly, Category = Movement)
+//    UMaterialInstanceDynamic* ProjectileMaterialInstance;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
     class UParticleSystem* ImpactEffect;

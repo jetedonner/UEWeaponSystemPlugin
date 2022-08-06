@@ -15,7 +15,7 @@
 
 DECLARE_DELEGATE(FSetupKeyDelegate)
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(Blueprintable)
 class UEWEAPONSYSTEMPLUGIN_API UWeaponManagerComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -46,6 +46,9 @@ public:
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
     class UWeaponComponent* WeaponComponent;
+    
+//    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+//    TSubclassOf<UWeaponComponent> WeaponComponentNG;
     
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

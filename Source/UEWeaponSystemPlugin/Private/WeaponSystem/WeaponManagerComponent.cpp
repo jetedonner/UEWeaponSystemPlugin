@@ -19,13 +19,33 @@ UWeaponManagerComponent::UWeaponManagerComponent()
         WeaponDefinitions->RowStruct = FWeaponDefinition::StaticStruct();
     }
     
-    if(!WeaponComponent)
-    {
-        WeaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("Weapon Component"));
-        WeaponComponent->bEditableWhenInherited = true;
-        WeaponComponent->RegisterComponent();
-//        UE_LOG(WeaponSysPlugin, Log, TEXT("WeaponComponent is SETUP"));
-    }
+//    if(WeaponComponentNG)
+//    {
+//        UDbg::DbgMsg(FString("INITIALIZING WeaponComponentNG"));
+////        TSubclassOf<class UWeaponComponentBase> It = WeaponManagerComponent->WeaponsArray[i];
+////
+////        if(It->IsChildOf(UWeaponComponentBase::StaticClass()) && !It->HasAnyClassFlags(CLASS_Abstract))
+////        {
+////            if(It->GetClass() != UWeaponComponentBase::StaticClass() && !It->GetName().StartsWith(TEXT("SKEL_")))
+////            {
+////                UWeaponComponentBase* SpawnedWeapon = NewObject<UWeaponComponentBase>(WeaponManagerComponent->GetOwner(), It->GetDefaultObject()->GetClass());
+////
+//        WeaponComponent = NewObject<UWeaponComponent>(this, WeaponComponentNG->GetDefaultObject()->GetClass());
+//        WeaponComponent->bEditableWhenInherited = true;
+//        WeaponComponent->RegisterComponent();
+////        UE_LOG(WeaponSysPlugin, Log, TEXT("WeaponComponent is SETUP"));
+//    }
+//    else
+//    {
+//        UDbg::DbgMsg(FString("NOOOOOOOOT INITIALIZING WeaponComponentNG"));
+        if(!WeaponComponent)
+        {
+            WeaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("Weapon Component"));
+            WeaponComponent->bEditableWhenInherited = true;
+            WeaponComponent->RegisterComponent();
+    //        UE_LOG(WeaponSysPlugin, Log, TEXT("WeaponComponent is SETUP"));
+        }
+//    }
 }
 
 UWeaponManagerComponent::UWeaponManagerComponent(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -37,13 +57,33 @@ UWeaponManagerComponent::UWeaponManagerComponent(const FObjectInitializer& Objec
         WeaponDefinitions->RowStruct = FWeaponDefinition::StaticStruct();
     }
     
-    if(!WeaponComponent)
-    {
-        WeaponComponent = ObjectInitializer.CreateDefaultSubobject<UWeaponComponent>(this, TEXT("Weapon Component"));
-        WeaponComponent->bEditableWhenInherited = true;
-//        UE_LOG(WeaponSysPlugin, Log, TEXT("WeaponComponent is SETUP (ObjectInitializer)"));
-        WeaponComponent->RegisterComponent();
-    }
+//    if(WeaponComponentNG)
+//    {
+////        UDbg::DbgMsg(FString("INITIALIZING WeaponComponentNG"));
+////        TSubclassOf<class UWeaponComponentBase> It = WeaponManagerComponent->WeaponsArray[i];
+////
+////        if(It->IsChildOf(UWeaponComponentBase::StaticClass()) && !It->HasAnyClassFlags(CLASS_Abstract))
+////        {
+////            if(It->GetClass() != UWeaponComponentBase::StaticClass() && !It->GetName().StartsWith(TEXT("SKEL_")))
+////            {
+////                UWeaponComponentBase* SpawnedWeapon = NewObject<UWeaponComponentBase>(WeaponManagerComponent->GetOwner(), It->GetDefaultObject()->GetClass());
+////
+//        WeaponComponent = NewObject<UWeaponComponent>(this, WeaponComponentNG->GetDefaultObject()->GetClass());
+//        WeaponComponent->bEditableWhenInherited = true;
+//        WeaponComponent->RegisterComponent();
+////        UE_LOG(WeaponSysPlugin, Log, TEXT("WeaponComponent is SETUP"));
+//    }
+//    else
+//    {
+//        UDbg::DbgMsg(FString("NOOOOOOOOT INITIALIZING WeaponComponentNG"));
+        if(!WeaponComponent)
+        {
+            WeaponComponent = ObjectInitializer.CreateDefaultSubobject<UWeaponComponent>(this, TEXT("Weapon Component"));
+            WeaponComponent->bEditableWhenInherited = true;
+    //        UE_LOG(WeaponSysPlugin, Log, TEXT("WeaponComponent is SETUP (ObjectInitializer)"));
+            WeaponComponent->RegisterComponent();
+        }
+//    }
 }
 
 void UWeaponManagerComponent::BeginPlay()
@@ -103,7 +143,8 @@ void UWeaponManagerComponent::SetupPlayerInput(class UInputComponent* PlayerInpu
 
     KBP_AlternateCrosshairKey.KeyDelegate.GetDelegateWithKeyForManualSet().BindLambda([=](const FKey& Key)
     {
-        UDbg::DbgMsg(FString("AlternateCrosshairKey PRESSED"));
+//        UDbg::DbgMsg(FString("AlternateCrosshairKey PRESSED"));
+        WeaponComponent->OnAlternateCrosshair(true);
         //WeaponComponent->StartShooting(EWeaponFunction::Secondary);
     });
     PlayerInputComponent->KeyBindings.Add(KBP_AlternateCrosshairKey);
@@ -113,7 +154,8 @@ void UWeaponManagerComponent::SetupPlayerInput(class UInputComponent* PlayerInpu
     KBR_AlternateCrosshairKey.bExecuteWhenPaused = false;
     KBR_AlternateCrosshairKey.KeyDelegate.GetDelegateWithKeyForManualSet().BindLambda([=](const FKey& Key)
     {
-        UDbg::DbgMsg(FString("AlternateCrosshairKey RELEASED"));
+//        UDbg::DbgMsg(FString("AlternateCrosshairKey RELEASED"));
+        WeaponComponent->OnAlternateCrosshair(false);
         //WeaponComponent->StopShooting();
     });
     InputComponent->KeyBindings.Add(KBR_AlternateCrosshairKey);
