@@ -35,9 +35,6 @@ protected:
 
 public:
     
-//    UPROPERTY()
-//    FWeaponFunctionDefinition WeaponFunctionDefinition;
-    
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
     
@@ -62,10 +59,6 @@ public:
     // Projectile mesh
     UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
     UStaticMeshComponent* ProjectileMeshComponent;
-
-    // Projectile material
-//    UPROPERTY(VisibleDefaultsOnly, Category = Movement)
-//    UMaterialInstanceDynamic* ProjectileMaterialInstance;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
     class UParticleSystem* ImpactEffect;
@@ -82,7 +75,6 @@ public:
     UPROPERTY(BlueprintReadOnly, Category="Weapon System")
     class UDecalComponent* ImpactDecalObject;
     
-    // Function that initializes the projectile's velocity in the shoot direction.
     void FireInDirection(const FVector& ShootDirection);
 
 };

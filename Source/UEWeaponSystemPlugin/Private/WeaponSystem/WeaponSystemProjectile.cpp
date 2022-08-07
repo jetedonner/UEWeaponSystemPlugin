@@ -92,7 +92,7 @@ void AWeaponSystemProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* O
     
     if(ImpactTargetSound)
     {
-        UDbg::DbgMsg(FString::Printf(TEXT("Projectile ImpactTargetSound IS SET")));
+//        UDbg::DbgMsg(FString::Printf(TEXT("Projectile ImpactTargetSound IS SET")));
         UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, ImpactTargetSound, Hit.ImpactPoint, FRotator::ZeroRotator, 1.0, 1.0, 0.0f, nullptr, nullptr, true);
     }
     else

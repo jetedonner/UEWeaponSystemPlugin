@@ -10,9 +10,9 @@
 
 UWeaponManagerComponent::UWeaponManagerComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+    // Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
+    // off to improve performance if you don't need them.
+    PrimaryComponentTick.bCanEverTick = true;
 
     if(WeaponDefinitions)
     {
@@ -89,6 +89,25 @@ UWeaponManagerComponent::UWeaponManagerComponent(const FObjectInitializer& Objec
 void UWeaponManagerComponent::BeginPlay()
 {
     Super::BeginPlay();
+    
+    int32 idx = 0;
+    for(TSubclassOf<UBaseWeaponComponent> Weapon: WeaponArsenal)
+    {
+        UBaseWeaponComponent* NewWeapon = Cast<UBaseWeaponComponent>(Weapon->GetDefaultObject());
+        
+        UBaseWeaponComponent* NewWeaponImpl = NewObject<UBaseWeaponComponent>(this, NewWeapon->GetClass(), *NewWeapon->GetClass()->GetName());
+            
+//        NewWeaponImpl->OnProjectileFireDelegate.AddDynamic(this, &UWeaponManagerComponent::ProjectileFired);
+//        NewWeaponImpl->OnProjectileHitDelegate.AddDynamic(this, &UWeaponManagerComponent::ProjectileHit);
+        NewWeaponImpl->RegisterComponent();
+        WeaponArsenalImpl.AddUnique(NewWeaponImpl);
+        if(idx == 0)
+        {
+            CurrentWeapon = NewWeaponImpl;
+        }
+        idx++;
+    }
+//    this->SetCurrentWeapon(1, false);
 }
 
 void UWeaponManagerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -104,7 +123,11 @@ void UWeaponManagerComponent::SetupPlayerInput(class UInputComponent* PlayerInpu
 
     KBP_PrimaryShootKey.KeyDelegate.GetDelegateWithKeyForManualSet().BindLambda([=](const FKey& Key)
     {
-        WeaponComponent->StartShooting();
+//        WeaponComponent->StartShooting();
+        if(CurrentWeapon)
+        {
+            CurrentWeapon->StartShooting(EWeaponFunction::Primary);
+        }
     });
     PlayerInputComponent->KeyBindings.Add(KBP_PrimaryShootKey);
     
@@ -113,7 +136,11 @@ void UWeaponManagerComponent::SetupPlayerInput(class UInputComponent* PlayerInpu
     KBR_PrimaryShootKey.bExecuteWhenPaused = false;
     KBR_PrimaryShootKey.KeyDelegate.GetDelegateWithKeyForManualSet().BindLambda([=](const FKey& Key)
     {
-        WeaponComponent->StopShooting();
+//        WeaponComponent->StopShooting();
+        if(CurrentWeapon)
+        {
+            CurrentWeapon->StopShooting();
+        }
     });
     InputComponent->KeyBindings.Add(KBR_PrimaryShootKey);
     
@@ -123,7 +150,11 @@ void UWeaponManagerComponent::SetupPlayerInput(class UInputComponent* PlayerInpu
 
     KBP_SecondaryShootKey.KeyDelegate.GetDelegateWithKeyForManualSet().BindLambda([=](const FKey& Key)
     {
-        WeaponComponent->StartShooting(EWeaponFunction::Secondary);
+//        WeaponComponent->StartShooting(EWeaponFunction::Secondary);
+        if(CurrentWeapon)
+        {
+            CurrentWeapon->StartShooting(EWeaponFunction::Secondary);
+        }
     });
     PlayerInputComponent->KeyBindings.Add(KBP_SecondaryShootKey);
     

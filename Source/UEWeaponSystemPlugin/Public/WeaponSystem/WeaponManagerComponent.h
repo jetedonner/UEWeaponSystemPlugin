@@ -11,6 +11,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "WeaponSystem/Definition/WeaponDefinition.h"
+#include "WeaponSystem/BaseWeaponComponent.h"
 #include "WeaponManagerComponent.generated.h"
 
 DECLARE_DELEGATE(FSetupKeyDelegate)
@@ -34,7 +35,6 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System", meta=(RequiredAssetDataTags="RowStructure=WeaponDefinition"))
     UDataTable* WeaponDefinitions;
     
-    
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
     FKey PrimaryShootKey;
     
@@ -45,10 +45,16 @@ public:
     FKey AlternateCrosshairKey;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+    TArray<TSubclassOf<class UBaseWeaponComponent>> WeaponArsenal;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+    TArray<class UBaseWeaponComponent*> WeaponArsenalImpl;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
     class UWeaponComponent* WeaponComponent;
     
-//    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
-//    TSubclassOf<UWeaponComponent> WeaponComponentNG;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Weapon System")
+    class UBaseWeaponComponent* CurrentWeapon;
     
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

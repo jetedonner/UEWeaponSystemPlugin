@@ -54,6 +54,8 @@ void UWeaponComponent::SetCurrentWeapon(struct FWeaponDefinition& WeaponDefiniti
 
 void UWeaponComponent::StartShooting(EWeaponFunction WeaponFunction)
 {
+    
+    
     if(IsReloading)
     {
         if(!IsShooting)
