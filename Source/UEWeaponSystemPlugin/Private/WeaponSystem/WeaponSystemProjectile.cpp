@@ -134,10 +134,46 @@ void AWeaponSystemProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* O
 // Function that initializes the projectile's velocity in the shoot direction.
 void AWeaponSystemProjectile::FireInDirection(const FVector& ShootDirection)
 {
+    LineTraceProjectile();
+    
     ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
     
 //    if(ShotSound)
 //    {
 //        ShotAudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, ShotSound, GetActorLocation(), FRotator::ZeroRotator, 1.0, 1.0, 0.0f, nullptr, nullptr, true);
 //    }
+}
+
+void AWeaponSystemProjectile::LineTraceProjectile()
+{
+    APlayerCameraManager* CameraManager = Cast<APlayerCameraManager>(UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0));
+    if (CameraManager)
+    {
+//        FVector Start = CameraManager->GetCameraLocation() + FVector(100.0f, 0.0f, 0.0f);
+        AActor* ActorRef = GetWorld()->GetFirstPlayerController()->GetPawn();
+        // Get the camera transform.
+        FVector CameraLocation;
+        FRotator CameraRotation;
+        ActorRef->GetActorEyesViewPoint(CameraLocation, CameraRotation);
+
+        FVector MuzzleOffset;
+        // Set MuzzleOffset to spawn projectiles slightly in front of the camera.
+        MuzzleOffset.Set(70.0f, 0.0f, 0.0f);
+
+        // Transform MuzzleOffset from camera space to world space.
+        FVector MuzzleLocation = CameraLocation + FTransform(CameraRotation).TransformVector(MuzzleOffset);
+
+        // Skew the aim to be slightly upwards.
+//        FRotator MuzzleRotation = CameraRotation;
+        FVector Start = MuzzleLocation;
+        FVector End = Start + 10000.0 * CameraManager->GetActorForwardVector();
+        
+        bool isHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECollisionChannel::ECC_GameTraceChannel1);
+
+        if (isHit)
+        {
+            OnLineTraceHit(HitResult);
+//           AActor* HitActor = MyHitResult.GetActor();
+        }
+    }
 }

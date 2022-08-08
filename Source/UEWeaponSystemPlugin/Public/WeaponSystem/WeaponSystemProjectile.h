@@ -61,6 +61,9 @@ public:
     UStaticMeshComponent* ProjectileMeshComponent;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+    FHitResult HitResult;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
     class UParticleSystem* ImpactEffect;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
@@ -76,5 +79,11 @@ public:
     class UDecalComponent* ImpactDecalObject;
     
     void FireInDirection(const FVector& ShootDirection);
+    
+    UFUNCTION(BlueprintCallable, Category="Weapon System")
+    void LineTraceProjectile();
+    
+    UFUNCTION(BlueprintImplementableEvent, Category="Weapon System")
+    void OnLineTraceHit(FHitResult LineTraceHitResult);
 
 };
