@@ -163,7 +163,11 @@ void UWeaponManagerComponent::SetupPlayerInput(class UInputComponent* PlayerInpu
     KBR_SecondaryShootKey.bExecuteWhenPaused = false;
     KBR_SecondaryShootKey.KeyDelegate.GetDelegateWithKeyForManualSet().BindLambda([=](const FKey& Key)
     {
-        WeaponComponent->StopShooting();
+//        WeaponComponent->StopShooting();
+        if(CurrentWeapon)
+        {
+            CurrentWeapon->StopShooting();
+        }
     });
     InputComponent->KeyBindings.Add(KBR_SecondaryShootKey);
     
@@ -205,6 +209,7 @@ void UWeaponManagerComponent::SetupPlayerInput(class UInputComponent* PlayerInpu
             KBP.KeyDelegate.GetDelegateWithKeyForManualSet().BindLambda([=](const FKey& Key)
             {
                 WeaponComponent->SetCurrentWeapon(*WeaponDefinition);
+                SetCurrentWeapon(WeaponDefinition->WeaponID);
             });
             PlayerInputComponent->KeyBindings.Add(KBP);
             if(idx == 0)
@@ -212,6 +217,65 @@ void UWeaponManagerComponent::SetupPlayerInput(class UInputComponent* PlayerInpu
                 WeaponComponent->SetCurrentWeapon(*WeaponDefinition);
             }
             idx++;
+        }
+    }
+}
+
+void UWeaponManagerComponent::SetCurrentWeapon(int32 WeaponID, bool PlayAudio)
+{
+    if(!CurrentWeapon || CurrentWeapon->WeaponDefinition()->WeaponID != WeaponID)
+    {
+//        IsAimedAtChar = false;
+//        IsAimedAtHitable = false;
+//        IsAimedAtPickup = false;
+        for(UBaseWeaponComponent* Weapon: WeaponArsenalImpl)
+        {
+            if(Weapon->WeaponDefinition()->WeaponID == WeaponID)
+            {
+//                if(IsReloading)
+//                {
+//                    IsReloading = false;
+//                }
+//
+//                if(IsShooting)
+//                {
+//                    GetWorld()->GetTimerManager().ClearTimer(ShootingTimerHandle);
+//                }
+//
+                CurrentWeapon = Weapon;
+//
+//                AWeaponSystemCharacterBase* MyOwner = Cast<AWeaponSystemCharacterBase>(this->GetOwner());
+//                if(CurrentWeapon && MyOwner && MyOwner->IsPlayerControlled())
+//                {
+//                    if(CurrentCSWidget)
+//                    {
+//                        CurrentCSWidget->RemoveFromViewport();
+//                        CurrentCSWidget->Destruct();
+//
+//                        UDbg::DbgMsg(FString::Printf(TEXT("Removing Current CS Widget")), 5.0f, FColor::Green);
+//                    }
+//
+//                    TSubclassOf<class UUserWidget> CSWidgetClass = CurrentWeapon->WeaponDefinition()->CrosshairUserWidget;
+//
+//                        if(CSWidgetClass)
+//                        {
+//                            UDbg::DbgMsg(FString::Printf(TEXT("HAS New CS Widget")), 5.0f, FColor::Green);
+//
+//                            CurrentCSWidget = CreateWidget<UUserWidget>(GetWorld(), CSWidgetClass);
+//                            if (CurrentCSWidget)
+//                            {
+//                                UDbg::DbgMsg(FString::Printf(TEXT("Adding Current CS Widget")), 5.0f, FColor::Green);
+//                                CurrentCSWidget->AddToViewport();
+//                            }
+//                        }
+//                }
+//
+//                if(WeaponChangeSound && PlayAudio)
+//                {
+//                    UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, this->WeaponChangeSound, GetOwner()->GetActorLocation(), FRotator::ZeroRotator, 2.0, 1.0, 0.0f, nullptr, nullptr, true);
+//                }
+                break;
+            }
         }
     }
 }

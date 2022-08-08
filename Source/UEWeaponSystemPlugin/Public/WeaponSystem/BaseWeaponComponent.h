@@ -42,7 +42,11 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(RequiredAssetDataTags="RowStructure=WeaponDefinition"), Category="Weapon System")
     FDataTableRowHandle WeaponDefinitionRowHandle;
     
+    FWeaponDefinition* WeaponDefinition();
+    
     EWeaponFunction CurrentWeaponFunction = EWeaponFunction::Primary;
+    
+    
     
 //    UFUNCTION(BlueprintPure, BlueprintInternalUseOnly, Category="Weapon System")
 //    FWeaponDefinition GetWeaponDefinition()
@@ -53,8 +57,36 @@ public:
 //    FWeaponDefinition* FoundWeaponDefinition = WeaponDefinitionRowHandle.DataTable->FindRow<FWeaponDefinition>(WeaponDefinitionRowHandle.RowName, "");
 //    FWeaponDefinition* FoundWeaponDefinition = WeaponDefinition.DataTable->FindRow<FWeaponDefinition>(WeaponDefinition.RowName, "");
     
-    UPROPERTY(VisibleInstanceOnly, Category="Weapon System")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+    int32 InitialAmmoCount = 30;
+    
+    UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category="Weapon System")
     int32 AmmoCount;
+    
+    UPROPERTY(BlueprintGetter=GetClipAmmoCount, Category="Weapon System")
+    int32 ClipAmmoCount;
+    
+    UFUNCTION(BlueprintPure, BlueprintInternalUseOnly, Category="Weapon System")
+    int32 GetClipAmmoCount()
+    {
+        if(AmmoCount > 0)
+        {
+            int32 ClipAmmoCountVar = AmmoCount % WeaponDefinition()->ClipSize;
+            if(ClipAmmoCountVar == 0)
+            {
+                return WeaponDefinition()->ClipSize;
+            }
+            else
+            {
+                return ClipAmmoCountVar;
+            }
+            return AmmoCount % WeaponDefinition()->ClipSize;
+        }
+        else
+        {
+            return AmmoCount;
+        }
+    }
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
     UAudioComponent* ShotAudioComponent;
@@ -79,4 +111,7 @@ public:
     
     UFUNCTION(BlueprintImplementableEvent, Category="Weapon System")
     void OnCustomStartShooting(FWeaponDefinition ShotWeaponDefinition, FWeaponFunctionDefinition ShotWeaponFunctionDefinition, EWeaponFunction ShotWeaponFunction, bool& Handled);
+    
+    UFUNCTION(BlueprintImplementableEvent, Category="Weapon System")
+    void OnCustomStopShooting(FWeaponDefinition ShotWeaponDefinition, FWeaponFunctionDefinition ShotWeaponFunctionDefinition, EWeaponFunction ShotWeaponFunction, bool& Handled);
 };

@@ -61,4 +61,5 @@ public:
     
     void SetupPlayerInput(class UInputComponent* PlayerInputComponent, class UInputComponent* InputComponent);
     
+    void SetCurrentWeapon(int32 WeaponID, bool PlayAudio = true);
 };

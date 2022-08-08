@@ -23,7 +23,7 @@ UBaseWeaponComponent::UBaseWeaponComponent()
 void UBaseWeaponComponent::BeginPlay()
 {
     Super::BeginPlay();
-
+    AmmoCount = InitialAmmoCount;
     // ...
     
 }
@@ -35,6 +35,22 @@ void UBaseWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
     // ...
+}
+
+FWeaponDefinition* UBaseWeaponComponent::WeaponDefinition()
+{
+    if(WeaponDefinitionRowHandle.IsNull())
+    {
+        UDbg::DbgMsg(FString::Printf(TEXT("NO WeaponDefinition setup!")));
+//        FWeaponDefinition* EmptyWeaponDefinition = FWeaponDefinition();
+//        return NewObject<FWeaponDefinition>(FWeaponDefinition);//
+        // TODO: Return something that doesn't throw an exception
+        return WeaponDefinitionRowHandle.DataTable->FindRow<FWeaponDefinition>(WeaponDefinitionRowHandle.RowName, "");
+    }
+    else
+    {
+        return WeaponDefinitionRowHandle.DataTable->FindRow<FWeaponDefinition>(WeaponDefinitionRowHandle.RowName, "");
+    }
 }
 
 void UBaseWeaponComponent::StartShooting(EWeaponFunction WeaponFunction)
@@ -54,6 +70,8 @@ void UBaseWeaponComponent::StartShooting(EWeaponFunction WeaponFunction)
             FoundWeaponFunctionDefinition = FoundWeaponDefinition->SecondaryWeaponFunctionDefinition;
         }
         
+        CurrentWeaponFunction = WeaponFunction;
+        
         bool Handled = false;
         OnCustomStartShooting(*FoundWeaponDefinition, FoundWeaponFunctionDefinition, WeaponFunction, Handled);
         
@@ -68,7 +86,7 @@ void UBaseWeaponComponent::StartShooting(EWeaponFunction WeaponFunction)
                 return;
             }
             
-            CurrentWeaponFunction = WeaponFunction;
+//            CurrentWeaponFunction = WeaponFunction;
             
             uint32 Tock = TimerUtil->Tock();
             
@@ -110,17 +128,39 @@ void UBaseWeaponComponent::StartShooting(EWeaponFunction WeaponFunction)
 
 void UBaseWeaponComponent::StopShooting()
 {
-    if(IsShooting)
+    if(WeaponDefinitionRowHandle.IsNull())
     {
-        IsShooting = false;
-        GetWorld()->GetTimerManager().ClearTimer(ShootingTimerHandle);
+        UDbg::DbgMsg(FString::Printf(TEXT("NO WeaponDefinition setup!")));
     }
-
-    if(ShotAudioComponent)
+    else
     {
-        UDbg::DbgMsg(FString("ShotAudioComponent->Stop();"));
-        ShotAudioComponent->Stop();
-        ShotAudioComponent = nullptr;
+        FWeaponDefinition* FoundWeaponDefinition = WeaponDefinitionRowHandle.DataTable->FindRow<FWeaponDefinition>(WeaponDefinitionRowHandle.RowName, "");
+        
+        FWeaponFunctionDefinition FoundWeaponFunctionDefinition = FoundWeaponDefinition->PrimaryWeaponFunctionDefinition;
+        
+        if(CurrentWeaponFunction == EWeaponFunction::Secondary)
+        {
+            FoundWeaponFunctionDefinition = FoundWeaponDefinition->SecondaryWeaponFunctionDefinition;
+        }
+        
+        bool Handled = false;
+        OnCustomStopShooting(*FoundWeaponDefinition, FoundWeaponFunctionDefinition, CurrentWeaponFunction, Handled);
+        
+        if(!Handled)
+        {
+            if(IsShooting)
+            {
+                IsShooting = false;
+                GetWorld()->GetTimerManager().ClearTimer(ShootingTimerHandle);
+            }
+
+            if(ShotAudioComponent)
+            {
+                UDbg::DbgMsg(FString("ShotAudioComponent->Stop();"));
+                ShotAudioComponent->Stop();
+                ShotAudioComponent = nullptr;
+            }
+        }
     }
 }
 
@@ -128,61 +168,70 @@ void UBaseWeaponComponent::FireShot()
 {
 //    FWeaponFunctionDefinition WeaponFunctionDefinition = GetWeaponFunctionDefinition(CurrentWeaponFunction);
     
-    FWeaponDefinition* FoundWeaponDefinition = WeaponDefinitionRowHandle.DataTable->FindRow<FWeaponDefinition>(WeaponDefinitionRowHandle.RowName, "");
-    
-    FWeaponFunctionDefinition WeaponFunctionDefinition = FoundWeaponDefinition->PrimaryWeaponFunctionDefinition;
-    
-    if(CurrentWeaponFunction == EWeaponFunction::Secondary)
+    if(AmmoCount > 0 || AmmoCount == -1)
     {
-        WeaponFunctionDefinition = FoundWeaponDefinition->SecondaryWeaponFunctionDefinition;
-    }
     
-    TSubclassOf<AWeaponSystemProjectile> ProjectileClass = WeaponFunctionDefinition.Projectile;
-    // Attempt to fire a projectile.
-    if (ProjectileClass)
-    {
-        AActor* ActorRef = GetWorld()->GetFirstPlayerController()->GetPawn();
-        // Get the camera transform.
-        FVector CameraLocation;
-        FRotator CameraRotation;
-        ActorRef->GetActorEyesViewPoint(CameraLocation, CameraRotation);
-
-        FVector MuzzleOffset;
-        // Set MuzzleOffset to spawn projectiles slightly in front of the camera.
-        MuzzleOffset.Set(20.0f, 0.0f, 0.0f);
-
-        // Transform MuzzleOffset from camera space to world space.
-        FVector MuzzleLocation = CameraLocation + FTransform(CameraRotation).TransformVector(MuzzleOffset);
-
-        // Skew the aim to be slightly upwards.
-        FRotator MuzzleRotation = CameraRotation;
-//        MuzzleRotation.Pitch += 10.0f;
-
-        UWorld* World = GetWorld();
-        if (World)
+        FWeaponDefinition* FoundWeaponDefinition = WeaponDefinitionRowHandle.DataTable->FindRow<FWeaponDefinition>(WeaponDefinitionRowHandle.RowName, "");
+        
+        FWeaponFunctionDefinition WeaponFunctionDefinition = FoundWeaponDefinition->PrimaryWeaponFunctionDefinition;
+        
+        if(CurrentWeaponFunction == EWeaponFunction::Secondary)
         {
-            FActorSpawnParameters SpawnParams;
-            SpawnParams.Owner = ActorRef;
-            SpawnParams.Instigator = ActorRef->GetInstigator();
+            WeaponFunctionDefinition = FoundWeaponDefinition->SecondaryWeaponFunctionDefinition;
+        }
+        
+        TSubclassOf<AWeaponSystemProjectile> ProjectileClass = WeaponFunctionDefinition.Projectile;
+        // Attempt to fire a projectile.
+        if (ProjectileClass)
+        {
+            AActor* ActorRef = GetWorld()->GetFirstPlayerController()->GetPawn();
+            // Get the camera transform.
+            FVector CameraLocation;
+            FRotator CameraRotation;
+            ActorRef->GetActorEyesViewPoint(CameraLocation, CameraRotation);
 
-            // Spawn the projectile at the muzzle.
-            AWeaponSystemProjectile* Projectile = World->SpawnActor<AWeaponSystemProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
-            if (Projectile)
+            FVector MuzzleOffset;
+            // Set MuzzleOffset to spawn projectiles slightly in front of the camera.
+            MuzzleOffset.Set(20.0f, 0.0f, 0.0f);
+
+            // Transform MuzzleOffset from camera space to world space.
+            FVector MuzzleLocation = CameraLocation + FTransform(CameraRotation).TransformVector(MuzzleOffset);
+
+            // Skew the aim to be slightly upwards.
+            FRotator MuzzleRotation = CameraRotation;
+    //        MuzzleRotation.Pitch += 10.0f;
+
+            UWorld* World = GetWorld();
+            if (World)
             {
-                // Set the projectile's initial trajectory.
-                FVector LaunchDirection = MuzzleRotation.Vector();
-                Projectile->FireInDirection(LaunchDirection);
+                FActorSpawnParameters SpawnParams;
+                SpawnParams.Owner = ActorRef;
+                SpawnParams.Instigator = ActorRef->GetInstigator();
 
-                if(ShotAudioComponent)
+                // Spawn the projectile at the muzzle.
+                AWeaponSystemProjectile* Projectile = World->SpawnActor<AWeaponSystemProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
+                if (Projectile)
                 {
-                    UDbg::DbgMsg(FString("ShotAudioComponent->Stop();"));
-                    ShotAudioComponent->Stop();
-                    ShotAudioComponent = nullptr;
+                    // Set the projectile's initial trajectory.
+                    FVector LaunchDirection = MuzzleRotation.Vector();
+                    Projectile->FireInDirection(LaunchDirection);
+
+                    if(ShotAudioComponent)
+                    {
+                        UDbg::DbgMsg(FString("ShotAudioComponent->Stop();"));
+                        ShotAudioComponent->Stop();
+                        ShotAudioComponent = nullptr;
+                    }
+
+                    ShotAudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, WeaponFunctionDefinition.ShootingSound, GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation(), FRotator::ZeroRotator, 1.0, 1.0, 0.0f, nullptr, nullptr, true);
+                    
+                    if(AmmoCount > 0)
+                    {
+                        AmmoCount--;
+                    }
                 }
 
-                ShotAudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, WeaponFunctionDefinition.ShootingSound, GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation(), FRotator::ZeroRotator, 1.0, 1.0, 0.0f, nullptr, nullptr, true);
             }
-
         }
     }
 }
