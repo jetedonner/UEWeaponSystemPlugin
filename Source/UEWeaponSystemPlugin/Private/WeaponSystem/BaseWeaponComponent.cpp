@@ -61,6 +61,8 @@ void UBaseWeaponComponent::StartShooting(EWeaponFunction WeaponFunction)
     }
     else
     {
+        //UDbg::DbgMsg(FString::Printf(TEXT("WeaponDefinition IS setup!")));
+
         FWeaponDefinition* FoundWeaponDefinition = WeaponDefinitionRowHandle.DataTable->FindRow<FWeaponDefinition>(WeaponDefinitionRowHandle.RowName, "");
         
         FWeaponFunctionDefinition FoundWeaponFunctionDefinition = FoundWeaponDefinition->PrimaryWeaponFunctionDefinition;

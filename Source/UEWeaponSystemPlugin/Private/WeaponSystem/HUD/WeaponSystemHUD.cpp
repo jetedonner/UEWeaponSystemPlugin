@@ -5,7 +5,17 @@
 
 AWeaponSystemHUD::AWeaponSystemHUD()
 {
-    
+//    // set default pawn class to our Blueprinted character
+//    static ConstructorHelpers::FClassFinder<AHUD> WeaponSystemHUDClass(TEXT("/Script/UEWeaponSystemPlugin.WeaponSystemHUD"));
+//    if (WeaponSystemHUDClass.Class != NULL)
+//    {
+//        UE_LOG(LogTemp, Warning, TEXT("WeaponSystemHUDClass FOUND (ClassName: %s) ..."), *WeaponSystemHUDClass.Class->GetName());
+////        DefaultPawnClass = PlayerPawnBPClass.Class;
+//    }
+//    else
+//    {
+//        UE_LOG(LogTemp, Warning, TEXT("WeaponSystemHUDClass NOT FOUND ..."));
+//    }
 }
 
 void AWeaponSystemHUD::BeginPlay()
