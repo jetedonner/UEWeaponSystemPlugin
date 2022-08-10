@@ -33,6 +33,9 @@ public:
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
     UWeaponManagerComponent* WeaponManagerComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+	USceneComponent* MuzzlePosition;
     
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

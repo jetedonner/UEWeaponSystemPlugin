@@ -30,7 +30,6 @@ protected:
     FTimerHandle ReloadingEndTimerHandle;
     FTimerHandle ReloadingStartTimerHandle;
 
-    bool IsShooting = false;
     FTimerHandle ShootingTimerHandle;
     
     class UtilityTimer* TimerUtil = new UtilityTimer();
@@ -57,6 +56,9 @@ public:
 //    FWeaponDefinition* FoundWeaponDefinition = WeaponDefinitionRowHandle.DataTable->FindRow<FWeaponDefinition>(WeaponDefinitionRowHandle.RowName, "");
 //    FWeaponDefinition* FoundWeaponDefinition = WeaponDefinition.DataTable->FindRow<FWeaponDefinition>(WeaponDefinition.RowName, "");
     
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Weapon System")
+    bool IsShooting = false;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
     int32 InitialAmmoCount = 30;
     

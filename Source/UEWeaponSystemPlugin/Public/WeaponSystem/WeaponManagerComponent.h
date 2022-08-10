@@ -10,6 +10,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Components/SceneComponent.h"
 #include "WeaponSystem/Definition/WeaponDefinition.h"
 #include "WeaponSystem/BaseWeaponComponent.h"
 #include "WeaponManagerComponent.generated.h"

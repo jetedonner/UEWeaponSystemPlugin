@@ -65,7 +65,7 @@ AWeaponSystemProjectile::AWeaponSystemProjectile()
         ProjectileMeshComponent->SetupAttachment(RootComponent);
     }
     
-    InitialLifeSpan = 5.0f;
+    InitialLifeSpan = 0.0f;
 }
 
 // Called when the game starts or when spawned
@@ -172,6 +172,7 @@ void AWeaponSystemProjectile::LineTraceProjectile()
 
         if (isHit)
         {
+            UDbg::DbgMsg(FString::Printf(TEXT("LineTraceProjectile() => IS HIT")));
             OnLineTraceHit(HitResult);
 //           AActor* HitActor = MyHitResult.GetActor();
         }

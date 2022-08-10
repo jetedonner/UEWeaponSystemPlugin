@@ -180,6 +180,7 @@ void UBaseWeaponComponent::FireShot()
         if(CurrentWeaponFunction == EWeaponFunction::Secondary)
         {
             WeaponFunctionDefinition = FoundWeaponDefinition->SecondaryWeaponFunctionDefinition;
+            UDbg::DbgMsg(FString::Printf(TEXT("FireShot SECONDARY!")));
         }
         
         TSubclassOf<AWeaponSystemProjectile> ProjectileClass = WeaponFunctionDefinition.Projectile;

@@ -20,6 +20,13 @@ AWeaponSystemCharacter::AWeaponSystemCharacter()
         WeaponManagerComponent->bEditableWhenInherited = true;
         this->AddOwnedComponent(WeaponManagerComponent);
     }
+
+    if(!MuzzlePosition)
+    {
+        MuzzlePosition = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleSceneComponent"));
+        MuzzlePosition->SetupAttachment(RootComponent);
+        MuzzlePosition->SetRelativeLocation(FVector(50.0f, 0.0f, 0.0f));
+    }
 }
 
 
@@ -32,6 +39,13 @@ AWeaponSystemCharacter::AWeaponSystemCharacter(const FObjectInitializer& ObjectI
         WeaponManagerComponent = ObjectInitializer.CreateDefaultSubobject<UWeaponManagerComponent>(this, TEXT("Weapon Manager Component"));
         WeaponManagerComponent->bEditableWhenInherited = true;
         this->AddOwnedComponent(WeaponManagerComponent);
+    }
+
+    if(!MuzzlePosition)
+    {
+        MuzzlePosition = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleSceneComponent"));
+        MuzzlePosition->SetupAttachment(RootComponent);
+        MuzzlePosition->SetRelativeLocation(FVector(50.0f, 0.0f, 0.0f));
     }
 }
 
