@@ -33,6 +33,10 @@ private:
     TArray<class UUserWidget*> CreatedWidgets;
     
 protected:
+    
+    
+public:
+    
     // This will be drawn at the center of the screen.
     UPROPERTY(EditDefaultsOnly)
     UTexture2D* CrosshairTexture;
@@ -49,7 +53,6 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System|HUD")
     UHUDUserWidget* InfoHUDWidget;
     
-public:
     UFUNCTION(BlueprintCallable, Category="Weapon System|HUD")
     void ShowCrosshair(bool Show);
 

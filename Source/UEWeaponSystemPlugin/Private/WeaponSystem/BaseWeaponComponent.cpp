@@ -8,6 +8,7 @@
 
 #include "WeaponSystem/BaseWeaponComponent.h"
 
+
 // Sets default values for this component's properties
 UBaseWeaponComponent::UBaseWeaponComponent()
 {
@@ -236,6 +237,8 @@ void UBaseWeaponComponent::FireShot()
                     {
                         AmmoCount--;
                     }
+//                    AWeaponSystemHUD* HUD = Cast<AWeaponSystemHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+//                    HUD->InfoHUDWidget->OnShowReloadProgressBar(2.75);
                 }
 
             }

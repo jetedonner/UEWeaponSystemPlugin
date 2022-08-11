@@ -51,6 +51,9 @@ void AMovingScoreWidgetActor::BeginPlay()
     FBoxSphereBounds BoxSphereBounds = MovingScoreWidgetComponent->CalcBounds(LocalToWorld);
     
     UDbg::DbgMsg(FString::Printf(TEXT("BOUNDS: %s!"), *BoxSphereBounds.ToString()));
+    UDbg::DbgMsg(FString::Printf(TEXT("BoxSphereBounds.BoxExtent.Y: %f!"), BoxSphereBounds.BoxExtent.Y));
+//    MovingScoreWidgetComponent->SetRelativeLocation(FVector(0, BoxSphereBounds.BoxExtent.Y / -2, 150 + 20));
+    
     
 //    MovingScoreWidgetComponent->SetRelativeLocation(FVector(0, 0, 150 + 20));
     

@@ -18,4 +18,7 @@ class UEWEAPONSYSTEMPLUGIN_API UHUDUserWidget : public UUserWidget
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System|HUD")
     AWeaponSystemCharacter* WeaponSystemCharacter;
+    
+    UFUNCTION(BlueprintImplementableEvent, Category="Weapon System|HUD")
+    void OnShowReloadProgressBar(float ReloadTime);
 };
