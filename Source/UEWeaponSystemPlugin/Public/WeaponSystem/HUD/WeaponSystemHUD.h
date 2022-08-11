@@ -51,4 +51,7 @@ protected:
 public:
     UFUNCTION(BlueprintCallable, Category="Weapon System|HUD")
     void ShowCrosshair(bool Show);
+
+    UFUNCTION(BlueprintCallable, Category="Weapon System|HUD")
+    void ShowCrosshair(ESlateVisibility Visibility = ESlateVisibility::Visible);
 };
