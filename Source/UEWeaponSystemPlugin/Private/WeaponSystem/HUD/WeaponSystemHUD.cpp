@@ -73,7 +73,8 @@ void AWeaponSystemHUD::BeginPlay()
             if(CreatedWidget->GetClass() == InfoHUDWidgetRef)
             {
                 UDbg::DbgMsg(FString::Printf(TEXT("Found INFOWIDGET!")));
-                InfoHUDWidget = CreatedWidget;
+                InfoHUDWidget = Cast<UHUDUserWidget>(CreatedWidget);
+                InfoHUDWidget->WeaponSystemCharacter = Cast<AWeaponSystemCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
             }
             
             UDbg::DbgMsg(FString::Printf(TEXT("Created Widget: %s!"), *CreatedWidget->GetClass()->GetName()));
@@ -132,24 +133,24 @@ void AWeaponSystemHUD::ShowCrosshair(bool Show)
     }
 }
 
-void AWeaponSystemHUD::ShowCrosshair(ESlateVisibility Visibility)
-{
-    if(CrosshairUserWidget)
-    {
-        /*if(Show)
-        {
-            UDbg::DbgMsg(FString::Printf(TEXT("Showing CrosshairUserWidget!")));
-            CrosshairUserWidget->SetVisibility(ESlateVisibility::Visible);
-        }
-        else
-        {
-            UDbg::DbgMsg(FString::Printf(TEXT("Hiding CrosshairUserWidget!")));
-            CrosshairUserWidget->SetVisibility(ESlateVisibility::Hidden);
-        }*/
-        CrosshairUserWidget->SetVisibility(Visibility);
-    }
-    else
-    {
-        UDbg::DbgMsg(FString::Printf(TEXT("CrosshairUserWidget NOT SET!")));
-    }
-}
+//void AWeaponSystemHUD::ShowCrosshair(ESlateVisibility Visibility)
+//{
+//    if(CrosshairUserWidget)
+//    {
+//        /*if(Show)
+//        {
+//            UDbg::DbgMsg(FString::Printf(TEXT("Showing CrosshairUserWidget!")));
+//            CrosshairUserWidget->SetVisibility(ESlateVisibility::Visible);
+//        }
+//        else
+//        {
+//            UDbg::DbgMsg(FString::Printf(TEXT("Hiding CrosshairUserWidget!")));
+//            CrosshairUserWidget->SetVisibility(ESlateVisibility::Hidden);
+//        }*/
+//        CrosshairUserWidget->SetVisibility(Visibility);
+//    }
+//    else
+//    {
+//        UDbg::DbgMsg(FString::Printf(TEXT("CrosshairUserWidget NOT SET!")));
+//    }
+//}

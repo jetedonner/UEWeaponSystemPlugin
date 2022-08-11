@@ -7,6 +7,7 @@
 #include "Engine/Canvas.h"
 #include "Blueprint/UserWidget.h"
 #include "WeaponSystem/HUD/Crosshair/DrawUserWidgetBase.h"
+#include "WeaponSystem/HUD/HUDUserWidget.h"
 #include "WeaponSystemHUD.generated.h"
 
 /**
@@ -43,15 +44,15 @@ protected:
     UDrawUserWidgetBase* CrosshairUserWidgetNG;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System|HUD")
-    TSubclassOf<UUserWidget> InfoHUDWidgetRef;
+    TSubclassOf<UHUDUserWidget> InfoHUDWidgetRef;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System|HUD")
-    UUserWidget* InfoHUDWidget;
+    UHUDUserWidget* InfoHUDWidget;
     
 public:
     UFUNCTION(BlueprintCallable, Category="Weapon System|HUD")
     void ShowCrosshair(bool Show);
 
-    UFUNCTION(BlueprintCallable, Category="Weapon System|HUD")
-    void ShowCrosshair(ESlateVisibility Visibility = ESlateVisibility::Visible);
+//    UFUNCTION(BlueprintCallable, Category="Weapon System|HUD")
+//    void ShowCrosshair(ESlateVisibility Visibility = ESlateVisibility::Visible);
 };
