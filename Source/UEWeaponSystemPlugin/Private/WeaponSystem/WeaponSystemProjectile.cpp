@@ -172,7 +172,6 @@ void AWeaponSystemProjectile::LineTraceProjectile()
 
         if (isHit)
         {
-            UDbg::DbgMsg(FString::Printf(TEXT("LineTraceProjectile() => IS HIT")));
             OnLineTraceHit(HitResult);
 //           AActor* HitActor = MyHitResult.GetActor();
         }

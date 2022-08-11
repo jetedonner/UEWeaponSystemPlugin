@@ -5,22 +5,60 @@
 
 AWeaponSystemHUD::AWeaponSystemHUD()
 {
+    static ConstructorHelpers::FClassFinder<UUserWidget> InfoHUDWidgetClass(TEXT("/UEWeaponSystemPlugin/HUD/InfoHUDWidget.InfoHUDWidget_C"));
 //    // set default pawn class to our Blueprinted character
-//    static ConstructorHelpers::FClassFinder<AHUD> WeaponSystemHUDClass(TEXT("/Script/UEWeaponSystemPlugin.WeaponSystemHUD"));
-//    if (WeaponSystemHUDClass.Class != NULL)
-//    {
-//        UE_LOG(LogTemp, Warning, TEXT("WeaponSystemHUDClass FOUND (ClassName: %s) ..."), *WeaponSystemHUDClass.Class->GetName());
-////        DefaultPawnClass = PlayerPawnBPClass.Class;
-//    }
-//    else
-//    {
-//        UE_LOG(LogTemp, Warning, TEXT("WeaponSystemHUDClass NOT FOUND ..."));
-//    }
+//    static ConstructorHelpers::FClassFinder<UUserWidget> InfoHUDWidgetClass(TEXT("/UEWeaponSystemPlugin/HUD/InfoHUDWidget.InfoHUDWidget"));
+    if (InfoHUDWidgetClass.Class != NULL)
+    {
+        InfoHUDWidgetRef = InfoHUDWidgetClass.Class;
+//         InfoHUDWidgetRef = InfoHUDWidgetClass.Class;
+
+//         UUserWidget* CreatedWidget = CreateWidget<UUserWidget>(GetWorld(), InfoHUDWidgetClass.Class); 
+
+//         InfoHUDWidget = CreatedWidget;
+//         // InfoHUDWidgetRef* InfoWidget = Cast<InfoHUDWidgetRef>(CreatedWidget);
+//         // if(InfoHUDWidgetRef.Class InfoWidget = Cast<InfoHUDWidgetRef.Class>(CreatedWidget))
+//         // {
+//         //     InfoHUDWidget = InfoWidget;
+//         // }
+
+         UE_LOG(LogTemp, Warning, TEXT("InfoHUDWidgetClass FOUND (ClassName: %s) ..."), *InfoHUDWidgetClass.Class->GetName());
+ //        DefaultPawnClass = PlayerPawnBPClass.Class;
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("InfoHUDWidgetClass NOT FOUND ..."));
+    }
+
 }
 
 void AWeaponSystemHUD::BeginPlay()
 {
     Super::BeginPlay();
+    
+    //    // set default pawn class to our Blueprinted character
+//    WidgetBlueprint'/UEWeaponSystemPlugin/HUD/InfoHUDWidget.InfoHUDWidget'
+//        static ConstructorHelpers::FClassFinder<UUserWidget> InfoHUDWidgetClass(TEXT("/UEWeaponSystemPlugin/HUD/InfoHUDWidget.InfoHUDWidget"));
+//        if (InfoHUDWidgetClass.Class != NULL)
+//        {
+//    //         InfoHUDWidgetRef = InfoHUDWidgetClass.Class;
+//
+//    //         UUserWidget* CreatedWidget = CreateWidget<UUserWidget>(GetWorld(), InfoHUDWidgetClass.Class);
+//
+//    //         InfoHUDWidget = CreatedWidget;
+//    //         // InfoHUDWidgetRef* InfoWidget = Cast<InfoHUDWidgetRef>(CreatedWidget);
+//    //         // if(InfoHUDWidgetRef.Class InfoWidget = Cast<InfoHUDWidgetRef.Class>(CreatedWidget))
+//    //         // {
+//    //         //     InfoHUDWidget = InfoWidget;
+//    //         // }
+//
+//             UE_LOG(LogTemp, Warning, TEXT("InfoHUDWidgetClass FOUND (ClassName: %s) ..."), *InfoHUDWidgetClass.Class->GetName());
+//     //        DefaultPawnClass = PlayerPawnBPClass.Class;
+//        }
+//        else
+//        {
+//            UE_LOG(LogTemp, Warning, TEXT("InfoHUDWidgetClass NOT FOUND ..."));
+//        }
 
     // If any widgets need to be added
     if (AllUIWidgets.Num() > 0)
@@ -32,6 +70,12 @@ void AWeaponSystemHUD::BeginPlay()
             // Create an instance of the widget and add to viewport
             UUserWidget* CreatedWidget = CreateWidget<UUserWidget>(GetWorld(), Widget);
             
+            if(CreatedWidget->GetClass() == InfoHUDWidgetRef)
+            {
+                UDbg::DbgMsg(FString::Printf(TEXT("Found INFOWIDGET!")));
+                InfoHUDWidget = CreatedWidget;
+            }
+            
             UDbg::DbgMsg(FString::Printf(TEXT("Created Widget: %s!"), *CreatedWidget->GetClass()->GetName()));
             
             UCrosshairUserWidgetBase* CSWidget = Cast<UCrosshairUserWidgetBase>(CreatedWidget);
@@ -39,7 +83,7 @@ void AWeaponSystemHUD::BeginPlay()
             {
                 CrosshairUserWidget = CSWidget;
             }
-            
+
             CreatedWidget->AddToViewport();
 
             // Store instanced widget in array

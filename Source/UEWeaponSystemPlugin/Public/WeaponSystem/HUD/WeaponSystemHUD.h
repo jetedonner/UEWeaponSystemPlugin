@@ -41,6 +41,12 @@ protected:
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System|HUD")
     UDrawUserWidgetBase* CrosshairUserWidgetNG;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System|HUD")
+    TSubclassOf<UUserWidget> InfoHUDWidgetRef;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System|HUD")
+    UUserWidget* InfoHUDWidget;
     
 public:
     UFUNCTION(BlueprintCallable, Category="Weapon System|HUD")

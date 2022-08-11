@@ -115,5 +115,8 @@ public:
     void OnCustomStartShooting(FWeaponDefinition ShotWeaponDefinition, FWeaponFunctionDefinition ShotWeaponFunctionDefinition, EWeaponFunction ShotWeaponFunction, bool& Handled);
     
     UFUNCTION(BlueprintImplementableEvent, Category="Weapon System")
+    void OnShotFired(FWeaponDefinition ShotWeaponDefinition, FWeaponFunctionDefinition ShotWeaponFunctionDefinition, EWeaponFunction ShotWeaponFunction, bool& Handled);
+
+    UFUNCTION(BlueprintImplementableEvent, Category="Weapon System")
     void OnCustomStopShooting(FWeaponDefinition ShotWeaponDefinition, FWeaponFunctionDefinition ShotWeaponFunctionDefinition, EWeaponFunction ShotWeaponFunction, bool& Handled);
 };

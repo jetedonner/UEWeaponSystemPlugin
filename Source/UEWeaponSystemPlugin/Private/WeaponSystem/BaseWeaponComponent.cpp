@@ -132,10 +132,11 @@ void UBaseWeaponComponent::StopShooting()
 {
     if(WeaponDefinitionRowHandle.IsNull())
     {
-        UDbg::DbgMsg(FString::Printf(TEXT("NO WeaponDefinition setup!")));
+        UDbg::DbgMsg(FString::Printf(TEXT("NO WeaponDefinition SetUp!")));
     }
     else
     {
+        UDbg::DbgMsg(FString::Printf(TEXT("UBaseWeaponComponent STOP SHOOTING!")));
         FWeaponDefinition* FoundWeaponDefinition = WeaponDefinitionRowHandle.DataTable->FindRow<FWeaponDefinition>(WeaponDefinitionRowHandle.RowName, "");
         
         FWeaponFunctionDefinition FoundWeaponFunctionDefinition = FoundWeaponDefinition->PrimaryWeaponFunctionDefinition;
@@ -156,12 +157,12 @@ void UBaseWeaponComponent::StopShooting()
                 GetWorld()->GetTimerManager().ClearTimer(ShootingTimerHandle);
             }
 
-            if(ShotAudioComponent)
-            {
-                UDbg::DbgMsg(FString("ShotAudioComponent->Stop();"));
-                ShotAudioComponent->Stop();
-                ShotAudioComponent = nullptr;
-            }
+//            if(ShotAudioComponent)
+//            {
+//                UDbg::DbgMsg(FString("ShotAudioComponent->Stop();"));
+//                ShotAudioComponent->Stop();
+//                ShotAudioComponent = nullptr;
+//            }
         }
     }
 }
@@ -169,7 +170,7 @@ void UBaseWeaponComponent::StopShooting()
 void UBaseWeaponComponent::FireShot()
 {
 //    FWeaponFunctionDefinition WeaponFunctionDefinition = GetWeaponFunctionDefinition(CurrentWeaponFunction);
-    
+    UDbg::DbgMsg(FString::Printf(TEXT("UBaseWeaponComponent::FireShot!")));
     if(AmmoCount > 0 || AmmoCount == -1)
     {
     
@@ -218,6 +219,9 @@ void UBaseWeaponComponent::FireShot()
                     // Set the projectile's initial trajectory.
                     FVector LaunchDirection = MuzzleRotation.Vector();
                     Projectile->FireInDirection(LaunchDirection);
+                    
+//                    bool Handled = false;
+//                    OnShotFired(FoundWeaponDefinition, WeaponFunctionDefinition, CurrentWeaponFunction, Handled);
 
                     if(ShotAudioComponent)
                     {
