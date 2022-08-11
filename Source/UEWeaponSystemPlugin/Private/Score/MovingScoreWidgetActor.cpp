@@ -27,10 +27,15 @@ AMovingScoreWidgetActor::AMovingScoreWidgetActor()
         MovingScoreWidgetComponent->SetWidgetSpace(EWidgetSpace::World);
         MovingScoreWidgetComponent->SetTwoSided(true);
         MovingScoreWidgetComponent->SetAbsolute(false, false, true);
-        MovingScoreWidgetComponent->SetRelativeLocation(FVector(0, 0, 150 + 20));
-        //MovingScoreWidgetComponent-> 
+        MovingScoreWidgetComponent->SetRelativeLocation(FVector(0, -125, 150 + 20));
+        MovingScoreWidgetComponent->SetupAttachment(RootComponent);
         
-        MovingScoreWidgetBase = Cast<UMovingScoreWidgetBase>(MovingScoreWidgetComponent->GetUserWidgetObject());
+//        MovingScoreWidgetBase = Cast<UMovingScoreWidgetBase>(MovingScoreWidgetComponent->GetUserWidgetObject());
+//
+//        if(!MovingScoreWidgetBase)
+//        {
+//            UDbg::DbgMsg(FString::Printf(TEXT("AMovingScoreWidgetActor::AMovingScoreWidgetActor() MovingScoreWidgetBase CAST FAILED!")));
+//        }
     }
 }
 
@@ -38,13 +43,36 @@ AMovingScoreWidgetActor::AMovingScoreWidgetActor()
 void AMovingScoreWidgetActor::BeginPlay()
 {
 	Super::BeginPlay();
-//    MovingScoreWidgetBase->PlayMoveAndFadeAnim();
+    
+    MovingScoreWidgetBase = Cast<UMovingScoreWidgetBase>(MovingScoreWidgetComponent->GetUserWidgetObject());
+    MovingScoreWidgetBase->Score = Score;
+    
+    FTransform LocalToWorld;
+    FBoxSphereBounds BoxSphereBounds = MovingScoreWidgetComponent->CalcBounds(LocalToWorld);
+    
+    UDbg::DbgMsg(FString::Printf(TEXT("BOUNDS: %s!"), *BoxSphereBounds.ToString()));
+    
+//    MovingScoreWidgetComponent->SetRelativeLocation(FVector(0, 0, 150 + 20));
+    
+    
+//    if(!MovingScoreWidgetBase)
+//    {
+//        UDbg::DbgMsg(FString::Printf(TEXT("AMovingScoreWidgetActor::BeginPlay() MovingScoreWidgetBase CAST FAILED!")));
+//    }
+    
+    if(MovingScoreWidgetBase)
+    {
+        MovingScoreWidgetBase->PlayMoveAndFadeAnim();
+    }
+    else
+    {
+        UDbg::DbgMsg(FString::Printf(TEXT("AMovingScoreWidgetActor::BeginPlay NO MovingScoreWidgetBase SET!")));
+    }
 }
 
 // Called every frame
 void AMovingScoreWidgetActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 

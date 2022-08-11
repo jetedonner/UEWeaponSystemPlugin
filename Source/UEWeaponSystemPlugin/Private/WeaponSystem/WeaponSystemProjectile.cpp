@@ -100,6 +100,11 @@ void AWeaponSystemProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* O
         UDbg::DbgMsg(FString::Printf(TEXT("Projectile ImpactTargetSound IS NOT SET")));
     }
     
+    if(ImpactEffect)
+    {
+        UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, GetActorLocation(), FRotator(1), true, EPSCPoolMethod::AutoRelease, true);
+    }
+    
     if(ImpactDecals.Num() > 0)
     {
         int32 Idx = FMath::RandRange(0, ImpactDecals.Num() - 1);

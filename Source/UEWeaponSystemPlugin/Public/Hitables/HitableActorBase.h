@@ -19,6 +19,7 @@
 #include "Utils/GlobalDefinitions.h"
 #include "WeaponSystem/WeaponSystemCharacter.h"
 #include "Score/MovingScoreWidgetBase.h"
+#include "Score/ScoreHelper.h"
 #include "HitableActorBase.generated.h"
 
 UCLASS(Abstract, Blueprintable)
@@ -44,6 +45,9 @@ public:
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Event|Hit")
     bool ByPassTriggeringActors = true;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Event|Hit")
+    bool ShowMovingScoreWidget = true;
     
     bool IsHit = false;
     

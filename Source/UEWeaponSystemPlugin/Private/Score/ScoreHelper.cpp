@@ -21,6 +21,7 @@ void UScoreHelper::SpawnMovingScoreWidget(UObject* WorldContextObject, const FSt
     {
         AMovingScoreWidgetActor* MovingScoreWidgetActor = (AMovingScoreWidgetActor*) GEngine->GetWorldFromContextObjectChecked(WorldContextObject)->SpawnActor<AMovingScoreWidgetActor>(AMovingScoreWidgetActor::StaticClass(), Location, Rotation);
         
+        MovingScoreWidgetActor->MovingScoreWidgetBase->Score = 650.0f;
 //        MovingScoreWidgetActor->MovingScoreWidgetBase->PlayMoveAndFadeAnim();
         
     }

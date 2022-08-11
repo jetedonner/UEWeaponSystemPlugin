@@ -29,6 +29,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Score System")
+    float Score = 200.0f;
+    
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Event|Hit")
     class UWidgetComponent* MovingScoreWidgetComponent;
     

@@ -41,6 +41,9 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon System")
     bool DestroyOnHit = true;
     
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon System")
+    bool ApplyRadialDamage = true;
+    
     // Function that is called when the projectile hits something.
     UFUNCTION()
     void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);

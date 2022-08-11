@@ -72,7 +72,11 @@ void AHitableActorBase::Tick(float DeltaTime)
 
 void AHitableActorBase::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-
+    UDbg::DbgMsg(FString::Printf(TEXT("AHitableActorBase::OnHit BASE")), 5.0f, FColor::Green);
+    if(ShowMovingScoreWidget)
+    {
+        UScoreHelper::SpawnMovingScoreWidget(GetWorld(), FString("100"), GetActorLocation(), GetActorRotation(), 15.0f, FColor::White);
+    }
 }
 
 void AHitableActorBase::OnComponentGotHit_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
