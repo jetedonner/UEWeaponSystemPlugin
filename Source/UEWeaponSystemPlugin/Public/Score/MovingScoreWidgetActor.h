@@ -25,7 +25,17 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
+    
+    FWidgetAnimationDynamicEvent StartDelegate;
+    FWidgetAnimationDynamicEvent EndDelegate;
+
+    UFUNCTION()
+    void AnimationStarted();
+
+    UFUNCTION()
+    void AnimationFinished();
+    
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

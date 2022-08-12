@@ -13,11 +13,11 @@ void UMovingScoreWidgetBase::NativeConstruct()
     Super::NativeConstruct();
 //    MoveUpAndFadeOutAnim->BindToAnimationFinished(&UMovingScoreWidgetBase::AnimationFinished);
     
-    StartDelegate.BindDynamic(this, &UMovingScoreWidgetBase::AnimationStarted);
-    EndDelegate.BindDynamic(this, &UMovingScoreWidgetBase::AnimationFinished);
-
-    BindToAnimationStarted(MoveUpAndFadeOutAnim, StartDelegate);
-    BindToAnimationFinished(MoveUpAndFadeOutAnim, EndDelegate);
+//    StartDelegate.BindDynamic(this, &UMovingScoreWidgetBase::AnimationStarted);
+//    EndDelegate.BindDynamic(this, &UMovingScoreWidgetBase::AnimationFinished);
+//
+//    BindToAnimationStarted(MoveUpAndFadeOutAnim, StartDelegate);
+//    BindToAnimationFinished(MoveUpAndFadeOutAnim, EndDelegate);
 }
 
 void UMovingScoreWidgetBase::PlayMoveAndFadeAnim()
@@ -32,14 +32,13 @@ void UMovingScoreWidgetBase::PlayMoveAndFadeAnim()
     }
 }
 
-void UMovingScoreWidgetBase::AnimationStarted()
-{
-    // some thing goes on here
-}
-
-void UMovingScoreWidgetBase::AnimationFinished()
-{
-    // some thing goes on here
-//    GetOwner()->Destroy();
-    UDbg::DbgMsg(FString::Printf(TEXT("UMovingScoreWidgetBase::AnimationFinished()!")));
-}
+//void UMovingScoreWidgetBase::AnimationStarted()
+//{
+//    // some thing goes on here
+//}
+//
+//void UMovingScoreWidgetBase::AnimationFinished()
+//{
+////    UDbg::DbgMsg(FString::Printf(TEXT("UMovingScoreWidgetBase::AnimationFinished()!")));
+////    Cast<AActor>(GetParent())->Destroy();
+//}

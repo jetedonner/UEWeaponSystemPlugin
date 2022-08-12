@@ -20,6 +20,13 @@ AWeaponSystemCharacter::AWeaponSystemCharacter()
         WeaponManagerComponent->bEditableWhenInherited = true;
         this->AddOwnedComponent(WeaponManagerComponent);
     }
+    
+    if(!ScoreManagerComponent)
+    {
+        ScoreManagerComponent = CreateDefaultSubobject<UScoreManagerComponent>(TEXT("Score Manager Component"));
+        ScoreManagerComponent->bEditableWhenInherited = true;
+        this->AddOwnedComponent(ScoreManagerComponent);
+    }
 
     if(!MuzzlePosition)
     {
@@ -39,6 +46,13 @@ AWeaponSystemCharacter::AWeaponSystemCharacter(const FObjectInitializer& ObjectI
         WeaponManagerComponent = ObjectInitializer.CreateDefaultSubobject<UWeaponManagerComponent>(this, TEXT("Weapon Manager Component"));
         WeaponManagerComponent->bEditableWhenInherited = true;
         this->AddOwnedComponent(WeaponManagerComponent);
+    }
+    
+    if(!ScoreManagerComponent)
+    {
+        ScoreManagerComponent = ObjectInitializer.CreateDefaultSubobject<UScoreManagerComponent>(this, TEXT("Score Manager Component"));
+        ScoreManagerComponent->bEditableWhenInherited = true;
+        this->AddOwnedComponent(ScoreManagerComponent);
     }
 
     if(!MuzzlePosition)

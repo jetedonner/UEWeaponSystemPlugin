@@ -21,14 +21,14 @@ class UEWEAPONSYSTEMPLUGIN_API UMovingScoreWidgetBase : public UUserWidget
 protected:
     virtual void NativeConstruct() override;
     
-    FWidgetAnimationDynamicEvent StartDelegate;
-    FWidgetAnimationDynamicEvent EndDelegate;
-
-    UFUNCTION()
-    void AnimationStarted();
-
-    UFUNCTION()
-    void AnimationFinished();
+//    FWidgetAnimationDynamicEvent StartDelegate;
+//    FWidgetAnimationDynamicEvent EndDelegate;
+//
+//    UFUNCTION()
+//    void AnimationStarted();
+//
+//    UFUNCTION()
+//    void AnimationFinished();
     
 public:
     

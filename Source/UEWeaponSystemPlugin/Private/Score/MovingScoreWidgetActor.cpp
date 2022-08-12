@@ -27,8 +27,11 @@ AMovingScoreWidgetActor::AMovingScoreWidgetActor()
         MovingScoreWidgetComponent->SetWidgetSpace(EWidgetSpace::World);
         MovingScoreWidgetComponent->SetTwoSided(true);
         MovingScoreWidgetComponent->SetAbsolute(false, false, true);
-        MovingScoreWidgetComponent->SetRelativeLocation(FVector(0, -125, 150 + 20));
+        MovingScoreWidgetComponent->SetRelativeLocation(FVector(0, 0, 150 + 20));
         MovingScoreWidgetComponent->SetupAttachment(RootComponent);
+        
+        
+        
         
 //        MovingScoreWidgetBase = Cast<UMovingScoreWidgetBase>(MovingScoreWidgetComponent->GetUserWidgetObject());
 //
@@ -46,6 +49,13 @@ void AMovingScoreWidgetActor::BeginPlay()
     
     MovingScoreWidgetBase = Cast<UMovingScoreWidgetBase>(MovingScoreWidgetComponent->GetUserWidgetObject());
     MovingScoreWidgetBase->Score = Score;
+    
+    StartDelegate.BindDynamic(this, &AMovingScoreWidgetActor::AnimationStarted);
+    EndDelegate.BindDynamic(this, &AMovingScoreWidgetActor::AnimationFinished);
+
+    MovingScoreWidgetBase->BindToAnimationStarted(MovingScoreWidgetBase->MoveUpAndFadeOutAnim, StartDelegate);
+    MovingScoreWidgetBase->BindToAnimationFinished(MovingScoreWidgetBase->MoveUpAndFadeOutAnim, EndDelegate);
+    
     
     FTransform LocalToWorld;
     FBoxSphereBounds BoxSphereBounds = MovingScoreWidgetComponent->CalcBounds(LocalToWorld);
@@ -79,3 +89,14 @@ void AMovingScoreWidgetActor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+
+void AMovingScoreWidgetActor::AnimationStarted()
+{
+    // some thing goes on here
+}
+
+void AMovingScoreWidgetActor::AnimationFinished()
+{
+//    UDbg::DbgMsg(FString::Printf(TEXT("AMovingScoreWidgetActor::AnimationFinished()!")));
+    Destroy();
+}

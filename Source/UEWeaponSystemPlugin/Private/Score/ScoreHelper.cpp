@@ -9,7 +9,7 @@
 #include "Score/ScoreHelper.h"
 //#include "Utils/GlobalDefinitions.h"
 
-void UScoreHelper::SpawnMovingScoreWidget(UObject* WorldContextObject, const FString ScoreText, FVector Location, FRotator Rotation, float Duration, FColor TextColor)
+void UScoreHelper::SpawnMovingScoreWidget(UObject* WorldContextObject, const float Score, FVector Location, FRotator Rotation)
 {
     
 //    AActor* ActorRef = GetWorld()->GetFirstPlayerController()->GetPawn();
@@ -19,42 +19,31 @@ void UScoreHelper::SpawnMovingScoreWidget(UObject* WorldContextObject, const FSt
 //    SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
     if(GEngine)
     {
-        AMovingScoreWidgetActor* MovingScoreWidgetActor = (AMovingScoreWidgetActor*) GEngine->GetWorldFromContextObjectChecked(WorldContextObject)->SpawnActor<AMovingScoreWidgetActor>(AMovingScoreWidgetActor::StaticClass(), Location, Rotation);
+//        if(RotateComponent == nullptr)
+//        {
+//            UDbg::DbgMsg(FString::Printf(TEXT("RotateComponent IS NULL")), 5.0f, FColor::Red);
+//            return;
+//        }
+//
+//        if(PlayerCharacter == nullptr)
+//        {
+//            UDbg::DbgMsg(FString::Printf(TEXT("PlayerCharacter IS NULL")), 5.0f, FColor::Red);
+//            return;
+//        }
         
-        MovingScoreWidgetActor->MovingScoreWidgetBase->Score = 650.0f;
+//        FVector MovingScoreWidgetLoc = Location; // RotateComponent->GetComponentLocation();
+        FVector PlayerLoc = GEngine->GetWorldFromContextObjectChecked(WorldContextObject)->GetFirstPlayerController()->GetPawn()->GetActorLocation();
+        FRotator MovingScoreWidgetRot = UKismetMathLibrary::FindLookAtRotation(Location, PlayerLoc);
+        FRotator MovingScoreWidgetRotNew = FRotator(0, MovingScoreWidgetRot.Yaw, 0);
+        
+//        RotateComponent->SetWorldRotation(MovingScoreWidgetRotNew);
+        
+        ////////
+        
+        AMovingScoreWidgetActor* MovingScoreWidgetActor = (AMovingScoreWidgetActor*) GEngine->GetWorldFromContextObjectChecked(WorldContextObject)->SpawnActor<AMovingScoreWidgetActor>(AMovingScoreWidgetActor::StaticClass(), Location, MovingScoreWidgetRotNew /*FRotator(0.0f, 0.0f, 0.0f) *//*Rotation*/);
+        
+        MovingScoreWidgetActor->MovingScoreWidgetBase->Score = Score;
 //        MovingScoreWidgetActor->MovingScoreWidgetBase->PlayMoveAndFadeAnim();
         
     }
-    
-//    if(!MovingScoreWidgetComponent)
-//    {
-//        MovingScoreWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(FName("MovingScoreWidget Component"));
-//
-//        static ConstructorHelpers::FClassFinder<UUserWidget> MovingScoreWidget(TEXT("/WeaponSystem/Widgets/MovingScoreWidgetBP"));
-//
-//        MovingScoreWidgetClass = MovingScoreWidget.Class;
-//
-//        MovingScoreWidgetComponent->bEditableWhenInherited = true;
-//        MovingScoreWidgetComponent->SetWidgetClass(MovingScoreWidget.Class);
-//        MovingScoreWidgetComponent->SetWidgetSpace(EWidgetSpace::World);
-//        MovingScoreWidgetComponent->SetTwoSided(true);
-//        MovingScoreWidgetComponent->SetAbsolute(false, false, true);
-//        MovingScoreWidgetComponent->SetRelativeLocation(FVector(0, 0, 150 + 20));
-//
-//        MovingScoreWidgetBase = Cast<UMovingScoreWidgetBase>(MovingScoreWidgetComponent->GetUserWidgetObject());
-//    }
-    
-//    UUserWidget* CreatedWidget = CreateWidget<UUserWidget>(GetWorld(), Widget);
-//    CreatedWidget->AddToViewport();
-//    UDevHelper* DevHelper = NewObject<UDevHelper>(UDevHelper::StaticClass());
-//
-//    if(DevHelper->DebugMode)
-//    {
-//        UE_LOG(WeaponSysPlugin, Log, TEXT("%s"), *DebugMessage);
-//
-//        if(!ConsoleOnly && DevHelper->OnScreeLog)
-//        {
-//            GEngine->AddOnScreenDebugMessage(-1, Duration, TextColor, DebugMessage);
-//        }
-//    }
 }

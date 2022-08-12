@@ -11,6 +11,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "WeaponSystem/WeaponManagerComponent.h"
+#include "Score/ScoreManagerComponent.h"
 #include "Utils/GlobalDefinitions.h"
 #include "Utils/Dbg.h"
 #include "WeaponSystemCharacter.generated.h"
@@ -34,6 +35,9 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
     UWeaponManagerComponent* WeaponManagerComponent;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Score System")
+    UScoreManagerComponent* ScoreManagerComponent;
+    
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
 	USceneComponent* MuzzlePosition;
     

@@ -78,8 +78,8 @@ public:
 //    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Event|Hit")
 //    TSubclassOf<UUserWidget> MovingScoreWidgetClass;
 //
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Event|Hit")
-    UMovingScoreWidgetBase* MovingScoreWidgetBase;
+//    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Event|Hit")
+//    UMovingScoreWidgetBase* MovingScoreWidgetBase;
     
 //    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Event|Hit")
 //    int32 MovingScoreWidgetIdx = 0;

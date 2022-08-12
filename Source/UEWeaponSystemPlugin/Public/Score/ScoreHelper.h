@@ -20,7 +20,7 @@ class UEWEAPONSYSTEMPLUGIN_API UScoreHelper : public UBlueprintFunctionLibrary
 public:
     
     UFUNCTION(BlueprintCallable, meta=(WorldContext="WorldContextObject"), Category="Score")
-    static void SpawnMovingScoreWidget(UObject* WorldContextObject, const FString ScoreText, FVector Location, FRotator Rotation, float Duration, FColor TextColor);
+    static void SpawnMovingScoreWidget(UObject* WorldContextObject, const float Score, FVector Location, FRotator Rotation);
     
     
 //    UFUNCTION(BlueprintCallable, Category="Debug", meta=(DevelopmentOnly))

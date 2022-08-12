@@ -7,6 +7,7 @@
 #include "Engine/Canvas.h"
 #include "Blueprint/UserWidget.h"
 #include "WeaponSystem/HUD/Crosshair/DrawUserWidgetBase.h"
+#include "WeaponSystem/HUD/Crosshair/CrosshairUserWidgetBase.h"
 #include "WeaponSystem/HUD/HUDUserWidget.h"
 #include "WeaponSystemHUD.generated.h"
 
