@@ -72,7 +72,7 @@ void AHitableActorBase::Tick(float DeltaTime)
 
 void AHitableActorBase::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-    UDbg::DbgMsg(FString::Printf(TEXT("AHitableActorBase::OnHit BASE")), 5.0f, FColor::Green);
+    // UDbg::DbgMsg(FString::Printf(TEXT("AHitableActorBase::OnHit BASE")), 5.0f, FColor::Green);
     if(ShowMovingScoreWidget)
     {
         UScoreHelper::SpawnMovingScoreWidget(GetWorld(), HitScore, GetActorLocation(), GetActorRotation());
@@ -91,7 +91,7 @@ void AHitableActorBase::OnComponentGotHit_Implementation(UPrimitiveComponent* Hi
 
 void AHitableActorBase::ExecActorHitHandler(AActor* OtherActor, const FHitResult& Hit)
 {
-    UDbg::DbgMsg(FString::Printf(TEXT("AHitableActorBase::ExecActorHitHandler")), 5.0f, FColor::Green);
+    // UDbg::DbgMsg(FString::Printf(TEXT("AHitableActorBase::ExecActorHitHandler")), 5.0f, FColor::Green);
     
     bool FoundActor = false;
     if(ByPassTriggeringActors)

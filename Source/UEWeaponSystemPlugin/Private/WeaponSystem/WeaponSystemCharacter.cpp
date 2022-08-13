@@ -77,6 +77,12 @@ void AWeaponSystemCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+    //APawn* MyOwner = Cast<APawn>(GetOwner());
+    if(!this->IsPlayerControlled())
+    {
+        return;
+    }
+
     if (PlayerInputComponent == nullptr) return;
     
     if(!WeaponManagerComponent)
@@ -88,4 +94,3 @@ void AWeaponSystemCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
         WeaponManagerComponent->SetupPlayerInput(PlayerInputComponent, InputComponent);
     }
 }
-
