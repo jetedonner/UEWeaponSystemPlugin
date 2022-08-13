@@ -57,6 +57,29 @@ public:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Weapon System")
     class UBaseWeaponComponent* CurrentWeapon;
     
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+    bool IsAimedAt = false;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+    bool IsAimedAtHitable = false;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+    bool IsAimedAtChar = false;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+    bool IsAimedAtPickup = false;
+    
+//    UFUNCTION(BlueprintPure, BlueprintInternalUseOnly, Category="Weapon System")
+//    bool IsAimedAtInt() {
+//        bool bRet = false;
+//        FHitResult HitResult;
+//        this->IsAimedAt(bRet, HitResult);
+//        return bRet;
+//    }
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+    FHitResult HitResult;
+    
     UFUNCTION(BlueprintCallable, Category="Weapon System")
     void PickupWeapon(int32 WeaponID, int32 AmmoCount);
     

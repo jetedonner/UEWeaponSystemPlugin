@@ -108,11 +108,198 @@ void UWeaponManagerComponent::BeginPlay()
         idx++;
     }
 //    this->SetCurrentWeapon(1, false);
+    
+    this->SetComponentTickInterval(0.25f);
 }
 
 void UWeaponManagerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+    
+    APawn* MyOwner = Cast<APawn>(GetOwner());
+    if(!MyOwner->IsPlayerControlled())
+    {
+        return;
+    }
+    
+//    if (GetWorld())
+//    {
+        APlayerCameraManager* CameraManager = Cast<APlayerCameraManager>(UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0));
+        if (CameraManager)
+        {
+//           FHitResult hitResult;
+           FVector Start = CameraManager->GetCameraLocation() - FVector(0.0f, 0.0f, 30.0f);
+           FVector End = Start + 10000.0 * CameraManager->GetActorForwardVector();
+
+            bool IsAimedAtInt = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECollisionChannel::ECC_GameTraceChannel1);
+            if(IsAimedAtInt)
+            {
+                AActor* HitActor = HitResult.GetActor();
+                if (HitActor)
+                {
+                    AWeaponSystemCharacter* pChar = Cast<AWeaponSystemCharacter>(HitActor);
+                    if (pChar && !IsAimedAtHitable)
+                    {
+                        IsAimedAtHitable = true;
+//                        UCrosshairUserWidgetBase* CurrentCSWidgetNew = Cast<UCrosshairUserWidgetBase>(this->CurrentCSWidget);
+//                        if(CurrentCSWidgetNew)
+//                        {
+//                           CurrentCSWidgetNew->PlayAimedAtAnimation(true);
+//                        }
+                    }
+                    else if(!pChar && IsAimedAtHitable)
+                    {
+                        IsAimedAtHitable = false;
+//                        UCrosshairUserWidgetBase* CurrentCSWidgetNew = Cast<UCrosshairUserWidgetBase>(this->CurrentCSWidget);
+//                        if(CurrentCSWidgetNew)
+//                        {
+//                            CurrentCSWidgetNew->PlayAimedAtAnimation(false);
+//                        }
+                    }
+
+                    if(!IsAimedAtHitable)
+                    {
+                       AHitableActorBase* p = Cast<AHitableActorBase>(HitActor);
+                       if (p && !IsAimedAtChar)
+                       {
+                           IsAimedAtChar = true;
+    //                       UCrosshairUserWidgetBase* CurrentCSWidgetNew = Cast<UCrosshairUserWidgetBase>(this->CurrentCSWidget);
+    //                       if(CurrentCSWidgetNew)
+    //                       {
+    //                           CurrentCSWidgetNew->PlayAimedAtAnimation(true);
+    //                       }
+                       }
+                       else if(!p && IsAimedAtChar)
+                       {
+                           IsAimedAtChar = false;
+    //                       UCrosshairUserWidgetBase* CurrentCSWidgetNew = Cast<UCrosshairUserWidgetBase>(this->CurrentCSWidget);
+    //                       if(CurrentCSWidgetNew)
+    //                       {
+    //                           CurrentCSWidgetNew->PlayAimedAtAnimation(false);
+    //                       }
+                       }
+
+                       if(!IsAimedAtChar)
+                       {
+                           AWeaponPickupActor* pick = Cast<AWeaponPickupActor>(HitActor);
+                           if (pick && !IsAimedAtPickup)
+                           {
+                               IsAimedAtPickup = true;
+        //                       UCrosshairUserWidgetBase* CurrentCSWidgetNew = Cast<UCrosshairUserWidgetBase>(this->CurrentCSWidget);
+        //                       if(CurrentCSWidgetNew)
+        //                       {
+        //                           CurrentCSWidgetNew->PlayAimedAtAnimation(true);
+        //                       }
+                           }
+                           else if(!pick && IsAimedAtPickup)
+                           {
+                               IsAimedAtPickup = false;
+        //                       UCrosshairUserWidgetBase* CurrentCSWidgetNew = Cast<UCrosshairUserWidgetBase>(this->CurrentCSWidget);
+        //                       if(CurrentCSWidgetNew)
+        //                       {
+        //                           CurrentCSWidgetNew->PlayAimedAtAnimation(false);
+        //                       }
+                           }
+                       }
+                    }
+                    IsAimedAt = IsAimedAtHitable || IsAimedAtChar || IsAimedAtPickup;
+                }
+                else
+                {
+                    IsAimedAt = false;
+                }
+            }
+            else
+            {
+                IsAimedAt = false;
+            }
+            
+//           if (isHit)
+//           {
+//               AActor* HitActor = MyHitResult.GetActor();
+//               if (HitActor)
+//               {
+//                   AWeaponSystemCharacter* pChar = Cast<AWeaponSystemCharacter>(HitActor);
+//                   if (pChar && !IsAimedAtChar)
+//                   {
+//                       IsAimedAtChar = true;
+//                       UCrosshairUserWidgetBase* CurrentCSWidgetNew = Cast<UCrosshairUserWidgetBase>(this->CurrentCSWidget);
+//                       if(CurrentCSWidgetNew)
+//                       {
+//                           CurrentCSWidgetNew->PlayAimedAtAnimation(true);
+//                       }
+//                   }
+//                   else if(!pChar && IsAimedAtChar)
+//                   {
+//                       IsAimedAtChar = false;
+//                       UCrosshairUserWidgetBase* CurrentCSWidgetNew = Cast<UCrosshairUserWidgetBase>(this->CurrentCSWidget);
+//                       if(CurrentCSWidgetNew)
+//                       {
+//                           CurrentCSWidgetNew->PlayAimedAtAnimation(false);
+//                       }
+//                   }
+//
+//                   if(IsAimedAtChar)
+//                   {
+//                       return;
+//                   }
+//
+//                   AHitableActorBase* p = Cast<AHitableActorBase>(HitActor);
+//                   if (p && !IsAimedAtHitable)
+//                   {
+//                       IsAimedAtHitable = true;
+//                       UCrosshairUserWidgetBase* CurrentCSWidgetNew = Cast<UCrosshairUserWidgetBase>(this->CurrentCSWidget);
+//                       if(CurrentCSWidgetNew)
+//                       {
+//                           CurrentCSWidgetNew->PlayAimedAtAnimation(true);
+//                       }
+//                   }
+//                   else if(!p && IsAimedAtHitable)
+//                   {
+//                       IsAimedAtHitable = false;
+//                       UCrosshairUserWidgetBase* CurrentCSWidgetNew = Cast<UCrosshairUserWidgetBase>(this->CurrentCSWidget);
+//                       if(CurrentCSWidgetNew)
+//                       {
+//                           CurrentCSWidgetNew->PlayAimedAtAnimation(false);
+//                       }
+//                   }
+//
+//                   if(IsAimedAtHitable)
+//                   {
+//                       return;
+//                   }
+//
+//                   AWeaponPickupActorBase* pick = Cast<AWeaponPickupActorBase>(HitActor);
+//                   if (pick && !IsAimedAtPickup)
+//                   {
+//                       IsAimedAtPickup = true;
+//                       UCrosshairUserWidgetBase* CurrentCSWidgetNew = Cast<UCrosshairUserWidgetBase>(this->CurrentCSWidget);
+//                       if(CurrentCSWidgetNew)
+//                       {
+//                           CurrentCSWidgetNew->PlayAimedAtAnimation(true);
+//                       }
+//                   }
+//                   else if(!pick && IsAimedAtPickup)
+//                   {
+//                       IsAimedAtPickup = false;
+//                       UCrosshairUserWidgetBase* CurrentCSWidgetNew = Cast<UCrosshairUserWidgetBase>(this->CurrentCSWidget);
+//                       if(CurrentCSWidgetNew)
+//                       {
+//                           CurrentCSWidgetNew->PlayAimedAtAnimation(false);
+//                       }
+//                   }
+//
+//               }
+//           }
+//            else
+//            {
+////                HitResult = nullptr;
+////                IsAimedAtChar = false;
+////                IsAimedAtHitable = false;
+////                IsAimedAtPickup = false;
+//            }
+        }
+//    }
 }
 
 void UWeaponManagerComponent::SetupPlayerInput(class UInputComponent* PlayerInputComponent, class UInputComponent* InputComponent)
