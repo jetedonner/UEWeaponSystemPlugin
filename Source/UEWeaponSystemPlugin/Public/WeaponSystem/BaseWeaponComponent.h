@@ -17,6 +17,8 @@
 #include "BaseWeaponComponent.generated.h"
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWeaponReloadingDelegate, float, Timeout);
+
 UCLASS(Blueprintable)
 class UEWEAPONSYSTEMPLUGIN_API UBaseWeaponComponent : public UActorComponent
 {
@@ -31,6 +33,9 @@ protected:
     bool IsReloading = false;
     FTimerHandle ReloadingEndTimerHandle;
     FTimerHandle ReloadingStartTimerHandle;
+    
+//    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+    FWeaponDefinition* MyWeaponDefinition;
 
     FTimerHandle ShootingTimerHandle;
     
@@ -60,6 +65,9 @@ public:
     
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Weapon System")
     bool IsShooting = false;
+    
+//    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Weapon System")
+//    bool IsReloading = false;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
     int32 InitialAmmoCount = 30;
@@ -124,4 +132,7 @@ public:
     
     UPROPERTY(BlueprintAssignable, Category="Weapon System")
     FOnShotFiredDelegate OnShotFiredDelegate;
+    
+    UPROPERTY(BlueprintAssignable, Category="Weapon System")
+    FWeaponReloadingDelegate OnWeaponReloading;
 };

@@ -79,6 +79,7 @@ void AWeaponPickupActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherA
     AWeaponSystemCharacter* PickupCharacter = Cast<AWeaponSystemCharacter>(OtherActor);
     if(PickupCharacter)
     {
+        UDbg::DbgMsg(FString::Printf(TEXT("PickupCharacter FOUND => PiuckingUp")), 5.0f, FColor::Red);
         this->OnPickup(PickupCharacter);
     }
     else

@@ -93,4 +93,10 @@ public:
     
     UFUNCTION(BlueprintCallable, Category="Weapon System")
     void OnShotFired(FWeaponDefinition ShotWeaponDefinition, FWeaponFunctionDefinition ShotWeaponFunctionDefinition, EWeaponFunction ShotWeaponFunction);
+    
+    UFUNCTION(BlueprintCallable, Category="Weapon System")
+    void WeaponReloading(float Timeout);
+    
+    UPROPERTY(BlueprintAssignable, Category="Weapon System")
+    FWeaponReloadingDelegate OnWeaponReloading;
 };

@@ -32,7 +32,6 @@ AMovingScoreWidgetActor::AMovingScoreWidgetActor()
         
         
         
-        
 //        MovingScoreWidgetBase = Cast<UMovingScoreWidgetBase>(MovingScoreWidgetComponent->GetUserWidgetObject());
 //
 //        if(!MovingScoreWidgetBase)

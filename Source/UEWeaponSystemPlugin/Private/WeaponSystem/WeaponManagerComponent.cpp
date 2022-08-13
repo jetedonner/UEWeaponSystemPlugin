@@ -98,6 +98,8 @@ void UWeaponManagerComponent::BeginPlay()
         UBaseWeaponComponent* NewWeaponImpl = NewObject<UBaseWeaponComponent>(this, NewWeapon->GetClass(), *NewWeapon->GetClass()->GetName());
             
         NewWeaponImpl->OnShotFiredDelegate.AddDynamic(this, &UWeaponManagerComponent::OnShotFired);
+        
+        NewWeaponImpl->OnWeaponReloading.AddDynamic(this, &UWeaponManagerComponent::WeaponReloading);
 //        NewWeaponImpl->OnProjectileFireDelegate.AddDynamic(this, &UWeaponManagerComponent::ProjectileFired);
 //        NewWeaponImpl->OnProjectileHitDelegate.AddDynamic(this, &UWeaponManagerComponent::ProjectileHit);
         NewWeaponImpl->RegisterComponent();
@@ -500,3 +502,10 @@ void UWeaponManagerComponent::OnShotFired(FWeaponDefinition ShotWeaponDefinition
 //    UDbg::DbgMsg(FString::Printf(TEXT("UWeaponManagerComponent::OnShotFired")), 5.0f, FColor::Green);
     WeaponComponent->OnShotFiredDelegate.Broadcast(ShotWeaponDefinition, ShotWeaponFunctionDefinition, ShotWeaponFunction);
 }
+
+void UWeaponManagerComponent::WeaponReloading(float Timeout)
+{
+//    UDbg::DbgMsg(FString::Printf(TEXT("UWeaponManagerComponent::OnShotFired")), 5.0f, FColor::Green);
+    this->OnWeaponReloading.Broadcast(Timeout);
+}
+

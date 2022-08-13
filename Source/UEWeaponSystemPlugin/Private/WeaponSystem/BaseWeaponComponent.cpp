@@ -15,8 +15,7 @@ UBaseWeaponComponent::UBaseWeaponComponent()
     // Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
     // off to improve performance if you don't need them.
     PrimaryComponentTick.bCanEverTick = true;
-
-    // ...
+    
 }
 
 
@@ -25,8 +24,6 @@ void UBaseWeaponComponent::BeginPlay()
 {
     Super::BeginPlay();
     AmmoCount = InitialAmmoCount;
-    // ...
-    
 }
 
 
@@ -34,8 +31,6 @@ void UBaseWeaponComponent::BeginPlay()
 void UBaseWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-    // ...
 }
 
 FWeaponDefinition* UBaseWeaponComponent::WeaponDefinition()
@@ -137,7 +132,7 @@ void UBaseWeaponComponent::StopShooting()
     }
     else
     {
-        UDbg::DbgMsg(FString::Printf(TEXT("UBaseWeaponComponent STOP SHOOTING!")));
+//        UDbg::DbgMsg(FString::Printf(TEXT("UBaseWeaponComponent STOP SHOOTING!")));
         FWeaponDefinition* FoundWeaponDefinition = WeaponDefinitionRowHandle.DataTable->FindRow<FWeaponDefinition>(WeaponDefinitionRowHandle.RowName, "");
         
         FWeaponFunctionDefinition FoundWeaponFunctionDefinition = FoundWeaponDefinition->PrimaryWeaponFunctionDefinition;
@@ -171,20 +166,35 @@ void UBaseWeaponComponent::StopShooting()
 void UBaseWeaponComponent::FireShot()
 {
 //    FWeaponFunctionDefinition WeaponFunctionDefinition = GetWeaponFunctionDefinition(CurrentWeaponFunction);
-    UDbg::DbgMsg(FString::Printf(TEXT("UBaseWeaponComponent::FireShot!")));
+//    UDbg::DbgMsg(FString::Printf(TEXT("UBaseWeaponComponent::FireShot!")));
+    if(IsReloading /*|| !CurrentWeapon->ReadyForNewShot*/)
+    {
+        return;
+    }
+    
+    FWeaponDefinition* FoundWeaponDefinition = WeaponDefinitionRowHandle.DataTable->FindRow<FWeaponDefinition>(WeaponDefinitionRowHandle.RowName, "");
+    
+    MyWeaponDefinition = FoundWeaponDefinition;
+    
+    FWeaponFunctionDefinition WeaponFunctionDefinition = FoundWeaponDefinition->PrimaryWeaponFunctionDefinition;
+    
+    if(CurrentWeaponFunction == EWeaponFunction::Secondary)
+    {
+        WeaponFunctionDefinition = FoundWeaponDefinition->SecondaryWeaponFunctionDefinition;
+//            UDbg::DbgMsg(FString::Printf(TEXT("FireShot SECONDARY!")));
+    }
+    
     if(AmmoCount > 0 || AmmoCount == -1)
     {
-    
-        FWeaponDefinition* FoundWeaponDefinition = WeaponDefinitionRowHandle.DataTable->FindRow<FWeaponDefinition>(WeaponDefinitionRowHandle.RowName, "");
+//        if(AmmoCnt > -1)
+//        {
+//            CurrentWeapon->AmmoCount--;
+//            AmmoCnt = CurrentWeapon->AmmoCount;
+//        }
         
-        FWeaponFunctionDefinition WeaponFunctionDefinition = FoundWeaponDefinition->PrimaryWeaponFunctionDefinition;
-        
-        if(CurrentWeaponFunction == EWeaponFunction::Secondary)
-        {
-            WeaponFunctionDefinition = FoundWeaponDefinition->SecondaryWeaponFunctionDefinition;
-            UDbg::DbgMsg(FString::Printf(TEXT("FireShot SECONDARY!")));
-        }
-        
+//        CurrentWeapon->FireShot(CurrentWeaponFunction);
+
+
         TSubclassOf<AWeaponSystemProjectile> ProjectileClass = WeaponFunctionDefinition.Projectile;
         // Attempt to fire a projectile.
         if (ProjectileClass)
@@ -227,7 +237,7 @@ void UBaseWeaponComponent::FireShot()
                     
                     if(ShotAudioComponent)
                     {
-                        UDbg::DbgMsg(FString("ShotAudioComponent->Stop();"));
+//                        UDbg::DbgMsg(FString("ShotAudioComponent->Stop();"));
                         ShotAudioComponent->Stop();
                         ShotAudioComponent = nullptr;
                     }
@@ -238,6 +248,17 @@ void UBaseWeaponComponent::FireShot()
                     {
                         AmmoCount--;
                     }
+                    
+                    if(AmmoCount > -1)
+                    {
+                        if(AmmoCount > 0 && (AmmoCount % FoundWeaponDefinition->ClipSize) == 0)
+                        {
+                            IsReloading = true;
+                            GetWorld()->GetTimerManager().SetTimer(ReloadingStartTimerHandle, this, &UBaseWeaponComponent::StartReloading, 0.01f, true, 0.01f);
+                            this->OnWeaponReloading.Broadcast(FoundWeaponDefinition->ReloadTimeout);
+                        }
+                    }
+                    
 //                    AWeaponSystemHUD* HUD = Cast<AWeaponSystemHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 //                    HUD->InfoHUDWidget->OnShowReloadProgressBar(2.75);
                 }
@@ -245,14 +266,42 @@ void UBaseWeaponComponent::FireShot()
             }
         }
     }
+    else
+    {
+        if(FoundWeaponDefinition->MagEmptySound)
+        {
+            UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, FoundWeaponDefinition->MagEmptySound, GetOwner()->GetActorLocation(), FRotator::ZeroRotator, 2.0, 1.0, 0.0f, nullptr, nullptr, true);
+        }
+    }
 }
 
 void UBaseWeaponComponent::StartReloading()
 {
-    
+    if(MyWeaponDefinition)
+    {
+        if(IsReloading)
+        {
+            GetWorld()->GetTimerManager().ClearTimer(ReloadingStartTimerHandle);
+            
+//            if(MyWeaponDefinition->PlayReloadSound)
+//            {
+//                UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, MyWeaponDefinition->ReloadSound, GetOwner()->GetActorLocation(), FRotator::ZeroRotator, 2.0, 1.0, 0.0f, nullptr, nullptr, true);
+//            }
+            GetWorld()->GetTimerManager().SetTimer(ReloadingEndTimerHandle, this, &UBaseWeaponComponent::FinishReloading, MyWeaponDefinition->ReloadTimeout, true, MyWeaponDefinition->ReloadTimeout);
+        }
+    }
+    else
+    {
+        UDbg::DbgMsg(FString("UBaseWeaponComponent::StartReloading() NO MyWeaponDefinition"));
+    }
 }
 
 void UBaseWeaponComponent::FinishReloading()
 {
-    
+    if(IsReloading)
+    {
+        IsReloading = false;
+//        ReadyForNewShot = true;
+        GetWorld()->GetTimerManager().ClearTimer(ReloadingEndTimerHandle);
+    }
 }
