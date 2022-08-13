@@ -97,6 +97,7 @@ void UWeaponManagerComponent::BeginPlay()
         
         UBaseWeaponComponent* NewWeaponImpl = NewObject<UBaseWeaponComponent>(this, NewWeapon->GetClass(), *NewWeapon->GetClass()->GetName());
             
+        NewWeaponImpl->OnShotFiredDelegate.AddDynamic(this, &UWeaponManagerComponent::OnShotFired);
 //        NewWeaponImpl->OnProjectileFireDelegate.AddDynamic(this, &UWeaponManagerComponent::ProjectileFired);
 //        NewWeaponImpl->OnProjectileHitDelegate.AddDynamic(this, &UWeaponManagerComponent::ProjectileHit);
         NewWeaponImpl->RegisterComponent();
@@ -481,9 +482,9 @@ void UWeaponManagerComponent::PickupWeapon(int32 WeaponID, int32 AmmoCount)
         
         if(CurrentWeapon->WeaponDefinition()->WeaponID != WeaponID)
         {
-//            IsAimedAtChar = false;
-//            IsAimedAtHitable = false;
-//            IsAimedAtPickup = false;
+            IsAimedAtChar = false;
+            IsAimedAtHitable = false;
+            IsAimedAtPickup = false;
             if(CurrentWeapon->IsShooting)
             {
                 CurrentWeapon->StopShooting();
@@ -492,4 +493,10 @@ void UWeaponManagerComponent::PickupWeapon(int32 WeaponID, int32 AmmoCount)
         
         SetCurrentWeapon(WeaponID, false);
     }
+}
+
+void UWeaponManagerComponent::OnShotFired(FWeaponDefinition ShotWeaponDefinition, FWeaponFunctionDefinition ShotWeaponFunctionDefinition, EWeaponFunction ShotWeaponFunction)
+{
+//    UDbg::DbgMsg(FString::Printf(TEXT("UWeaponManagerComponent::OnShotFired")), 5.0f, FColor::Green);
+    WeaponComponent->OnShotFiredDelegate.Broadcast(ShotWeaponDefinition, ShotWeaponFunctionDefinition, ShotWeaponFunction);
 }

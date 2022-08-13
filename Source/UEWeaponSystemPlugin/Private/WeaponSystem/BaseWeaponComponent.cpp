@@ -223,7 +223,8 @@ void UBaseWeaponComponent::FireShot()
                     
 //                    bool Handled = false;
 //                    OnShotFired(FoundWeaponDefinition, WeaponFunctionDefinition, CurrentWeaponFunction, Handled);
-
+                    OnShotFiredDelegate.Broadcast(*FoundWeaponDefinition, WeaponFunctionDefinition, CurrentWeaponFunction);
+                    
                     if(ShotAudioComponent)
                     {
                         UDbg::DbgMsg(FString("ShotAudioComponent->Stop();"));

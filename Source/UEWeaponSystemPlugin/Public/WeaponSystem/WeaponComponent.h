@@ -17,6 +17,9 @@
 #include "WeaponComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAlternateCrosshairDelegate, bool, Pressed);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnShotFiredDelegate, FWeaponDefinition, ShotWeaponDefinition, FWeaponFunctionDefinition, ShotWeaponFunctionDefinition, EWeaponFunction, ShotWeaponFunction);
+
 //RamaMeleeWeapon class .h
 
 //DECLARE_DYNAMIC_DELEGATE_RetVal_ThreeParams(bool, FOnCustomStartShooting, FWeaponDefinition, WeaponDefinition, FWeaponFunctionDefinition, WeaponFunctionDefinition, EWeaponFunction, WeaponFunction);
@@ -96,6 +99,9 @@ public:
     
     UPROPERTY(BlueprintAssignable, Category="Weapon System")
     FOnAlternateCrosshairDelegate OnAlternateCrosshairDelegate;
+    
+    UPROPERTY(BlueprintAssignable, Category="Weapon System")
+    FOnShotFiredDelegate OnShotFiredDelegate;
     
 //    UPROPERTY(BlueprintAssignable, Category="Weapon System")
 //    FOnCustomStartShooting OnCustomStartShooting;

@@ -13,6 +13,7 @@
 #include "Components/SceneComponent.h"
 #include "WeaponSystem/Definition/WeaponDefinition.h"
 #include "WeaponSystem/BaseWeaponComponent.h"
+//#include "WeaponSystem/HUD/WeaponSystemHUD.h"
 #include "WeaponManagerComponent.generated.h"
 
 DECLARE_DELEGATE(FSetupKeyDelegate)
@@ -89,4 +90,7 @@ public:
     void SetupPlayerInput(class UInputComponent* PlayerInputComponent, class UInputComponent* InputComponent);
     
     void SetCurrentWeapon(int32 WeaponID, bool PlayAudio = true);
+    
+    UFUNCTION(BlueprintCallable, Category="Weapon System")
+    void OnShotFired(FWeaponDefinition ShotWeaponDefinition, FWeaponFunctionDefinition ShotWeaponFunctionDefinition, EWeaponFunction ShotWeaponFunction);
 };

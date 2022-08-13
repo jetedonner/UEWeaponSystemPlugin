@@ -13,6 +13,7 @@
 #include "WeaponSystem/Definition/WeaponDefinition.h"
 //#include "WeaponSystem/HUD/WeaponSystemHUD.h"
 #include "Utils/UtilityTimer.h"
+#include "WeaponSystem/WeaponComponent.h"
 #include "BaseWeaponComponent.generated.h"
 
 
@@ -120,4 +121,7 @@ public:
 
     UFUNCTION(BlueprintImplementableEvent, Category="Weapon System")
     void OnCustomStopShooting(FWeaponDefinition ShotWeaponDefinition, FWeaponFunctionDefinition ShotWeaponFunctionDefinition, EWeaponFunction ShotWeaponFunction, bool& Handled);
+    
+    UPROPERTY(BlueprintAssignable, Category="Weapon System")
+    FOnShotFiredDelegate OnShotFiredDelegate;
 };
