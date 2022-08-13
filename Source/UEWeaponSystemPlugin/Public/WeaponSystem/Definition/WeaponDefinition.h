@@ -51,10 +51,13 @@ public:
     class USoundCue* MagEmptySound;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
-    TSoftObjectPtr<USoundCue> ReloadSound;
+    USoundCue* ReloadSound;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
-    TSoftObjectPtr<UTexture2D> HUDIcon;
+    UTexture2D* HUDIcon;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+    UTexture2D* InfoHUDIcon;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
     FWeaponFunctionDefinition PrimaryWeaponFunctionDefinition = FWeaponFunctionDefinition(EWeaponFunction::Primary);

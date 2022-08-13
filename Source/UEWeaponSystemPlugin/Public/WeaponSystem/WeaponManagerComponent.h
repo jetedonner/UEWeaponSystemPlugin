@@ -57,6 +57,9 @@ public:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Weapon System")
     class UBaseWeaponComponent* CurrentWeapon;
     
+    UFUNCTION(BlueprintCallable, Category="Weapon System")
+    void PickupWeapon(int32 WeaponID, int32 AmmoCount);
+    
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
     

@@ -279,3 +279,30 @@ void UWeaponManagerComponent::SetCurrentWeapon(int32 WeaponID, bool PlayAudio)
         }
     }
 }
+
+void UWeaponManagerComponent::PickupWeapon(int32 WeaponID, int32 AmmoCount)
+{
+    UBaseWeaponComponent* const* DaWeapon = WeaponArsenalImpl.FindByPredicate( [&](UBaseWeaponComponent* Result){ return WeaponID == Result->WeaponDefinition()->WeaponID; } );
+    
+    if(DaWeapon)
+    {
+        UDbg::DbgMsg(FString::Printf(TEXT("PickupWeapon EXISTS AND FOUND")), 5.0f, FColor::Green);
+        if(AmmoCount >= 0)
+        {
+            (*DaWeapon)->AmmoCount += AmmoCount;
+        }
+        
+        if(CurrentWeapon->WeaponDefinition()->WeaponID != WeaponID)
+        {
+//            IsAimedAtChar = false;
+//            IsAimedAtHitable = false;
+//            IsAimedAtPickup = false;
+            if(CurrentWeapon->IsShooting)
+            {
+                CurrentWeapon->StopShooting();
+            }
+        }
+        
+        SetCurrentWeapon(WeaponID, false);
+    }
+}
