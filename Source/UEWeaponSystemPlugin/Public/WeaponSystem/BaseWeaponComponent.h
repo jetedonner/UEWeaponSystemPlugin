@@ -52,7 +52,8 @@ public:
     
     EWeaponFunction CurrentWeaponFunction = EWeaponFunction::Primary;
     
-    
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Weapon System")
+    FVector MuzzleOffset;
     
 //    UFUNCTION(BlueprintPure, BlueprintInternalUseOnly, Category="Weapon System")
 //    FWeaponDefinition GetWeaponDefinition()

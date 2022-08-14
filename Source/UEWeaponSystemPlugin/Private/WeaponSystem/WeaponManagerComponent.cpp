@@ -74,7 +74,8 @@ void UWeaponManagerComponent::BeginPlay()
         UBaseWeaponComponent* NewWeapon = Cast<UBaseWeaponComponent>(Weapon->GetDefaultObject());
         
         UBaseWeaponComponent* NewWeaponImpl = NewObject<UBaseWeaponComponent>(this, NewWeapon->GetClass(), *NewWeapon->GetClass()->GetName());
-            
+
+        NewWeaponImpl->MuzzleOffset = MuzzleOffset;
         NewWeaponImpl->OnShotFiredDelegate.AddDynamic(this, &UWeaponManagerComponent::OnShotFired);
         
         NewWeaponImpl->OnWeaponReloading.AddDynamic(this, &UWeaponManagerComponent::WeaponReloading);

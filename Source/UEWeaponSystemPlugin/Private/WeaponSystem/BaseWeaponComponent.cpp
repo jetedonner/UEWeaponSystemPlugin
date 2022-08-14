@@ -165,7 +165,6 @@ void UBaseWeaponComponent::StopShooting()
 
 void UBaseWeaponComponent::FireShot()
 {
-//    FWeaponFunctionDefinition WeaponFunctionDefinition = GetWeaponFunctionDefinition(CurrentWeaponFunction);
 //    UDbg::DbgMsg(FString::Printf(TEXT("UBaseWeaponComponent::FireShot!")));
     if(IsReloading /*|| !CurrentWeapon->ReadyForNewShot*/)
     {
@@ -181,40 +180,23 @@ void UBaseWeaponComponent::FireShot()
     if(CurrentWeaponFunction == EWeaponFunction::Secondary)
     {
         WeaponFunctionDefinition = FoundWeaponDefinition->SecondaryWeaponFunctionDefinition;
-//            UDbg::DbgMsg(FString::Printf(TEXT("FireShot SECONDARY!")));
     }
     
     if(AmmoCount > 0 || AmmoCount == -1)
     {
-//        if(AmmoCnt > -1)
-//        {
-//            CurrentWeapon->AmmoCount--;
-//            AmmoCnt = CurrentWeapon->AmmoCount;
-//        }
-        
-//        CurrentWeapon->FireShot(CurrentWeaponFunction);
-
-
         TSubclassOf<AWeaponSystemProjectile> ProjectileClass = WeaponFunctionDefinition.Projectile;
-        // Attempt to fire a projectile.
         if (ProjectileClass)
         {
             AActor* ActorRef = GetWorld()->GetFirstPlayerController()->GetPawn();
-            // Get the camera transform.
             FVector CameraLocation;
             FRotator CameraRotation;
             ActorRef->GetActorEyesViewPoint(CameraLocation, CameraRotation);
 
-            FVector MuzzleOffset;
+            // FVector MuzzleOffset;
             // Set MuzzleOffset to spawn projectiles slightly in front of the camera.
-            MuzzleOffset.Set(20.0f, 0.0f, 0.0f);
-
-            // Transform MuzzleOffset from camera space to world space.
+            // MuzzleOffset.Set(90.0f, 0.0f, 0.0f);
             FVector MuzzleLocation = CameraLocation + FTransform(CameraRotation).TransformVector(MuzzleOffset);
-
-            // Skew the aim to be slightly upwards.
             FRotator MuzzleRotation = CameraRotation;
-    //        MuzzleRotation.Pitch += 10.0f;
 
             UWorld* World = GetWorld();
             if (World)
@@ -223,22 +205,17 @@ void UBaseWeaponComponent::FireShot()
                 SpawnParams.Owner = ActorRef;
                 SpawnParams.Instigator = ActorRef->GetInstigator();
 
-                // Spawn the projectile at the muzzle.
                 AWeaponSystemProjectile* Projectile = World->SpawnActor<AWeaponSystemProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
                 if (Projectile)
                 {
-                    // Set the projectile's initial trajectory.
                     FVector LaunchDirection = MuzzleRotation.Vector();
                     Projectile->DamageFactor = WeaponFunctionDefinition.DamageFactor;
                     Projectile->FireInDirection(LaunchDirection);
-                    
-//                    bool Handled = false;
-//                    OnShotFired(FoundWeaponDefinition, WeaponFunctionDefinition, CurrentWeaponFunction, Handled);
+
                     OnShotFiredDelegate.Broadcast(*FoundWeaponDefinition, WeaponFunctionDefinition, CurrentWeaponFunction);
                     
                     if(ShotAudioComponent)
                     {
-//                        UDbg::DbgMsg(FString("ShotAudioComponent->Stop();"));
                         ShotAudioComponent->Stop();
                         ShotAudioComponent = nullptr;
                     }
@@ -271,6 +248,7 @@ void UBaseWeaponComponent::FireShot()
     {
         if(FoundWeaponDefinition->MagEmptySound)
         {
+            UDbg::DbgMsg(FString::Printf(TEXT("Playing MagEmptySound!")));
             UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, FoundWeaponDefinition->MagEmptySound, GetOwner()->GetActorLocation(), FRotator::ZeroRotator, 2.0, 1.0, 0.0f, nullptr, nullptr, true);
         }
     }
@@ -284,10 +262,10 @@ void UBaseWeaponComponent::StartReloading()
         {
             GetWorld()->GetTimerManager().ClearTimer(ReloadingStartTimerHandle);
             
-//            if(MyWeaponDefinition->PlayReloadSound)
-//            {
-//                UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, MyWeaponDefinition->ReloadSound, GetOwner()->GetActorLocation(), FRotator::ZeroRotator, 2.0, 1.0, 0.0f, nullptr, nullptr, true);
-//            }
+           if(MyWeaponDefinition->ReloadSound)
+           {
+               UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, MyWeaponDefinition->ReloadSound, GetOwner()->GetActorLocation(), FRotator::ZeroRotator, 2.0, 1.0, 0.0f, nullptr, nullptr, true);
+           }
             GetWorld()->GetTimerManager().SetTimer(ReloadingEndTimerHandle, this, &UBaseWeaponComponent::FinishReloading, MyWeaponDefinition->ReloadTimeout, true, MyWeaponDefinition->ReloadTimeout);
         }
     }

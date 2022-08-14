@@ -40,7 +40,11 @@ AWeaponSystemCharacter::AWeaponSystemCharacter()
     {
         MuzzlePosition = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleSceneComponent"));
         MuzzlePosition->SetupAttachment(RootComponent);
-        MuzzlePosition->SetRelativeLocation(FVector(50.0f, 0.0f, 0.0f));
+        MuzzlePosition->SetRelativeLocation(FVector(90.0f, 0.0f, 0.0f));
+        if(WeaponManagerComponent)
+        {
+            WeaponManagerComponent->MuzzleOffset = MuzzlePosition->GetComponentLocation();
+        }
     }
 }
 
@@ -75,7 +79,11 @@ AWeaponSystemCharacter::AWeaponSystemCharacter(const FObjectInitializer& ObjectI
     {
         MuzzlePosition = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleSceneComponent"));
         MuzzlePosition->SetupAttachment(RootComponent);
-        MuzzlePosition->SetRelativeLocation(FVector(50.0f, 0.0f, 0.0f));
+        MuzzlePosition->SetRelativeLocation(FVector(90.0f, 0.0f, 0.0f));
+        if(WeaponManagerComponent)
+        {
+            WeaponManagerComponent->MuzzleOffset = MuzzlePosition->GetComponentLocation();
+        }
     }
 }
 

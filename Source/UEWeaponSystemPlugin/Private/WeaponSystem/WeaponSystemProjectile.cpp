@@ -85,6 +85,11 @@ void AWeaponSystemProjectile::Tick(float DeltaTime)
 void AWeaponSystemProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
     UDbg::DbgMsg(FString::Printf(TEXT("Projectile OnHit: %s"), *OtherActor->GetName()));
+    if(OtherActor == this->GetOwner())
+    {
+        return;
+    }
+
     if (OtherActor != nullptr && OtherActor != this && OtherComponent != nullptr)
     {
         if(OtherComponent->IsSimulatingPhysics())

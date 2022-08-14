@@ -33,6 +33,9 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Weapon System")
+    FVector MuzzleOffset;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System", meta=(RequiredAssetDataTags="RowStructure=WeaponDefinition"))
     UDataTable* WeaponDefinitions;
