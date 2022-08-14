@@ -39,6 +39,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health System")
     UHealthManagerComponent* HealthManagerComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+    class UWidgetComponent* FloatingHealthBar;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Score System")
     UScoreManagerComponent* ScoreManagerComponent;
     

@@ -9,49 +9,20 @@
 
 #include "Health/HealthManagerComponent.h"
 
-//// Sets default values for this component's properties
-//UHealthManagerComponent::UHealthManagerComponent()
-//{
-//	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-//	// off to improve performance if you don't need them.
-//	PrimaryComponentTick.bCanEverTick = true;
-//
-//	// ...
-//}
-//
-//
-//// Called when the game starts
-//void UHealthManagerComponent::BeginPlay()
-//{
-//	Super::BeginPlay();
-//
-//	// ...
-//
-//}
-//
-//
-//// Called every frame
-//void UHealthManagerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-//{
-//	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-//
-//	// ...
-//}
-
 UHealthManagerComponent::UHealthManagerComponent()
 {
     PrimaryComponentTick.bCanEverTick = true;
 }
 
-//void UHealthManagerComponent::Activate(bool bReset /* = false */)
-//{
-//    Super::Activate(bReset);
+void UHealthManagerComponent::Activate(bool bReset /* = false */)
+{
+   Super::Activate(bReset);
 //    ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner());
 //    if(OwnerCharacter)
 //    {
 //        OwnerCharacter->GetMesh()->OnComponentHit.AddDynamic(this, &UHealthManagerComponent::OnHit);
 //    }
-//}
+}
 
 void UHealthManagerComponent::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
@@ -83,16 +54,19 @@ void UHealthManagerComponent::ApplyDamage(AActor* DamagedActor, float Damage, co
 {
     float NewHealth = 0.0f;
     DecreaseHealth(Damage, NewHealth);
-//    this->OnReceivedAnyDamageDelegate.Broadcast(Damage, DamageType, InstigatedBy, DamageCauser);
+    this->OnReceivedAnyDamageDelegate.Broadcast(Damage, DamageType, InstigatedBy, DamageCauser);
+    
 }
 
 void UHealthManagerComponent::IncreaseHealth(float Value, float& NewHealth)
 {
     NewHealth = (Health += Value);
+    Cast<UFloatingHealthBarWidget>(FloatingHealthBar)->Health = Health;
 }
 
 void UHealthManagerComponent::DecreaseHealth(float Value, float& NewHealth)
 {
     NewHealth = (Health -= Value);
+    Cast<UFloatingHealthBarWidget>(FloatingHealthBar)->Health = Health;
 //    Died = (Health <= 0.0f);
 }

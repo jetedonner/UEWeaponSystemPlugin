@@ -1,9 +1,9 @@
 //
 //  DevHelper.cpp
-//  UE4_WeaponSystemDemo
+//  UEWeaponSystemPlugin
 //
 //  Created by Kim David Hauser on 27.07.22.
-//  Copyright © 2022 Epic Games, Inc. All rights reserved.
+//  Copyright © 1991 - 2022 DaVe Inc. kimhauser.ch, All rights reserved.
 //
 
 #include "Utils/DevHelper.h"

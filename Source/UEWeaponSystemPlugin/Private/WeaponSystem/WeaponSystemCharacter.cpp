@@ -29,6 +29,23 @@ AWeaponSystemCharacter::AWeaponSystemCharacter()
         this->AddOwnedComponent(HealthManagerComponent);
     }
 
+    if(!FloatingHealthBar)
+    {
+        FloatingHealthBar = CreateDefaultSubobject<UWidgetComponent>(FName("FloatingHealthBar Component"));
+        
+        static ConstructorHelpers::FClassFinder<UUserWidget> FloatingHealthBarWidget(TEXT("/UEWeaponSystemPlugin/Widgets/FloatingHealthBar"));
+        
+        if(FloatingHealthBarWidget.Class)
+        {
+            FloatingHealthBar->bEditableWhenInherited = true;
+            FloatingHealthBar->SetWidgetClass(FloatingHealthBarWidget.Class);
+            FloatingHealthBar->SetWidgetSpace(EWidgetSpace::World);
+            FloatingHealthBar->SetupAttachment(this->GetRootComponent());
+            FloatingHealthBar->SetRelativeLocation(FVector(0.0f, 0.0f, 130.0f));
+            FloatingHealthBar->SetRelativeScale3D(FVector(0.3f, 0.3f, 0.3f));
+        }
+    }
+
     if(!ScoreManagerComponent)
     {
         ScoreManagerComponent = CreateDefaultSubobject<UScoreManagerComponent>(TEXT("Score Manager Component"));
@@ -43,7 +60,7 @@ AWeaponSystemCharacter::AWeaponSystemCharacter()
         MuzzlePosition->SetRelativeLocation(FVector(90.0f, 0.0f, 0.0f));
         if(WeaponManagerComponent)
         {
-            WeaponManagerComponent->MuzzleOffset = MuzzlePosition->GetComponentLocation();
+            WeaponManagerComponent->MuzzleOffset = MuzzlePosition->GetRelativeLocation();
         }
     }
 }
@@ -67,6 +84,24 @@ AWeaponSystemCharacter::AWeaponSystemCharacter(const FObjectInitializer& ObjectI
         // HealthManagerComponent->OnReceivedAnyDamageDelegate.AddDynamic(this, &AWeaponSystemCharacterBase::OnReceivedAnyDamage);
         this->AddOwnedComponent(HealthManagerComponent);
     }
+
+    if(!FloatingHealthBar)
+    {
+        FloatingHealthBar = ObjectInitializer.CreateDefaultSubobject<UWidgetComponent>(this, FName("FloatingHealthBar Component"));
+        
+        static ConstructorHelpers::FClassFinder<UUserWidget> FloatingHealthBarWidget(TEXT("/UEWeaponSystemPlugin/Widgets/FloatingHealthBar"));
+        
+        if(FloatingHealthBarWidget.Class)
+        {
+            FloatingHealthBar->bEditableWhenInherited = true;
+            FloatingHealthBar->SetWidgetClass(FloatingHealthBarWidget.Class);
+            FloatingHealthBar->SetWidgetSpace(EWidgetSpace::World);
+            FloatingHealthBar->SetupAttachment(this->GetRootComponent());
+            FloatingHealthBar->SetRelativeLocation(FVector(0.0f, 0.0f, 130.0f));
+            FloatingHealthBar->SetRelativeScale3D(FVector(0.3f, 0.3f, 0.3f));
+            // HealthManagerComponent->FloatingHealthBar = Cast<UFloatingHealthBarWidget>(FloatingHealthBar->GetUserWidgetObject());
+        }
+    }
     
     if(!ScoreManagerComponent)
     {
@@ -82,20 +117,29 @@ AWeaponSystemCharacter::AWeaponSystemCharacter(const FObjectInitializer& ObjectI
         MuzzlePosition->SetRelativeLocation(FVector(90.0f, 0.0f, 0.0f));
         if(WeaponManagerComponent)
         {
-            WeaponManagerComponent->MuzzleOffset = MuzzlePosition->GetComponentLocation();
+            WeaponManagerComponent->MuzzleOffset = MuzzlePosition->GetRelativeLocation();
         }
     }
 }
 
 void AWeaponSystemCharacter::BeginPlay()
 {
+    if(WeaponManagerComponent)
+    {
+        WeaponManagerComponent->MuzzleOffset = MuzzlePosition->GetRelativeLocation();
+    }
 	Super::BeginPlay();
+
+    HealthManagerComponent->FloatingHealthBar = Cast<UFloatingHealthBarWidget>(FloatingHealthBar->GetUserWidgetObject());
     Cast<AActor>(this)->OnTakeAnyDamage.AddDynamic(this, &AWeaponSystemCharacter::OnTakeAnyDamage);
+    UDbg::DbgMsg(FString::Printf(TEXT("WeaponManagerComponent->MuzzleOffset => %s"), *MuzzlePosition->GetRelativeLocation().ToString()));
 }
 
 void AWeaponSystemCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+    
+    UHUDFunc::RotateToPlayer(FloatingHealthBar, UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 }
 
 void AWeaponSystemCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -124,19 +168,19 @@ void AWeaponSystemCharacter::OnTakeAnyDamage(AActor* DamagedActor, float Damage,
 {
     UDbg::DbgMsg(FString(TEXT("AWeaponSystemCharacter::OnTakeAnyDamage!!!")), 5.0f, FColor::Yellow);
 
-    // if(HealthManagerComponent)
-    // {
-    //     if(!this->HealthManagerComponent->Died)
-    //     {
-    //         HealthManagerComponent->ApplyDamage(DamagedActor, Damage, DamageType, InstigatedBy, DamageCauser);
+    if(HealthManagerComponent)
+    {
+        if(!this->HealthManagerComponent->Died)
+        {
+            HealthManagerComponent->ApplyDamage(DamagedActor, Damage, DamageType, InstigatedBy, DamageCauser);
             
-    //         if(this->HealthManagerComponent->Died)
-    //         {
-    //             if(DieSound)
-    //             {
-    //                 UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, DieSound, GetActorLocation(), FRotator::ZeroRotator, 2.0, 1.0, 0.0f, nullptr, nullptr, true);
-    //             }
-    //         }
-    //     }
-    // }
+            if(this->HealthManagerComponent->Died)
+            {
+                // if(DieSound)
+                // {
+                //     UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, DieSound, GetActorLocation(), FRotator::ZeroRotator, 2.0, 1.0, 0.0f, nullptr, nullptr, true);
+                // }
+            }
+        }
+    }
 }

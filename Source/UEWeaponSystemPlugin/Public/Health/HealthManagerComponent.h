@@ -11,6 +11,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Utils/Dbg.h"
+#include "Health/FloatingHealthBarWidget.h"
 #include "HealthManagerComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FReceivedAnyDamageDelegate, float, Damage, const class UDamageType*, DamageType, class AController*, InstigatedBy, AActor*, DamageCauser);
@@ -35,13 +36,22 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health System")
     float Health = 100.0f;
     
+	UFUNCTION(BlueprintPure, BlueprintInternalUseOnly, Category="Health System")
+    bool GetDied()
+	{
+		return (Health <= 0.0f);
+	}
+
+	UPROPERTY(BlueprintGetter=GetDied, Category="Health System")
+    bool Died;
+
 //    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health System")
 //    bool Died = false;
 
 //    virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 //
-//    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health System")
-//    TSubclassOf<class UUserWidget> FloatingHealthBar;
+   	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health System")
+   	UFloatingHealthBarWidget* FloatingHealthBar;
     
     UFUNCTION(BlueprintCallable, Category="Health System")
     void IncreaseHealth(float Value, float& NewHealth);
@@ -55,7 +65,7 @@ public:
     UFUNCTION(BlueprintCallable, Category="Health System")
     void ApplyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
     
-//    virtual void Activate(bool bReset /* = false */) override;
+   	virtual void Activate(bool bReset) override;
     
     UFUNCTION(BlueprintCallable, Category="Weapon System")
     void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
