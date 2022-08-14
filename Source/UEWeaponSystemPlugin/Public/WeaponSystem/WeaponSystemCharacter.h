@@ -12,6 +12,7 @@
 #include "GameFramework/Character.h"
 #include "WeaponSystem/WeaponManagerComponent.h"
 #include "Score/ScoreManagerComponent.h"
+#include "Health/HealthManagerComponent.h"
 #include "Utils/GlobalDefinitions.h"
 #include "Utils/Dbg.h"
 #include "WeaponSystemCharacter.generated.h"
@@ -35,6 +36,9 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
     UWeaponManagerComponent* WeaponManagerComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health System")
+    UHealthManagerComponent* HealthManagerComponent;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Score System")
     UScoreManagerComponent* ScoreManagerComponent;
     
@@ -47,5 +51,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintCallable, Category="Weapon System")
+    void OnTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
     
 };

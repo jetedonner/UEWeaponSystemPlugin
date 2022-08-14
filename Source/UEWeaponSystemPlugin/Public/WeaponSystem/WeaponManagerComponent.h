@@ -45,6 +45,9 @@ public:
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
     FKey AlternateCrosshairKey;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+    FKey InitializeWeaponsKey;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
     TArray<TSubclassOf<class UBaseWeaponComponent>> WeaponArsenal;
@@ -96,6 +99,9 @@ public:
     
     UFUNCTION(BlueprintCallable, Category="Weapon System")
     void WeaponReloading(float Timeout);
+
+    UFUNCTION(BlueprintCallable, Category="Weapon System")
+    void InitializeWeapons();
     
     UPROPERTY(BlueprintAssignable, Category="Weapon System")
     FWeaponReloadingDelegate OnWeaponReloading;

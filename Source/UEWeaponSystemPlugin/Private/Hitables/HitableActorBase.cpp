@@ -75,12 +75,16 @@ void AHitableActorBase::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
     // UDbg::DbgMsg(FString::Printf(TEXT("AHitableActorBase::OnHit BASE")), 5.0f, FColor::Green);
     if(ShowMovingScoreWidget)
     {
-        UScoreHelper::SpawnMovingScoreWidget(GetWorld(), HitScore, GetActorLocation(), GetActorRotation());
-        
-        AWeaponSystemCharacter* WeaponSystemCharacter = Cast<AWeaponSystemCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
-        
-        
-        WeaponSystemCharacter->ScoreManagerComponent->AddScore(HitScore);
+        AWeaponSystemProjectile* WeaponSystemProjectile = Cast<AWeaponSystemProjectile>(OtherActor);
+        if(WeaponSystemProjectile)
+        {
+            UScoreHelper::SpawnMovingScoreWidget(GetWorld(), HitScore, GetActorLocation(), GetActorRotation());
+            
+            AWeaponSystemCharacter* WeaponSystemCharacter = Cast<AWeaponSystemCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
+            
+            
+            WeaponSystemCharacter->ScoreManagerComponent->AddScore(HitScore);
+        }
     }
 }
 

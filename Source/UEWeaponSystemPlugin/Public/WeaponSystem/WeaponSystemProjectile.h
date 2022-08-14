@@ -38,6 +38,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
     
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(RequiredAssetDataTags="RowStructure=WeaponDefinition"), Category="Weapon System")
+    FDataTableRowHandle WeaponDefinition;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+    float DamageFactor = 5.0;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon System")
     bool DestroyOnHit = true;
     

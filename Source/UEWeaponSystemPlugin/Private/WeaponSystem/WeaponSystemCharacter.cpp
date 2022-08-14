@@ -21,6 +21,14 @@ AWeaponSystemCharacter::AWeaponSystemCharacter()
         this->AddOwnedComponent(WeaponManagerComponent);
     }
     
+    if(!HealthManagerComponent)
+    {
+        HealthManagerComponent = CreateDefaultSubobject<UHealthManagerComponent>(TEXT("Health Manager Component"));
+        HealthManagerComponent->bEditableWhenInherited = true;
+        // HealthManagerComponent->OnReceivedAnyDamageDelegate.AddDynamic(this, &AWeaponSystemCharacterBase::OnReceivedAnyDamage);
+        this->AddOwnedComponent(HealthManagerComponent);
+    }
+
     if(!ScoreManagerComponent)
     {
         ScoreManagerComponent = CreateDefaultSubobject<UScoreManagerComponent>(TEXT("Score Manager Component"));
@@ -47,6 +55,14 @@ AWeaponSystemCharacter::AWeaponSystemCharacter(const FObjectInitializer& ObjectI
         WeaponManagerComponent->bEditableWhenInherited = true;
         this->AddOwnedComponent(WeaponManagerComponent);
     }
+
+    if(!HealthManagerComponent)
+    {
+        HealthManagerComponent = ObjectInitializer.CreateDefaultSubobject<UHealthManagerComponent>(this, TEXT("Health Manager Component"));
+        HealthManagerComponent->bEditableWhenInherited = true;
+        // HealthManagerComponent->OnReceivedAnyDamageDelegate.AddDynamic(this, &AWeaponSystemCharacterBase::OnReceivedAnyDamage);
+        this->AddOwnedComponent(HealthManagerComponent);
+    }
     
     if(!ScoreManagerComponent)
     {
@@ -66,6 +82,7 @@ AWeaponSystemCharacter::AWeaponSystemCharacter(const FObjectInitializer& ObjectI
 void AWeaponSystemCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+    Cast<AActor>(this)->OnTakeAnyDamage.AddDynamic(this, &AWeaponSystemCharacter::OnTakeAnyDamage);
 }
 
 void AWeaponSystemCharacter::Tick(float DeltaTime)
@@ -93,4 +110,25 @@ void AWeaponSystemCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
     {
         WeaponManagerComponent->SetupPlayerInput(PlayerInputComponent, InputComponent);
     }
+}
+
+void AWeaponSystemCharacter::OnTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+{
+    UDbg::DbgMsg(FString(TEXT("AWeaponSystemCharacter::OnTakeAnyDamage!!!")), 5.0f, FColor::Yellow);
+
+    // if(HealthManagerComponent)
+    // {
+    //     if(!this->HealthManagerComponent->Died)
+    //     {
+    //         HealthManagerComponent->ApplyDamage(DamagedActor, Damage, DamageType, InstigatedBy, DamageCauser);
+            
+    //         if(this->HealthManagerComponent->Died)
+    //         {
+    //             if(DieSound)
+    //             {
+    //                 UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, DieSound, GetActorLocation(), FRotator::ZeroRotator, 2.0, 1.0, 0.0f, nullptr, nullptr, true);
+    //             }
+    //         }
+    //     }
+    // }
 }

@@ -69,29 +69,27 @@ void AWeaponPickupActor::BeginPlay()
 void AWeaponPickupActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AWeaponPickupActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-    UDbg::DbgMsg(FString::Printf(TEXT("AWeaponPickupActor::OnHit(...) by => %s"), *OtherActor->GetName()), 5.0f, FColor::Red);
+    // UDbg::DbgMsg(FString::Printf(TEXT("AWeaponPickupActor::OnHit(...) by => %s"), *OtherActor->GetName()), 5.0f, FColor::Red);
     
     AWeaponSystemCharacter* PickupCharacter = Cast<AWeaponSystemCharacter>(OtherActor);
     if(PickupCharacter)
     {
-        UDbg::DbgMsg(FString::Printf(TEXT("PickupCharacter FOUND => PiuckingUp")), 5.0f, FColor::Red);
+        // UDbg::DbgMsg(FString::Printf(TEXT("PickupCharacter FOUND => PiuckingUp")), 5.0f, FColor::Red);
         this->OnPickup(PickupCharacter);
     }
     else
     {
-        UDbg::DbgMsg(FString::Printf(TEXT("PickupCharacter NOT Found => Trying Projectile")), 5.0f, FColor::Red);
+        // UDbg::DbgMsg(FString::Printf(TEXT("PickupCharacter NOT Found => Trying Projectile")), 5.0f, FColor::Red);
         AWeaponSystemProjectile* PickupProjectile = Cast<AWeaponSystemProjectile>(OtherActor);
         if(PickupProjectile)
         {
-            UDbg::DbgMsg(FString::Printf(TEXT("AWeaponPickupActorBase::OnHit(...) PROJECTILE => %s"), *OtherActor->GetName()), 5.0f, FColor::Red);
+            // UDbg::DbgMsg(FString::Printf(TEXT("AWeaponPickupActorBase::OnHit(...) PROJECTILE => %s"), *OtherActor->GetName()), 5.0f, FColor::Red);
             
             APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-            
             this->OnPickup(PlayerPawn);
         }
         else

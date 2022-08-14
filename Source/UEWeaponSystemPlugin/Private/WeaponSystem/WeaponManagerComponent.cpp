@@ -18,34 +18,12 @@ UWeaponManagerComponent::UWeaponManagerComponent()
     {
         WeaponDefinitions->RowStruct = FWeaponDefinition::StaticStruct();
     }
-    
-//    if(WeaponComponentNG)
-//    {
-//        UDbg::DbgMsg(FString("INITIALIZING WeaponComponentNG"));
-////        TSubclassOf<class UWeaponComponentBase> It = WeaponManagerComponent->WeaponsArray[i];
-////
-////        if(It->IsChildOf(UWeaponComponentBase::StaticClass()) && !It->HasAnyClassFlags(CLASS_Abstract))
-////        {
-////            if(It->GetClass() != UWeaponComponentBase::StaticClass() && !It->GetName().StartsWith(TEXT("SKEL_")))
-////            {
-////                UWeaponComponentBase* SpawnedWeapon = NewObject<UWeaponComponentBase>(WeaponManagerComponent->GetOwner(), It->GetDefaultObject()->GetClass());
-////
-//        WeaponComponent = NewObject<UWeaponComponent>(this, WeaponComponentNG->GetDefaultObject()->GetClass());
-//        WeaponComponent->bEditableWhenInherited = true;
-//        WeaponComponent->RegisterComponent();
-////        UE_LOG(WeaponSysPlugin, Log, TEXT("WeaponComponent is SETUP"));
-//    }
-//    else
-//    {
-//        UDbg::DbgMsg(FString("NOOOOOOOOT INITIALIZING WeaponComponentNG"));
-        if(!WeaponComponent)
-        {
-            WeaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("Weapon Component"));
-            WeaponComponent->bEditableWhenInherited = true;
-            WeaponComponent->RegisterComponent();
-    //        UE_LOG(WeaponSysPlugin, Log, TEXT("WeaponComponent is SETUP"));
-        }
-//    }
+    if(!WeaponComponent)
+    {
+        WeaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("Weapon Component"));
+        WeaponComponent->bEditableWhenInherited = true;
+        WeaponComponent->RegisterComponent();
+    }
 }
 
 UWeaponManagerComponent::UWeaponManagerComponent(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -370,7 +348,6 @@ void UWeaponManagerComponent::SetupPlayerInput(class UInputComponent* PlayerInpu
     {
 //        UDbg::DbgMsg(FString("AlternateCrosshairKey PRESSED"));
         WeaponComponent->OnAlternateCrosshair(true);
-        //WeaponComponent->StartShooting(EWeaponFunction::Secondary);
     });
     PlayerInputComponent->KeyBindings.Add(KBP_AlternateCrosshairKey);
     
@@ -381,10 +358,33 @@ void UWeaponManagerComponent::SetupPlayerInput(class UInputComponent* PlayerInpu
     {
 //        UDbg::DbgMsg(FString("AlternateCrosshairKey RELEASED"));
         WeaponComponent->OnAlternateCrosshair(false);
-        //WeaponComponent->StopShooting();
     });
     InputComponent->KeyBindings.Add(KBR_AlternateCrosshairKey);
     
+
+    
+    // InitializeWeaponsKey
+    FInputKeyBinding KBP_InitializeWeaponsKey(FInputChord(InitializeWeaponsKey, false, false, false, false), EInputEvent::IE_Pressed);
+    KBP_InitializeWeaponsKey.bConsumeInput = true;
+    KBP_InitializeWeaponsKey.bExecuteWhenPaused = false;
+
+    KBP_InitializeWeaponsKey.KeyDelegate.GetDelegateWithKeyForManualSet().BindLambda([=](const FKey& Key)
+    {
+//        UDbg::DbgMsg(FString("InitializeWeaponsKey PRESSED"));
+        this->InitializeWeapons();
+        // WeaponComponent->OnAlternateCrosshair(true);
+    });
+    PlayerInputComponent->KeyBindings.Add(KBP_InitializeWeaponsKey);
+    
+//     FInputKeyBinding KBR_InitializeWeaponsKey(FInputChord(InitializeWeaponsKey, false, false, false, false), EInputEvent::IE_Released);
+//     KBR_InitializeWeaponsKey.bConsumeInput = true;
+//     KBR_InitializeWeaponsKey.bExecuteWhenPaused = false;
+//     KBR_InitializeWeaponsKey.KeyDelegate.GetDelegateWithKeyForManualSet().BindLambda([=](const FKey& Key)
+//     {
+// //        UDbg::DbgMsg(FString("InitializeWeaponsKey RELEASED"));
+//         WeaponComponent->OnAlternateCrosshair(false);
+//     });
+//     InputComponent->KeyBindings.Add(KBR_InitializeWeaponsKey);
     
     TArray<FName> RowNames = WeaponDefinitions->GetRowNames();
     int32 idx = 0;
@@ -509,3 +509,28 @@ void UWeaponManagerComponent::WeaponReloading(float Timeout)
     this->OnWeaponReloading.Broadcast(Timeout);
 }
 
+void UWeaponManagerComponent::InitializeWeapons()
+{
+int32 idx = 0;
+    for(UBaseWeaponComponent* WeaponImpl: WeaponArsenalImpl)
+    {
+        WeaponImpl->AmmoCount = WeaponImpl->InitialAmmoCount;
+        // WeaponDefinition()->WeaponDefinition()->
+//         UBaseWeaponComponent* NewWeapon = Cast<UBaseWeaponComponent>(Weapon->GetDefaultObject());
+        
+//         UBaseWeaponComponent* NewWeaponImpl = NewObject<UBaseWeaponComponent>(this, NewWeapon->GetClass(), *NewWeapon->GetClass()->GetName());
+            
+//         NewWeaponImpl->OnShotFiredDelegate.AddDynamic(this, &UWeaponManagerComponent::OnShotFired);
+        
+//         NewWeaponImpl->OnWeaponReloading.AddDynamic(this, &UWeaponManagerComponent::WeaponReloading);
+// //        NewWeaponImpl->OnProjectileFireDelegate.AddDynamic(this, &UWeaponManagerComponent::ProjectileFired);
+// //        NewWeaponImpl->OnProjectileHitDelegate.AddDynamic(this, &UWeaponManagerComponent::ProjectileHit);
+//         NewWeaponImpl->RegisterComponent();
+//         WeaponArsenalImpl.AddUnique(NewWeaponImpl);
+//         if(idx == 0)
+//         {
+//             CurrentWeapon = NewWeaponImpl;
+//         }
+//         idx++;
+    }
+}

@@ -85,9 +85,13 @@ void AWeaponSystemProjectile::Tick(float DeltaTime)
 void AWeaponSystemProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
     UDbg::DbgMsg(FString::Printf(TEXT("Projectile OnHit: %s"), *OtherActor->GetName()));
-    if (OtherActor != nullptr && OtherActor != this && OtherComponent != nullptr && OtherComponent->IsSimulatingPhysics())
+    if (OtherActor != nullptr && OtherActor != this && OtherComponent != nullptr)
     {
-        OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);
+        if(OtherComponent->IsSimulatingPhysics())
+        {
+            OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);
+        }
+        UGameplayStatics::ApplyDamage(OtherActor, DamageFactor, GetWorld()->GetFirstPlayerController(), this, UDamageType::StaticClass());
     }
     
     if(ImpactTargetSound)

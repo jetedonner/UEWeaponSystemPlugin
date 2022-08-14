@@ -229,6 +229,7 @@ void UBaseWeaponComponent::FireShot()
                 {
                     // Set the projectile's initial trajectory.
                     FVector LaunchDirection = MuzzleRotation.Vector();
+                    Projectile->DamageFactor = WeaponFunctionDefinition.DamageFactor;
                     Projectile->FireInDirection(LaunchDirection);
                     
 //                    bool Handled = false;
