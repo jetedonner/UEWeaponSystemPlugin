@@ -186,11 +186,13 @@ void AWeaponSystemProjectile::LineTraceProjectile()
 
         if (isHit)
         {
-            OnLineTraceHit(HitResult);
+            bool HitCharacterOrHitable = false;
             if(Cast<AWeaponSystemCharacter>(HitResult.GetActor()) || Cast<AHitableActorBase>(HitResult.GetActor()))
             {
                 UDbg::DbgMsg(FString::Printf(TEXT("Projectile LINETRACE HIT Char Or Hitable")));
+                HitCharacterOrHitable = true;
             }
+            OnLineTraceHit(HitResult, HitCharacterOrHitable);
         }
     }
 }

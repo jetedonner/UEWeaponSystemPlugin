@@ -93,6 +93,6 @@ public:
     void LineTraceProjectile();
     
     UFUNCTION(BlueprintImplementableEvent, Category="Weapon System")
-    void OnLineTraceHit(FHitResult LineTraceHitResult);
+    void OnLineTraceHit(FHitResult LineTraceHitResult, bool HitCharacterOrHitable);
 
 };
