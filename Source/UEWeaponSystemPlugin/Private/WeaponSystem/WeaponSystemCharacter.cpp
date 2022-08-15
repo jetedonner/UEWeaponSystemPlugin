@@ -139,7 +139,21 @@ void AWeaponSystemCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
     
-    UHUDFunc::RotateToPlayer(FloatingHealthBar, UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+    ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+    if(this == PlayerCharacter)
+    {
+        FVector MovingScoreWidgetLoc = FloatingHealthBar->GetComponentLocation();
+        FVector PlayerLoc = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->GetCameraLocation(); //PlayerCharacter->GetRootComponent()->GetComponentLocation();
+        
+        FRotator MovingScoreWidgetRot = UKismetMathLibrary::FindLookAtRotation(MovingScoreWidgetLoc, PlayerLoc);
+        FRotator MovingScoreWidgetRotNew = FRotator(0, MovingScoreWidgetRot.Yaw, 0);
+        
+        FloatingHealthBar->SetWorldRotation(MovingScoreWidgetRotNew);
+    }
+    else
+    {
+        UHUDFunc::RotateToPlayer(FloatingHealthBar, PlayerCharacter);
+    }
 }
 
 void AWeaponSystemCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
