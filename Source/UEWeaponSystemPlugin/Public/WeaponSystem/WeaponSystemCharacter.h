@@ -47,6 +47,9 @@ public:
     
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
 	USceneComponent* MuzzlePosition;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+    class USoundCue* DieSound;
     
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

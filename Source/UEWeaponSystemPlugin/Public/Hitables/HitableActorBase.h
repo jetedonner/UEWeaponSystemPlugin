@@ -20,10 +20,11 @@
 #include "WeaponSystem/WeaponSystemCharacter.h"
 #include "Score/MovingScoreWidgetBase.h"
 #include "Score/ScoreHelper.h"
+#include "Common/HitableInterface.h"
 #include "HitableActorBase.generated.h"
 
 UCLASS(Abstract, Blueprintable)
-class UEWEAPONSYSTEMPLUGIN_API AHitableActorBase : public AActor
+class UEWEAPONSYSTEMPLUGIN_API AHitableActorBase : public AActor/*, public UHitableInterface*/
 {
     GENERATED_BODY()
     
@@ -95,4 +96,8 @@ public:
     
     void OnComponentGotHit_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
 
+    // UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="Event|Hit")
+    // virtual void OnGotHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit) override;
+    
+    // void OnGotHit_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
 };

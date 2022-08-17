@@ -9,15 +9,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
+#include "Components/SceneComponent.h"
 #include "Utils/Dbg.h"
 #include "Health/FloatingHealthBarWidget.h"
+#include "GameFramework/Character.h"
+#include "Components/CapsuleComponent.h"
 #include "HealthManagerComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FReceivedAnyDamageDelegate, float, Damage, const class UDamageType*, DamageType, class AController*, InstigatedBy, AActor*, DamageCauser);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class UEWEAPONSYSTEMPLUGIN_API UHealthManagerComponent : public UActorComponent
+class UEWEAPONSYSTEMPLUGIN_API UHealthManagerComponent : public USceneComponent
 {
 	GENERATED_BODY()
 
@@ -29,9 +31,13 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	void SetupParent(ACharacter* InParent);
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health System")
     float Health = 100.0f;

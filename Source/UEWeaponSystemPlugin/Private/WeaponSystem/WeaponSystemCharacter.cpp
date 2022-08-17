@@ -27,9 +27,10 @@ AWeaponSystemCharacter::AWeaponSystemCharacter()
         HealthManagerComponent->bEditableWhenInherited = true;
         // HealthManagerComponent->OnReceivedAnyDamageDelegate.AddDynamic(this, &AWeaponSystemCharacterBase::OnReceivedAnyDamage);
         this->AddOwnedComponent(HealthManagerComponent);
+        // HealthManagerComponent->SetupParent(this);
     }
 
-    if(!FloatingHealthBar)
+    if(!FloatingHealthBar && this != UGameplayStatics::GetPlayerCharacter(GetWorld(), 0))
     {
         FloatingHealthBar = CreateDefaultSubobject<UWidgetComponent>(FName("FloatingHealthBar Component"));
         
@@ -83,9 +84,10 @@ AWeaponSystemCharacter::AWeaponSystemCharacter(const FObjectInitializer& ObjectI
         HealthManagerComponent->bEditableWhenInherited = true;
         // HealthManagerComponent->OnReceivedAnyDamageDelegate.AddDynamic(this, &AWeaponSystemCharacterBase::OnReceivedAnyDamage);
         this->AddOwnedComponent(HealthManagerComponent);
+        // HealthManagerComponent->SetupParent(this);
     }
 
-    if(!FloatingHealthBar)
+    if(!FloatingHealthBar && this != UGameplayStatics::GetPlayerCharacter(GetWorld(), 0))
     {
         FloatingHealthBar = ObjectInitializer.CreateDefaultSubobject<UWidgetComponent>(this, FName("FloatingHealthBar Component"));
         
@@ -128,6 +130,9 @@ void AWeaponSystemCharacter::BeginPlay()
     {
         WeaponManagerComponent->MuzzleOffset = MuzzlePosition->GetRelativeLocation();
     }
+    
+    HealthManagerComponent->SetupParent(this);
+
 	Super::BeginPlay();
 
     HealthManagerComponent->FloatingHealthBar = Cast<UFloatingHealthBarWidget>(FloatingHealthBar->GetUserWidgetObject());
@@ -142,13 +147,14 @@ void AWeaponSystemCharacter::Tick(float DeltaTime)
     ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
     if(this == PlayerCharacter)
     {
-        FVector MovingScoreWidgetLoc = FloatingHealthBar->GetComponentLocation();
-        FVector PlayerLoc = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->GetCameraLocation(); //PlayerCharacter->GetRootComponent()->GetComponentLocation();
+        FloatingHealthBar->SetVisibility(false);
+        // FVector MovingScoreWidgetLoc = FloatingHealthBar->GetComponentLocation();
+        // FVector PlayerLoc = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->GetCameraLocation(); //PlayerCharacter->GetRootComponent()->GetComponentLocation();
         
-        FRotator MovingScoreWidgetRot = UKismetMathLibrary::FindLookAtRotation(MovingScoreWidgetLoc, PlayerLoc);
-        FRotator MovingScoreWidgetRotNew = FRotator(0, MovingScoreWidgetRot.Yaw, 0);
+        // FRotator MovingScoreWidgetRot = UKismetMathLibrary::FindLookAtRotation(MovingScoreWidgetLoc, PlayerLoc);
+        // FRotator MovingScoreWidgetRotNew = FRotator(0, MovingScoreWidgetRot.Yaw, 0);
         
-        FloatingHealthBar->SetWorldRotation(MovingScoreWidgetRotNew);
+        // FloatingHealthBar->SetWorldRotation(MovingScoreWidgetRotNew);
     }
     else
     {
@@ -190,10 +196,10 @@ void AWeaponSystemCharacter::OnTakeAnyDamage(AActor* DamagedActor, float Damage,
             
             if(this->HealthManagerComponent->Died)
             {
-                // if(DieSound)
-                // {
-                //     UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, DieSound, GetActorLocation(), FRotator::ZeroRotator, 2.0, 1.0, 0.0f, nullptr, nullptr, true);
-                // }
+                if(DieSound)
+                {
+                    UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, DieSound, GetActorLocation(), FRotator::ZeroRotator, 2.0, 1.0, 0.0f, nullptr, nullptr, true);
+                }
             }
         }
     }

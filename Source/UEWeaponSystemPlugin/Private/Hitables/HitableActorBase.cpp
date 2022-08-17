@@ -93,6 +93,16 @@ void AHitableActorBase::OnComponentGotHit_Implementation(UPrimitiveComponent* Hi
     // Actor Got Hit!!!
 }
 
+// void AHitableActorBase::OnGotHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
+// {
+//     // Actor Got Hit!!!
+// }
+
+// void AHitableActorBase::OnGotHit_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
+// {
+//     // Actor Got Hit!!!
+// }
+
 void AHitableActorBase::ExecActorHitHandler(AActor* OtherActor, const FHitResult& Hit)
 {
     // UDbg::DbgMsg(FString::Printf(TEXT("AHitableActorBase::ExecActorHitHandler")), 5.0f, FColor::Green);

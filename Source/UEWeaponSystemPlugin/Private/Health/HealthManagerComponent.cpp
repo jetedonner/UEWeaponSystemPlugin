@@ -14,6 +14,23 @@ UHealthManagerComponent::UHealthManagerComponent()
     PrimaryComponentTick.bCanEverTick = true;
 }
 
+void UHealthManagerComponent::SetupParent(ACharacter* InParent)
+{
+    if(InParent)
+    {
+        if(InParent)
+        {
+            UDbg::DbgMsg(FString::Printf(TEXT("UHealthManagerComponent::SetupParent => InParent SET")), 5.0f, FColor::Purple); 
+            InParent->GetCapsuleComponent()->OnComponentHit.AddDynamic(this, &UHealthManagerComponent::OnHit);
+        }
+    }
+    else
+    {
+        UDbg::DbgMsg(FString::Printf(TEXT("UHealthManagerComponent::SetupParent => InParent NOT SET")), 5.0f, FColor::Purple);
+    }
+    // UDbg::DbgMsg(FString::Printf(TEXT("UHealthManagerComponent::SetupParent => %s"), *InParent->GetName()), 5.0f, FColor::Purple);
+}
+
 void UHealthManagerComponent::Activate(bool bReset /* = false */)
 {
    Super::Activate(bReset);
