@@ -133,7 +133,7 @@ void AWeaponSystemProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* O
         {
             OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);
         }
-        UGameplayStatics::ApplyDamage(OtherActor, DamageFactor, GetWorld()->GetFirstPlayerController(), this, UDamageType::StaticClass());
+        UGameplayStatics::ApplyDamage(OtherActor, DamageFactor, GetOwner()->GetInstigatorController(), this, UDamageType::StaticClass());
     }
     
     if(ImpactTargetSound)

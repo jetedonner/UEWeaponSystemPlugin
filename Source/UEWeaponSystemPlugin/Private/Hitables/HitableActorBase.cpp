@@ -11,6 +11,12 @@
 AHitableActorBase::AHitableActorBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+    if(!MeshComponent)
+    {
+        MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
+        MeshComponent->bEditableWhenInherited = true;
+    }
 }
 
 AHitableActorBase::AHitableActorBase(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -72,14 +78,32 @@ void AHitableActorBase::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
             }
             else
             {
-                UDbg::DbgMsg(FString::Printf(TEXT("AHitableActorBase::OnHit => WeaponSystemProjectile OWNER is NOT A AWeaponSystemCharacter!")/* (Name: %s), *WeaponSystemProjectile->GetOwner()->GetName()*/), 5.0f, FColor::Purple);
-                if(WeaponSystemProjectile->GetOwner())
+                // UDbg::DbgMsg(FString::Printf(TEXT("AHitableActorBase::OnHit => WeaponSystemProjectile OWNER is NOT A AWeaponSystemCharacter!")/* (Name: %s), *WeaponSystemProjectile->GetOwner()->GetName()*/), 5.0f, FColor::Purple);
+                // if(WeaponSystemProjectile->GetOwner())
+                // {
+                //     UDbg::DbgMsg(FString::Printf(TEXT("WeaponSystemProjectile->GetOwner() NOT NULL")), 5.0f, FColor::Green);
+                // }
+                // else
+                // {
+                //     UDbg::DbgMsg(FString::Printf(TEXT("WeaponSystemProjectile->GetOwner() IIISSSS NULL")), 5.0f, FColor::Purple);
+                // }
+
+                if(WeaponSystemProjectile->GetInstigator())
                 {
-                    UDbg::DbgMsg(FString::Printf(TEXT("WeaponSystemProjectile->GetOwner() NOT NULL")), 5.0f, FColor::Purple);
+                    // UDbg::DbgMsg(FString::Printf(TEXT("WeaponSystemProjectile->GetInstigator() NOT NULL")), 5.0f, FColor::Green);
+                    AWeaponSystemCharacter* WeaponSystemCharacter2 = Cast<AWeaponSystemCharacter>(WeaponSystemProjectile->GetInstigator());
+                    if(WeaponSystemCharacter2)
+                    {
+                        WeaponSystemCharacter2->ScoreManagerComponent->AddScore(HitScore);
+                    }
+                    else
+                    {
+                        UDbg::DbgMsg(FString::Printf(TEXT("WeaponSystemProjectile->GetInstigator() NOT CASTED!!!")), 5.0f, FColor::Purple);
+                    }
                 }
                 else
                 {
-                    UDbg::DbgMsg(FString::Printf(TEXT("WeaponSystemProjectile->GetOwner() IIISSSS NULL")), 5.0f, FColor::Purple);
+                    UDbg::DbgMsg(FString::Printf(TEXT("WeaponSystemProjectile->GetInstigator() IIISSSS NULL")), 5.0f, FColor::Purple);
                 }
             }
         }
@@ -90,7 +114,7 @@ void AHitableActorBase::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
     }
     else
     {
-        UDbg::DbgMsg(FString::Printf(TEXT("AHitableActorBase::OnHit => ShowMovingScoreWidget == FALSE!")), 5.0f, FColor::Purple);
+        // UDbg::DbgMsg(FString::Printf(TEXT("AHitableActorBase::OnHit => ShowMovingScoreWidget == FALSE!")), 5.0f, FColor::Purple);
     }
     this->OnHitted(HitComponent, OtherActor, OtherComp, NormalImpulse, Hit);
 }
