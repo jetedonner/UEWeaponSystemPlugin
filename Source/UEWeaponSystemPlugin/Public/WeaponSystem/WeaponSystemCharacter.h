@@ -15,6 +15,7 @@
 #include "Health/HealthManagerComponent.h"
 #include "Utils/GlobalDefinitions.h"
 #include "Utils/Dbg.h"
+#include "Common/HitableInterface.h"
 #include "WeaponSystemCharacter.generated.h"
 
 UCLASS(Blueprintable)
@@ -59,5 +60,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Weapon System")
     void OnTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Weapon System")
+    void OnHitted(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+    virtual void OnHitted_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
     
 };

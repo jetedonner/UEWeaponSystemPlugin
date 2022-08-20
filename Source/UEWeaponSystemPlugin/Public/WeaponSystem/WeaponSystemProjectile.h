@@ -28,6 +28,7 @@ class UEWEAPONSYSTEMPLUGIN_API AWeaponSystemProjectile : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AWeaponSystemProjectile();
+    AWeaponSystemProjectile(const FObjectInitializer& ObjectInitializer);
 
 protected:
 	// Called when the game starts or when spawned

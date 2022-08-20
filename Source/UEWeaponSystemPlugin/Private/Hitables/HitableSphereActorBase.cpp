@@ -20,7 +20,7 @@ AHitableSphereActorBase::AHitableSphereActorBase(const FObjectInitializer& Objec
     
     if(!CollisionComponent)
     {
-        CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
+        CollisionComponent = ObjectInitializer.CreateDefaultSubobject<USphereComponent>(this, TEXT("SphereCollision"));
         Cast<USphereComponent>(CollisionComponent)->SetSphereRadius(100.0f, true);
         CollisionComponent->bEditableWhenInherited = true;
         CollisionComponent->SetCollisionProfileName(TEXT("Projectile"));

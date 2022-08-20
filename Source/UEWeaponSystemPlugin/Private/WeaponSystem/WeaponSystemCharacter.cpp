@@ -138,6 +138,8 @@ void AWeaponSystemCharacter::BeginPlay()
     HealthManagerComponent->FloatingHealthBar = Cast<UFloatingHealthBarWidget>(FloatingHealthBar->GetUserWidgetObject());
     Cast<AActor>(this)->OnTakeAnyDamage.AddDynamic(this, &AWeaponSystemCharacter::OnTakeAnyDamage);
     UDbg::DbgMsg(FString::Printf(TEXT("WeaponManagerComponent->MuzzleOffset => %s"), *MuzzlePosition->GetRelativeLocation().ToString()));
+    this->GetCapsuleComponent()->OnComponentHit.AddDynamic(this, &AWeaponSystemCharacter::OnHitted);
+    // CollisionComponent->OnComponentHit.AddDynamic(this, &AWeaponSystemCharacter::OnHitted);
 }
 
 void AWeaponSystemCharacter::Tick(float DeltaTime)
@@ -203,4 +205,9 @@ void AWeaponSystemCharacter::OnTakeAnyDamage(AActor* DamagedActor, float Damage,
             }
         }
     }
+}
+
+void AWeaponSystemCharacter::OnHitted_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	UDbg::DbgMsg(FString::Printf(TEXT("AHitableActorBaseNG::OnHitted_Implementation")), 5.0f, FColor::Green);
 }

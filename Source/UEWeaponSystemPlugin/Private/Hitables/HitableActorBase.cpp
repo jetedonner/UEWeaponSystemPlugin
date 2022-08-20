@@ -19,27 +19,9 @@ AHitableActorBase::AHitableActorBase(const FObjectInitializer& ObjectInitializer
     
     if(!MeshComponent)
     {
-        MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
+        MeshComponent = ObjectInitializer.CreateDefaultSubobject<UStaticMeshComponent>(this, TEXT("MeshComponent"));
         MeshComponent->bEditableWhenInherited = true;
     }
-    
-//    if(!MovingScoreWidgetComponent)
-//    {
-//        MovingScoreWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(FName("MovingScoreWidget Component"));
-//
-//        static ConstructorHelpers::FClassFinder<UUserWidget> MovingScoreWidget(TEXT("/WeaponSystem/Widgets/MovingScoreWidgetBP"));
-//
-//        MovingScoreWidgetClass = MovingScoreWidget.Class;
-//
-//        MovingScoreWidgetComponent->bEditableWhenInherited = true;
-//        MovingScoreWidgetComponent->SetWidgetClass(MovingScoreWidget.Class);
-//        MovingScoreWidgetComponent->SetWidgetSpace(EWidgetSpace::World);
-//        MovingScoreWidgetComponent->SetTwoSided(true);
-//        MovingScoreWidgetComponent->SetAbsolute(false, false, true);
-//        MovingScoreWidgetComponent->SetRelativeLocation(FVector(0, 0, 150 + 20));
-//
-//        MovingScoreWidgetBase = Cast<UMovingScoreWidgetBase>(MovingScoreWidgetComponent->GetUserWidgetObject());
-//    }
 }
 
 void AHitableActorBase::AttachMesh()
@@ -48,11 +30,6 @@ void AHitableActorBase::AttachMesh()
     {
         MeshComponent->SetupAttachment(CollisionComponent);
     }
-    
-//    if(MovingScoreWidgetComponent && CollisionComponent)
-//    {
-//        MovingScoreWidgetComponent->SetupAttachment(CollisionComponent);
-//    }
 }
 
 void AHitableActorBase::BeginPlay()
@@ -62,6 +39,11 @@ void AHitableActorBase::BeginPlay()
     if(CollisionComponent)
     {
         CollisionComponent->OnComponentHit.AddDynamic(this, &AHitableActorBase::OnHit);
+    }
+
+    if(MeshComponent)
+    {
+        MeshComponent->OnComponentHit.AddDynamic(this, &AHitableActorBase::OnHit);
     }
 }
 
@@ -79,13 +61,38 @@ void AHitableActorBase::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
         if(WeaponSystemProjectile)
         {
             UScoreHelper::SpawnMovingScoreWidget(GetWorld(), HitScore, GetActorLocation(), GetActorRotation());
-            
-            AWeaponSystemCharacter* WeaponSystemCharacter = Cast<AWeaponSystemCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
-            
-            
-            WeaponSystemCharacter->ScoreManagerComponent->AddScore(HitScore);
+
+            // AWeaponSystemCharacter* WeaponSystemCharacter = Cast<AWeaponSystemCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
+            // WeaponSystemCharacter->ScoreManagerComponent->AddScore(HitScore);
+
+            AWeaponSystemCharacter* WeaponSystemCharacter = Cast<AWeaponSystemCharacter>(WeaponSystemProjectile->GetOwner());
+            if(WeaponSystemCharacter)
+            {
+                WeaponSystemCharacter->ScoreManagerComponent->AddScore(HitScore);
+            }
+            else
+            {
+                UDbg::DbgMsg(FString::Printf(TEXT("AHitableActorBase::OnHit => WeaponSystemProjectile OWNER is NOT A AWeaponSystemCharacter!")/* (Name: %s), *WeaponSystemProjectile->GetOwner()->GetName()*/), 5.0f, FColor::Purple);
+                if(WeaponSystemProjectile->GetOwner())
+                {
+                    UDbg::DbgMsg(FString::Printf(TEXT("WeaponSystemProjectile->GetOwner() NOT NULL")), 5.0f, FColor::Purple);
+                }
+                else
+                {
+                    UDbg::DbgMsg(FString::Printf(TEXT("WeaponSystemProjectile->GetOwner() IIISSSS NULL")), 5.0f, FColor::Purple);
+                }
+            }
+        }
+        else
+        {
+            UDbg::DbgMsg(FString::Printf(TEXT("AHitableActorBase::OnHit => NOT A WeaponSystemProjectile!")), 5.0f, FColor::Purple);
         }
     }
+    else
+    {
+        UDbg::DbgMsg(FString::Printf(TEXT("AHitableActorBase::OnHit => ShowMovingScoreWidget == FALSE!")), 5.0f, FColor::Purple);
+    }
+    this->OnHitted(HitComponent, OtherActor, OtherComp, NormalImpulse, Hit);
 }
 
 void AHitableActorBase::OnComponentGotHit_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
@@ -196,4 +203,9 @@ void AHitableActorBase::ExecActorHitHandler(AActor* OtherActor, const FHitResult
 //    {
 //        UDbg::DbgMsg(FString::Printf(TEXT("ELSE if (FoundActor && OtherActor && (OtherActor != this))")));
 //    }
+}
+
+void AHitableActorBase::OnHitted_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	UDbg::DbgMsg(FString::Printf(TEXT("AHitableActorBase::OnHitted_Implementation")), 5.0f, FColor::Green);
 }

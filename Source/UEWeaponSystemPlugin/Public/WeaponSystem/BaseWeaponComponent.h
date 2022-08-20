@@ -136,4 +136,8 @@ public:
     
     UPROPERTY(BlueprintAssignable, Category="Weapon System")
     FWeaponReloadingDelegate OnWeaponReloading;
+
+    UPROPERTY(BlueprintAssignable, Category="Weapon System")
+    FOnProjectileFiredDelegate OnProjectileFired;
+    
 };

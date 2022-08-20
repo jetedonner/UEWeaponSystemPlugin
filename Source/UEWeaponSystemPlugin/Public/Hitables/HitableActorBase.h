@@ -10,6 +10,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/BoxComponent.h"
+#include "Utils/Dbg.h"
 #include "Components/SceneComponent.h"
 #include "Components/ShapeComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -24,7 +26,7 @@
 #include "HitableActorBase.generated.h"
 
 UCLASS(Abstract, Blueprintable)
-class UEWEAPONSYSTEMPLUGIN_API AHitableActorBase : public AActor/*, public UHitableInterface*/
+class UEWEAPONSYSTEMPLUGIN_API AHitableActorBase : public AActor, public IHitableInterface
 {
     GENERATED_BODY()
     
@@ -100,4 +102,9 @@ public:
     // virtual void OnGotHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit) override;
     
     // void OnGotHit_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
+
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Weapon System")
+    void OnHitted(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+    virtual void OnHitted_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 };

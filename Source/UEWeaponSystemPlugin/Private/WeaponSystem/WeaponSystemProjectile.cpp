@@ -49,30 +49,61 @@ AWeaponSystemProjectile::AWeaponSystemProjectile()
     if (!ProjectileMeshComponent)
     {
         ProjectileMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMeshComponent"));
-//        static ConstructorHelpers::FObjectFinder<UStaticMesh>Mesh(TEXT("'/Game/Sphere.Sphere'"));
-//        if (Mesh.Succeeded())
-//        {
-//            ProjectileMeshComponent->SetStaticMesh(Mesh.Object);
-//        }
-//
-//        static ConstructorHelpers::FObjectFinder<UMaterial>Material(TEXT("'/Game/SphereMaterial.SphereMaterial'"));
-//        if (Material.Succeeded())
-//        {
-//            ProjectileMaterialInstance = UMaterialInstanceDynamic::Create(Material.Object, ProjectileMeshComponent);
-//        }
-//        ProjectileMeshComponent->SetMaterial(0, ProjectileMaterialInstance);
-//        ProjectileMeshComponent->SetRelativeScale3D(FVector(0.09f, 0.09f, 0.09f));
         ProjectileMeshComponent->SetupAttachment(RootComponent);
     }
     
-    InitialLifeSpan = 0.0f;
+    InitialLifeSpan = 5.0f;
+}
+
+AWeaponSystemProjectile::AWeaponSystemProjectile(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+{
+    PrimaryActorTick.bCanEverTick = true;
+    
+    if (!RootComponent)
+    {
+        RootComponent = ObjectInitializer.CreateDefaultSubobject<USceneComponent>(this, TEXT("ProjectileSceneComponent"));
+    }
+
+    if (!CollisionComponent)
+    {
+        // Use a sphere as a simple collision representation.
+        CollisionComponent = ObjectInitializer.CreateDefaultSubobject<USphereComponent>(this, TEXT("SphereComponent"));
+        // Set the sphere's collision profile name to "Projectile".
+        CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Projectile"));
+        // Event called when component hits something.
+        CollisionComponent->OnComponentHit.AddDynamic(this, &AWeaponSystemProjectile::OnHit);
+        // Set the sphere's collision radius.
+        CollisionComponent->InitSphereRadius(15.0f);
+        // Set the root component to be the collision component.
+        RootComponent = CollisionComponent;
+    }
+
+    if (!ProjectileMovementComponent)
+    {
+        // Use this component to drive this projectile's movement.
+        ProjectileMovementComponent = ObjectInitializer.CreateDefaultSubobject<UProjectileMovementComponent>(this, TEXT("ProjectileMovementComponent"));
+        ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
+        ProjectileMovementComponent->InitialSpeed = 3000.0f;
+        ProjectileMovementComponent->MaxSpeed = 3000.0f;
+        ProjectileMovementComponent->bRotationFollowsVelocity = true;
+        ProjectileMovementComponent->bShouldBounce = true;
+        ProjectileMovementComponent->Bounciness = 0.3f;
+        ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
+    }
+
+    if (!ProjectileMeshComponent)
+    {
+        ProjectileMeshComponent = ObjectInitializer.CreateDefaultSubobject<UStaticMeshComponent>(this, TEXT("ProjectileMeshComponent"));
+        ProjectileMeshComponent->SetupAttachment(RootComponent);
+    }
+    
+    InitialLifeSpan = 5.0f;
 }
 
 // Called when the game starts or when spawned
 void AWeaponSystemProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -84,10 +115,16 @@ void AWeaponSystemProjectile::Tick(float DeltaTime)
 
 void AWeaponSystemProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
-    UDbg::DbgMsg(FString::Printf(TEXT("Projectile OnHit: %s"), *OtherActor->GetName()));
+    UDbg::DbgMsg(FString::Printf(TEXT("Projectile OnHit: %s / Owner: %s"), *OtherActor->GetName(), *this->GetOwner()->GetName()));
     if(OtherActor == this->GetOwner())
     {
         return;
+    }
+
+
+    if(OtherActor->Implements<UHitableInterface>())
+    {
+        UDbg::DbgMsg(FString::Printf(TEXT("OtherActor->Implements<UHitableInterface>() IIIIIITTTTTT IMPLEMENTS !!!!!!!!!!!!")));
     }
 
     if (OtherActor != nullptr && OtherActor != this && OtherComponent != nullptr)

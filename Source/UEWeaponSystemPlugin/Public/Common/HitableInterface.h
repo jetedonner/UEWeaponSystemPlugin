@@ -30,8 +30,8 @@ public:
 	//UFUNCTION(BlueprintNativeEvent, Category="Event|Hit")
     // virtual void OnGotHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
 
-    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Weapon System")
-    void OnGotHitted();
+    // UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Weapon System")
+    // void OnGotHitted();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Weapon System")
     void OnHitted(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

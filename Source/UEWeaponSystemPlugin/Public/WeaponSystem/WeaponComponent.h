@@ -20,6 +20,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAlternateCrosshairDelegate, bool,
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnShotFiredDelegate, FWeaponDefinition, ShotWeaponDefinition, FWeaponFunctionDefinition, ShotWeaponFunctionDefinition, EWeaponFunction, ShotWeaponFunction);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnProjectileFiredDelegate, AWeaponSystemProjectile*, Projectile);
+
 //RamaMeleeWeapon class .h
 
 //DECLARE_DYNAMIC_DELEGATE_RetVal_ThreeParams(bool, FOnCustomStartShooting, FWeaponDefinition, WeaponDefinition, FWeaponFunctionDefinition, WeaponFunctionDefinition, EWeaponFunction, WeaponFunction);

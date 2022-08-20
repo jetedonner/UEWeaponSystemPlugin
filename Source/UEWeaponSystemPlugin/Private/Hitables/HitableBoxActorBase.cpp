@@ -20,7 +20,7 @@ AHitableBoxActorBase::AHitableBoxActorBase(const FObjectInitializer& ObjectIniti
     
     if(!CollisionComponent)
     {
-        CollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
+        CollisionComponent = ObjectInitializer.CreateDefaultSubobject<UBoxComponent>(this, TEXT("BoxCollision"));
         Cast<UBoxComponent>(CollisionComponent)->SetBoxExtent(FVector(100.0f, 100.0f, 100.0f), true);
         CollisionComponent->bEditableWhenInherited = true;
         CollisionComponent->SetCollisionProfileName(TEXT("Projectile"));

@@ -165,8 +165,7 @@ void UBaseWeaponComponent::StopShooting()
 
 void UBaseWeaponComponent::FireShot()
 {
-//    UDbg::DbgMsg(FString::Printf(TEXT("UBaseWeaponComponent::FireShot!")));
-    if(IsReloading /*|| !CurrentWeapon->ReadyForNewShot*/)
+    if(IsReloading)
     {
         return;
     }
@@ -194,7 +193,7 @@ void UBaseWeaponComponent::FireShot()
 
             // FVector MuzzleOffset;
             // Set MuzzleOffset to spawn projectiles slightly in front of the camera.
-            // MuzzleOffset.Set(90.0f, 0.0f, 0.0f);
+            MuzzleOffset.Set(60.0f, 0.0f, 0.0f);
             FVector MuzzleLocation = CameraLocation + FTransform(CameraRotation).TransformVector(MuzzleOffset);
             FRotator MuzzleRotation = CameraRotation;
 
@@ -213,7 +212,8 @@ void UBaseWeaponComponent::FireShot()
                     Projectile->FireInDirection(LaunchDirection);
 
                     OnShotFiredDelegate.Broadcast(*FoundWeaponDefinition, WeaponFunctionDefinition, CurrentWeaponFunction);
-                    
+                    OnProjectileFired.Broadcast(Projectile);
+
                     if(ShotAudioComponent)
                     {
                         ShotAudioComponent->Stop();
