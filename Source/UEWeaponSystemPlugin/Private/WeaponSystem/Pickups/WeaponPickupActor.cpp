@@ -104,12 +104,12 @@ void AWeaponPickupActor::OnPickup(AActor* OtherActor)
     AWeaponSystemCharacter* PickupCharacter = Cast<AWeaponSystemCharacter>(OtherActor);
     if(PickupCharacter)
     {
-        FWeaponDefinition* MyWeaponDefinition = WeaponDefinition.GetRow<FWeaponDefinition>("");
+        FWeaponDefinition* CurrentWeaponDefinition = WeaponDefinition.GetRow<FWeaponDefinition>("");
         
-        if(MyWeaponDefinition)
+        if(CurrentWeaponDefinition)
         {
-            int32 DefPickUpCount = (PickUpCount < 0 ? MyWeaponDefinition->PickUpCount : PickUpCount);
-            PickupCharacter->WeaponManagerComponent->PickupWeapon(MyWeaponDefinition->WeaponID, DefPickUpCount);
+            int32 DefPickUpCount = (PickUpCount < 0 ? CurrentWeaponDefinition->PickUpCount : PickUpCount);
+            PickupCharacter->WeaponManagerComponent->PickupWeapon(CurrentWeaponDefinition->WeaponID, DefPickUpCount);
             if(PickupSound)
             {
                 UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, PickupSound, GetActorLocation(), FRotator::ZeroRotator, 1.0, 1.0, 0.0f, nullptr, nullptr, true);

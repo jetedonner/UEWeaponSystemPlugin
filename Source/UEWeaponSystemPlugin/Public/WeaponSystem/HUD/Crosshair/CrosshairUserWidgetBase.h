@@ -23,9 +23,12 @@ protected:
     const FName AimedAnimationName = FName("AimedAnimation");
     
     virtual void NativeConstruct() override;
-    
+
 public:
     
+    UFUNCTION(BlueprintImplementableEvent, Category="Weapon System")
+    void ShowCrosshair(const int32 WeaponID);
+
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Weapon System")
     void OnAnimateCrosshair(bool AlternativeAnimation = false);
     

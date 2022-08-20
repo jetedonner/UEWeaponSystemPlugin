@@ -10,7 +10,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "WeaponSystem/WeaponManagerComponent.h"
+#include "WeaponSystem/WeaponManagerComponentExt.h"
 #include "Score/ScoreManagerComponent.h"
 #include "Health/HealthManagerComponent.h"
 #include "Utils/GlobalDefinitions.h"
@@ -35,7 +35,7 @@ protected:
 public:
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
-    UWeaponManagerComponent* WeaponManagerComponent;
+    UWeaponManagerComponentExt* WeaponManagerComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health System")
     UHealthManagerComponent* HealthManagerComponent;

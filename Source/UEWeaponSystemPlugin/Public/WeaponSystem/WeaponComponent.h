@@ -14,6 +14,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Utils/UtilityTimer.h"
 #include "WeaponSystem/Definition/WeaponDefinition.h"
+#include "WeaponSystem/HUD/WeaponSystemHUD.h"
 #include "WeaponComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAlternateCrosshairDelegate, bool, Pressed);
@@ -38,11 +39,9 @@ public:
 
 protected:
     
-    bool IsReloading = false;
     FTimerHandle ReloadingEndTimerHandle;
     FTimerHandle ReloadingStartTimerHandle;
 
-    bool IsShooting = false;
     FTimerHandle ShootingTimerHandle;
     
     class UtilityTimer* TimerUtil = new UtilityTimer();
@@ -52,6 +51,12 @@ protected:
 
 public:
     
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Weapon System")
+    bool IsShooting = false;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Weapon System")
+    bool IsReloading = false;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System", meta=(RequiredAssetDataTags="RowStructure=WeaponDefinition"))
     UDataTable* WeaponDefinitions;
     
@@ -78,6 +83,9 @@ public:
     
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Weapon System")
+    class UBaseWeaponComponent* CurrentWeapon;
+    
     UFUNCTION(BlueprintCallable, Category="Weapon System")
     void SetCurrentWeapon(struct FWeaponDefinition& WeaponDefinition);
     

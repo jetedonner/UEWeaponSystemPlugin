@@ -16,7 +16,7 @@ AWeaponSystemCharacter::AWeaponSystemCharacter()
     
     if(!WeaponManagerComponent)
     {
-        WeaponManagerComponent = CreateDefaultSubobject<UWeaponManagerComponent>(TEXT("Weapon Manager Component"));
+        WeaponManagerComponent = CreateDefaultSubobject<UWeaponManagerComponentExt>(TEXT("Weapon Manager Component"));
         WeaponManagerComponent->bEditableWhenInherited = true;
         this->AddOwnedComponent(WeaponManagerComponent);
     }
@@ -73,7 +73,7 @@ AWeaponSystemCharacter::AWeaponSystemCharacter(const FObjectInitializer& ObjectI
     
     if(!WeaponManagerComponent)
     {
-        WeaponManagerComponent = ObjectInitializer.CreateDefaultSubobject<UWeaponManagerComponent>(this, TEXT("Weapon Manager Component"));
+        WeaponManagerComponent = ObjectInitializer.CreateDefaultSubobject<UWeaponManagerComponentExt>(this, TEXT("Weapon Manager Component"));
         WeaponManagerComponent->bEditableWhenInherited = true;
         this->AddOwnedComponent(WeaponManagerComponent);
     }

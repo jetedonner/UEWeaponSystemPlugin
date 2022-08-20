@@ -172,7 +172,7 @@ void UBaseWeaponComponent::FireShot()
     
     FWeaponDefinition* FoundWeaponDefinition = WeaponDefinitionRowHandle.DataTable->FindRow<FWeaponDefinition>(WeaponDefinitionRowHandle.RowName, "");
     
-    MyWeaponDefinition = FoundWeaponDefinition;
+    CurrentWeaponDefinition = FoundWeaponDefinition;
     
     FWeaponFunctionDefinition WeaponFunctionDefinition = FoundWeaponDefinition->PrimaryWeaponFunctionDefinition;
     
@@ -256,22 +256,22 @@ void UBaseWeaponComponent::FireShot()
 
 void UBaseWeaponComponent::StartReloading()
 {
-    if(MyWeaponDefinition)
+    if(CurrentWeaponDefinition)
     {
         if(IsReloading)
         {
             GetWorld()->GetTimerManager().ClearTimer(ReloadingStartTimerHandle);
             
-           if(MyWeaponDefinition->ReloadSound)
+           if(CurrentWeaponDefinition->ReloadSound)
            {
-               UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, MyWeaponDefinition->ReloadSound, GetOwner()->GetActorLocation(), FRotator::ZeroRotator, 2.0, 1.0, 0.0f, nullptr, nullptr, true);
+               UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, CurrentWeaponDefinition->ReloadSound, GetOwner()->GetActorLocation(), FRotator::ZeroRotator, 2.0, 1.0, 0.0f, nullptr, nullptr, true);
            }
-            GetWorld()->GetTimerManager().SetTimer(ReloadingEndTimerHandle, this, &UBaseWeaponComponent::FinishReloading, MyWeaponDefinition->ReloadTimeout, true, MyWeaponDefinition->ReloadTimeout);
+            GetWorld()->GetTimerManager().SetTimer(ReloadingEndTimerHandle, this, &UBaseWeaponComponent::FinishReloading, CurrentWeaponDefinition->ReloadTimeout, true, CurrentWeaponDefinition->ReloadTimeout);
         }
     }
     else
     {
-        UDbg::DbgMsg(FString("UBaseWeaponComponent::StartReloading() NO MyWeaponDefinition"));
+        UDbg::DbgMsg(FString("UBaseWeaponComponent::StartReloading() NO CurrentWeaponDefinition"));
     }
 }
 

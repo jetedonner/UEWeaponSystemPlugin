@@ -29,13 +29,12 @@ public:
     UBaseWeaponComponent();
 
 protected:
-    
-    bool IsReloading = false;
+
     FTimerHandle ReloadingEndTimerHandle;
     FTimerHandle ReloadingStartTimerHandle;
     
 //    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
-    FWeaponDefinition* MyWeaponDefinition;
+    FWeaponDefinition* CurrentWeaponDefinition;
 
     FTimerHandle ShootingTimerHandle;
     
@@ -45,6 +44,13 @@ protected:
     virtual void BeginPlay() override;
 
 public:
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+    bool IsShooting = false;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+    bool IsReloading = false;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(RequiredAssetDataTags="RowStructure=WeaponDefinition"), Category="Weapon System")
     FDataTableRowHandle WeaponDefinitionRowHandle;
     
@@ -54,21 +60,6 @@ public:
     
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Weapon System")
     FVector MuzzleOffset;
-    
-//    UFUNCTION(BlueprintPure, BlueprintInternalUseOnly, Category="Weapon System")
-//    FWeaponDefinition GetWeaponDefinition()
-//    {
-//        return *WeaponDefinitionRowHandle.DataTable->FindRow<FWeaponDefinition>(WeaponDefinitionRowHandle.RowName, "");
-//    }
-    
-//    FWeaponDefinition* FoundWeaponDefinition = WeaponDefinitionRowHandle.DataTable->FindRow<FWeaponDefinition>(WeaponDefinitionRowHandle.RowName, "");
-//    FWeaponDefinition* FoundWeaponDefinition = WeaponDefinition.DataTable->FindRow<FWeaponDefinition>(WeaponDefinition.RowName, "");
-    
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Weapon System")
-    bool IsShooting = false;
-    
-//    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Weapon System")
-//    bool IsReloading = false;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
     int32 InitialAmmoCount = 30;

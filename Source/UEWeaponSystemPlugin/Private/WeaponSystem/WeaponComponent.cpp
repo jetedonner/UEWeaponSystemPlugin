@@ -48,6 +48,15 @@ void UWeaponComponent::SetCurrentWeapon(struct FWeaponDefinition& WeaponDefiniti
     if(CurrentWeaponDefinition.WeaponID != WeaponDefinition.WeaponID)
     {
         CurrentWeaponDefinition = WeaponDefinition;
+        // Cast(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+        AWeaponSystemHUD* MyHUD = Cast<AWeaponSystemHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+        if(MyHUD)
+        {   
+            if(MyHUD->CrosshairUserWidget)
+            {
+                MyHUD->CrosshairUserWidget->ShowCrosshair(WeaponDefinition.WeaponID);
+            }
+        }
 //        UDbg::DbgMsg(FString::Printf(TEXT("Activating Weapon: %s"), *CurrentWeaponDefinition.WeaponName));
     }
 }

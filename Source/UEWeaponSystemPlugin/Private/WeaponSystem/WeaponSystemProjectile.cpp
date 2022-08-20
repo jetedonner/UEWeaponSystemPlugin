@@ -52,7 +52,7 @@ AWeaponSystemProjectile::AWeaponSystemProjectile()
         ProjectileMeshComponent->SetupAttachment(RootComponent);
     }
     
-    InitialLifeSpan = 5.0f;
+    InitialLifeSpan = 0.0f;
 }
 
 AWeaponSystemProjectile::AWeaponSystemProjectile(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -97,7 +97,7 @@ AWeaponSystemProjectile::AWeaponSystemProjectile(const FObjectInitializer& Objec
         ProjectileMeshComponent->SetupAttachment(RootComponent);
     }
     
-    InitialLifeSpan = 5.0f;
+    InitialLifeSpan = 0.0f;
 }
 
 // Called when the game starts or when spawned

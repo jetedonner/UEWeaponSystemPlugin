@@ -1,5 +1,5 @@
 //
-//  WeaponManagerComponent.h
+//  WeaponManagerComponentBase.h
 //  UEWeaponSystemPlugin
 //
 //  Created by Kim David Hauser on 06.08.22.
@@ -14,19 +14,20 @@
 #include "WeaponSystem/Definition/WeaponDefinition.h"
 #include "WeaponSystem/BaseWeaponComponent.h"
 //#include "WeaponSystem/HUD/WeaponSystemHUD.h"
-#include "WeaponManagerComponent.generated.h"
+#include "Utils/UtilityTimer.h"
+#include "WeaponManagerComponentBase.generated.h"
 
 DECLARE_DELEGATE(FSetupKeyDelegate)
 
 UCLASS(Blueprintable)
-class UEWEAPONSYSTEMPLUGIN_API UWeaponManagerComponent : public UActorComponent
+class UEWEAPONSYSTEMPLUGIN_API UWeaponManagerComponentBase : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UWeaponManagerComponent();
-    UWeaponManagerComponent(const FObjectInitializer& ObjectInitializer);
+	UWeaponManagerComponentBase();
+    UWeaponManagerComponentBase(const FObjectInitializer& ObjectInitializer);
 
 protected:
 	// Called when the game starts
@@ -97,6 +98,12 @@ public:
     
     void SetCurrentWeapon(int32 WeaponID, bool PlayAudio = true);
     
+    UFUNCTION(BlueprintCallable, Category="Weapon System")
+    virtual void StartShooting(EWeaponFunction WeaponFunction = EWeaponFunction::Primary);
+    
+    UFUNCTION(BlueprintCallable, Category="Weapon System")
+    virtual void StopShooting();
+
     UFUNCTION(BlueprintCallable, Category="Weapon System")
     void OnShotFired(FWeaponDefinition ShotWeaponDefinition, FWeaponFunctionDefinition ShotWeaponFunctionDefinition, EWeaponFunction ShotWeaponFunction);
     

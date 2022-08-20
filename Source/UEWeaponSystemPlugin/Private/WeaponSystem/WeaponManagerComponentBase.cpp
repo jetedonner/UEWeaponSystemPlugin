@@ -1,14 +1,14 @@
 //
-//  WeaponManagerComponent.cpp
+//  WeaponManagerComponentBase.cpp
 //  UEWeaponSystemPlugin
 //
 //  Created by Kim David Hauser on 06.08.22.
 //  Copyright © 1991 - 2022 DaVe Inc. kimhauser.ch, All rights reserved.
 //
 
-#include "WeaponSystem/WeaponManagerComponent.h"
+#include "WeaponSystem/WeaponManagerComponentBase.h"
 
-UWeaponManagerComponent::UWeaponManagerComponent()
+UWeaponManagerComponentBase::UWeaponManagerComponentBase()
 {
     // Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
     // off to improve performance if you don't need them.
@@ -26,7 +26,7 @@ UWeaponManagerComponent::UWeaponManagerComponent()
     }
 }
 
-UWeaponManagerComponent::UWeaponManagerComponent(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+UWeaponManagerComponentBase::UWeaponManagerComponentBase(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
     PrimaryComponentTick.bCanEverTick = true;
     
@@ -64,7 +64,7 @@ UWeaponManagerComponent::UWeaponManagerComponent(const FObjectInitializer& Objec
 //    }
 }
 
-void UWeaponManagerComponent::BeginPlay()
+void UWeaponManagerComponentBase::BeginPlay()
 {
     Super::BeginPlay();
     
@@ -76,11 +76,11 @@ void UWeaponManagerComponent::BeginPlay()
         UBaseWeaponComponent* NewWeaponImpl = NewObject<UBaseWeaponComponent>(this, NewWeapon->GetClass(), *NewWeapon->GetClass()->GetName());
 
         NewWeaponImpl->MuzzleOffset = MuzzleOffset;
-        NewWeaponImpl->OnShotFiredDelegate.AddDynamic(this, &UWeaponManagerComponent::OnShotFired);
+        NewWeaponImpl->OnShotFiredDelegate.AddDynamic(this, &UWeaponManagerComponentBase::OnShotFired);
         
-        NewWeaponImpl->OnWeaponReloading.AddDynamic(this, &UWeaponManagerComponent::WeaponReloading);
-//        NewWeaponImpl->OnProjectileFireDelegate.AddDynamic(this, &UWeaponManagerComponent::ProjectileFired);
-//        NewWeaponImpl->OnProjectileHitDelegate.AddDynamic(this, &UWeaponManagerComponent::ProjectileHit);
+        NewWeaponImpl->OnWeaponReloading.AddDynamic(this, &UWeaponManagerComponentBase::WeaponReloading);
+//        NewWeaponImpl->OnProjectileFireDelegate.AddDynamic(this, &UWeaponManagerComponentBase::ProjectileFired);
+//        NewWeaponImpl->OnProjectileHitDelegate.AddDynamic(this, &UWeaponManagerComponentBase::ProjectileHit);
         NewWeaponImpl->RegisterComponent();
         WeaponArsenalImpl.AddUnique(NewWeaponImpl);
         if(idx == 0)
@@ -94,7 +94,7 @@ void UWeaponManagerComponent::BeginPlay()
     this->SetComponentTickInterval(0.25f);
 }
 
-void UWeaponManagerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UWeaponManagerComponentBase::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
     
@@ -284,7 +284,7 @@ void UWeaponManagerComponent::TickComponent(float DeltaTime, ELevelTick TickType
 //    }
 }
 
-void UWeaponManagerComponent::SetupPlayerInput(class UInputComponent* PlayerInputComponent, class UInputComponent* InputComponent)
+void UWeaponManagerComponentBase::SetupPlayerInput(class UInputComponent* PlayerInputComponent, class UInputComponent* InputComponent)
 {
     FInputKeyBinding KBP_PrimaryShootKey(FInputChord(PrimaryShootKey, false, false, false, false), EInputEvent::IE_Pressed);
     KBP_PrimaryShootKey.bConsumeInput = true;
@@ -293,10 +293,11 @@ void UWeaponManagerComponent::SetupPlayerInput(class UInputComponent* PlayerInpu
     KBP_PrimaryShootKey.KeyDelegate.GetDelegateWithKeyForManualSet().BindLambda([=](const FKey& Key)
     {
 //        WeaponComponent->StartShooting();
-        if(CurrentWeapon)
-        {
-            CurrentWeapon->StartShooting(EWeaponFunction::Primary);
-        }
+        // if(CurrentWeapon)
+        // {
+        //     CurrentWeapon->StartShooting(EWeaponFunction::Primary);
+        // }
+        StartShooting(EWeaponFunction::Primary);
     });
     PlayerInputComponent->KeyBindings.Add(KBP_PrimaryShootKey);
     
@@ -306,10 +307,11 @@ void UWeaponManagerComponent::SetupPlayerInput(class UInputComponent* PlayerInpu
     KBR_PrimaryShootKey.KeyDelegate.GetDelegateWithKeyForManualSet().BindLambda([=](const FKey& Key)
     {
 //        WeaponComponent->StopShooting();
-        if(CurrentWeapon)
-        {
-            CurrentWeapon->StopShooting();
-        }
+        // if(CurrentWeapon)
+        // {
+        //     CurrentWeapon->StopShooting();
+        // }
+        StopShooting();
     });
     InputComponent->KeyBindings.Add(KBR_PrimaryShootKey);
     
@@ -320,10 +322,11 @@ void UWeaponManagerComponent::SetupPlayerInput(class UInputComponent* PlayerInpu
     KBP_SecondaryShootKey.KeyDelegate.GetDelegateWithKeyForManualSet().BindLambda([=](const FKey& Key)
     {
 //        WeaponComponent->StartShooting(EWeaponFunction::Secondary);
-        if(CurrentWeapon)
-        {
-            CurrentWeapon->StartShooting(EWeaponFunction::Secondary);
-        }
+        // if(CurrentWeapon)
+        // {
+        //     CurrentWeapon->StartShooting(EWeaponFunction::Secondary);
+        // }
+        StartShooting(EWeaponFunction::Secondary);
     });
     PlayerInputComponent->KeyBindings.Add(KBP_SecondaryShootKey);
     
@@ -333,10 +336,11 @@ void UWeaponManagerComponent::SetupPlayerInput(class UInputComponent* PlayerInpu
     KBR_SecondaryShootKey.KeyDelegate.GetDelegateWithKeyForManualSet().BindLambda([=](const FKey& Key)
     {
 //        WeaponComponent->StopShooting();
-        if(CurrentWeapon)
-        {
-            CurrentWeapon->StopShooting();
-        }
+        // if(CurrentWeapon)
+        // {
+        //     CurrentWeapon->StopShooting();
+        // }
+        StopShooting();
     });
     InputComponent->KeyBindings.Add(KBR_SecondaryShootKey);
     
@@ -399,20 +403,21 @@ void UWeaponManagerComponent::SetupPlayerInput(class UInputComponent* PlayerInpu
             KBP.bExecuteWhenPaused = false;
             KBP.KeyDelegate.GetDelegateWithKeyForManualSet().BindLambda([=](const FKey& Key)
             {
-                WeaponComponent->SetCurrentWeapon(*WeaponDefinition);
+                // WeaponComponent->SetCurrentWeapon(*WeaponDefinition);
                 SetCurrentWeapon(WeaponDefinition->WeaponID);
             });
             PlayerInputComponent->KeyBindings.Add(KBP);
             if(idx == 0)
             {
-                WeaponComponent->SetCurrentWeapon(*WeaponDefinition);
+                // WeaponComponent->SetCurrentWeapon(*WeaponDefinition);
+                SetCurrentWeapon(WeaponDefinition->WeaponID);
             }
             idx++;
         }
     }
 }
 
-void UWeaponManagerComponent::SetCurrentWeapon(int32 WeaponID, bool PlayAudio)
+void UWeaponManagerComponentBase::SetCurrentWeapon(int32 WeaponID, bool PlayAudio)
 {
     if(!CurrentWeapon || CurrentWeapon->WeaponDefinition()->WeaponID != WeaponID)
     {
@@ -471,7 +476,18 @@ void UWeaponManagerComponent::SetCurrentWeapon(int32 WeaponID, bool PlayAudio)
     }
 }
 
-void UWeaponManagerComponent::PickupWeapon(int32 WeaponID, int32 AmmoCount)
+void UWeaponManagerComponentBase::StartShooting(EWeaponFunction WeaponFunction)
+{
+
+}
+    
+void UWeaponManagerComponentBase::StopShooting()
+{
+
+}
+
+
+void UWeaponManagerComponentBase::PickupWeapon(int32 WeaponID, int32 AmmoCount)
 {
     UBaseWeaponComponent* const* DaWeapon = WeaponArsenalImpl.FindByPredicate( [&](UBaseWeaponComponent* Result){ return WeaponID == Result->WeaponDefinition()->WeaponID; } );
     
@@ -498,21 +514,21 @@ void UWeaponManagerComponent::PickupWeapon(int32 WeaponID, int32 AmmoCount)
     }
 }
 
-void UWeaponManagerComponent::OnShotFired(FWeaponDefinition ShotWeaponDefinition, FWeaponFunctionDefinition ShotWeaponFunctionDefinition, EWeaponFunction ShotWeaponFunction)
+void UWeaponManagerComponentBase::OnShotFired(FWeaponDefinition ShotWeaponDefinition, FWeaponFunctionDefinition ShotWeaponFunctionDefinition, EWeaponFunction ShotWeaponFunction)
 {
-//    UDbg::DbgMsg(FString::Printf(TEXT("UWeaponManagerComponent::OnShotFired")), 5.0f, FColor::Green);
+//    UDbg::DbgMsg(FString::Printf(TEXT("UWeaponManagerComponentBase::OnShotFired")), 5.0f, FColor::Green);
     WeaponComponent->OnShotFiredDelegate.Broadcast(ShotWeaponDefinition, ShotWeaponFunctionDefinition, ShotWeaponFunction);
 }
 
-void UWeaponManagerComponent::WeaponReloading(float Timeout)
+void UWeaponManagerComponentBase::WeaponReloading(float Timeout)
 {
-//    UDbg::DbgMsg(FString::Printf(TEXT("UWeaponManagerComponent::OnShotFired")), 5.0f, FColor::Green);
+//    UDbg::DbgMsg(FString::Printf(TEXT("UWeaponManagerComponentBase::OnShotFired")), 5.0f, FColor::Green);
     this->OnWeaponReloading.Broadcast(Timeout);
 }
 
-void UWeaponManagerComponent::InitializeWeapons()
+void UWeaponManagerComponentBase::InitializeWeapons()
 {
-int32 idx = 0;
+    int32 idx = 0;
     for(UBaseWeaponComponent* WeaponImpl: WeaponArsenalImpl)
     {
         WeaponImpl->AmmoCount = WeaponImpl->InitialAmmoCount;
@@ -521,11 +537,11 @@ int32 idx = 0;
         
 //         UBaseWeaponComponent* NewWeaponImpl = NewObject<UBaseWeaponComponent>(this, NewWeapon->GetClass(), *NewWeapon->GetClass()->GetName());
             
-//         NewWeaponImpl->OnShotFiredDelegate.AddDynamic(this, &UWeaponManagerComponent::OnShotFired);
+//         NewWeaponImpl->OnShotFiredDelegate.AddDynamic(this, &UWeaponManagerComponentBase::OnShotFired);
         
-//         NewWeaponImpl->OnWeaponReloading.AddDynamic(this, &UWeaponManagerComponent::WeaponReloading);
-// //        NewWeaponImpl->OnProjectileFireDelegate.AddDynamic(this, &UWeaponManagerComponent::ProjectileFired);
-// //        NewWeaponImpl->OnProjectileHitDelegate.AddDynamic(this, &UWeaponManagerComponent::ProjectileHit);
+//         NewWeaponImpl->OnWeaponReloading.AddDynamic(this, &UWeaponManagerComponentBase::WeaponReloading);
+// //        NewWeaponImpl->OnProjectileFireDelegate.AddDynamic(this, &UWeaponManagerComponentBase::ProjectileFired);
+// //        NewWeaponImpl->OnProjectileHitDelegate.AddDynamic(this, &UWeaponManagerComponentBase::ProjectileHit);
 //         NewWeaponImpl->RegisterComponent();
 //         WeaponArsenalImpl.AddUnique(NewWeaponImpl);
 //         if(idx == 0)

@@ -50,7 +50,7 @@ void AWeaponSystemHUD::BeginPlay()
             {
                 // UDbg::DbgMsg(FString::Printf(TEXT("Found HUD INFO WIDGET!")));
                 InfoHUDWidget = Cast<UHUDUserWidget>(CreatedWidget);
-                InfoHUDWidget->WeaponSystemCharacter = Cast<AWeaponSystemCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+                // InfoHUDWidget->WeaponSystemCharacter = Cast<AWeaponSystemCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
             }
             
             // UDbg::DbgMsg(FString::Printf(TEXT("Created Widget: %s!"), *CreatedWidget->GetClass()->GetName()));
