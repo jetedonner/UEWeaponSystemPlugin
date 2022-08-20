@@ -3,6 +3,36 @@
 
 #include "WeaponSystem/WeaponManagerComponentExt.h"
 
+void UWeaponManagerComponentExt::BeginPlay()
+{
+    Super::BeginPlay();
+    
+    int32 idx = 0;
+    for(UBaseWeaponComponent* WeaponImpl: WeaponArsenalImpl)
+    {
+//         UBaseWeaponComponent* NewWeapon = Cast<UBaseWeaponComponent>(Weapon->GetDefaultObject());
+        
+//         UBaseWeaponComponent* NewWeaponImpl = NewObject<UBaseWeaponComponent>(this, NewWeapon->GetClass(), *NewWeapon->GetClass()->GetName());
+
+//         NewWeaponImpl->MuzzleOffset = MuzzleOffset;
+//         NewWeaponImpl->OnShotFiredDelegate.AddDynamic(this, &UWeaponManagerComponentBase::OnShotFired);
+        
+//         NewWeaponImpl->OnWeaponReloading.AddDynamic(this, &UWeaponManagerComponentBase::WeaponReloading);
+// //        NewWeaponImpl->OnProjectileFireDelegate.AddDynamic(this, &UWeaponManagerComponentBase::ProjectileFired);
+// //        NewWeaponImpl->OnProjectileHitDelegate.AddDynamic(this, &UWeaponManagerComponentBase::ProjectileHit);
+//         NewWeaponImpl->RegisterComponent();
+//         WeaponArsenalImpl.AddUnique(NewWeaponImpl);
+//         if(idx == 0)
+//         {
+//             CurrentWeapon = NewWeaponImpl;
+//         }
+//         idx++;
+    }
+//    this->SetCurrentWeapon(1, false);
+    
+    this->SetComponentTickInterval(0.25f);
+}
+
 void UWeaponManagerComponentExt::StartShooting(EWeaponFunction WeaponFunction)
 {
     Super::StartShooting(WeaponFunction);
@@ -24,10 +54,10 @@ void UWeaponManagerComponentExt::StartShooting(EWeaponFunction WeaponFunction)
             FoundWeaponFunctionDefinition = FoundWeaponDefinition->SecondaryWeaponFunctionDefinition;
         }
         
-        CurrentWeaponFunction = WeaponFunction;
+        CurrentWeapon->CurrentWeaponFunction = WeaponFunction;
         
         bool Handled = false;
-        // OnCustomStartShooting(*FoundWeaponDefinition, FoundWeaponFunctionDefinition, WeaponFunction, Handled);
+        CurrentWeapon->OnCustomStartShooting(*FoundWeaponDefinition, FoundWeaponFunctionDefinition, WeaponFunction, Handled);
         
         if(!Handled)
         {
@@ -95,13 +125,13 @@ void UWeaponManagerComponentExt::StopShooting()
         
         FWeaponFunctionDefinition FoundWeaponFunctionDefinition = FoundWeaponDefinition->PrimaryWeaponFunctionDefinition;
         
-        if(CurrentWeaponFunction == EWeaponFunction::Secondary)
+        if(CurrentWeapon->CurrentWeaponFunction == EWeaponFunction::Secondary)
         {
             FoundWeaponFunctionDefinition = FoundWeaponDefinition->SecondaryWeaponFunctionDefinition;
         }
         
         bool Handled = false;
-        // OnCustomStopShooting(*FoundWeaponDefinition, FoundWeaponFunctionDefinition, CurrentWeaponFunction, Handled);
+        CurrentWeapon->OnCustomStopShooting(*FoundWeaponDefinition, FoundWeaponFunctionDefinition, CurrentWeapon->CurrentWeaponFunction, Handled);
         
         if(!Handled)
         {

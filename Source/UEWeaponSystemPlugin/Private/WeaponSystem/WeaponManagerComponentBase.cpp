@@ -85,7 +85,8 @@ void UWeaponManagerComponentBase::BeginPlay()
         WeaponArsenalImpl.AddUnique(NewWeaponImpl);
         if(idx == 0)
         {
-            CurrentWeapon = NewWeaponImpl;
+            // CurrentWeapon = NewWeaponImpl;
+            SetCurrentWeapon(NewWeaponImpl->WeaponDefinition()->WeaponID);
         }
         idx++;
     }
@@ -195,93 +196,7 @@ void UWeaponManagerComponentBase::TickComponent(float DeltaTime, ELevelTick Tick
             {
                 IsAimedAt = false;
             }
-            
-//           if (isHit)
-//           {
-//               AActor* HitActor = MyHitResult.GetActor();
-//               if (HitActor)
-//               {
-//                   AWeaponSystemCharacter* pChar = Cast<AWeaponSystemCharacter>(HitActor);
-//                   if (pChar && !IsAimedAtChar)
-//                   {
-//                       IsAimedAtChar = true;
-//                       UCrosshairUserWidgetBase* CurrentCSWidgetNew = Cast<UCrosshairUserWidgetBase>(this->CurrentCSWidget);
-//                       if(CurrentCSWidgetNew)
-//                       {
-//                           CurrentCSWidgetNew->PlayAimedAtAnimation(true);
-//                       }
-//                   }
-//                   else if(!pChar && IsAimedAtChar)
-//                   {
-//                       IsAimedAtChar = false;
-//                       UCrosshairUserWidgetBase* CurrentCSWidgetNew = Cast<UCrosshairUserWidgetBase>(this->CurrentCSWidget);
-//                       if(CurrentCSWidgetNew)
-//                       {
-//                           CurrentCSWidgetNew->PlayAimedAtAnimation(false);
-//                       }
-//                   }
-//
-//                   if(IsAimedAtChar)
-//                   {
-//                       return;
-//                   }
-//
-//                   AHitableActorBase* p = Cast<AHitableActorBase>(HitActor);
-//                   if (p && !IsAimedAtHitable)
-//                   {
-//                       IsAimedAtHitable = true;
-//                       UCrosshairUserWidgetBase* CurrentCSWidgetNew = Cast<UCrosshairUserWidgetBase>(this->CurrentCSWidget);
-//                       if(CurrentCSWidgetNew)
-//                       {
-//                           CurrentCSWidgetNew->PlayAimedAtAnimation(true);
-//                       }
-//                   }
-//                   else if(!p && IsAimedAtHitable)
-//                   {
-//                       IsAimedAtHitable = false;
-//                       UCrosshairUserWidgetBase* CurrentCSWidgetNew = Cast<UCrosshairUserWidgetBase>(this->CurrentCSWidget);
-//                       if(CurrentCSWidgetNew)
-//                       {
-//                           CurrentCSWidgetNew->PlayAimedAtAnimation(false);
-//                       }
-//                   }
-//
-//                   if(IsAimedAtHitable)
-//                   {
-//                       return;
-//                   }
-//
-//                   AWeaponPickupActorBase* pick = Cast<AWeaponPickupActorBase>(HitActor);
-//                   if (pick && !IsAimedAtPickup)
-//                   {
-//                       IsAimedAtPickup = true;
-//                       UCrosshairUserWidgetBase* CurrentCSWidgetNew = Cast<UCrosshairUserWidgetBase>(this->CurrentCSWidget);
-//                       if(CurrentCSWidgetNew)
-//                       {
-//                           CurrentCSWidgetNew->PlayAimedAtAnimation(true);
-//                       }
-//                   }
-//                   else if(!pick && IsAimedAtPickup)
-//                   {
-//                       IsAimedAtPickup = false;
-//                       UCrosshairUserWidgetBase* CurrentCSWidgetNew = Cast<UCrosshairUserWidgetBase>(this->CurrentCSWidget);
-//                       if(CurrentCSWidgetNew)
-//                       {
-//                           CurrentCSWidgetNew->PlayAimedAtAnimation(false);
-//                       }
-//                   }
-//
-//               }
-//           }
-//            else
-//            {
-////                HitResult = nullptr;
-////                IsAimedAtChar = false;
-////                IsAimedAtHitable = false;
-////                IsAimedAtPickup = false;
-//            }
         }
-//    }
 }
 
 void UWeaponManagerComponentBase::SetupPlayerInput(class UInputComponent* PlayerInputComponent, class UInputComponent* InputComponent)
@@ -292,11 +207,6 @@ void UWeaponManagerComponentBase::SetupPlayerInput(class UInputComponent* Player
 
     KBP_PrimaryShootKey.KeyDelegate.GetDelegateWithKeyForManualSet().BindLambda([=](const FKey& Key)
     {
-//        WeaponComponent->StartShooting();
-        // if(CurrentWeapon)
-        // {
-        //     CurrentWeapon->StartShooting(EWeaponFunction::Primary);
-        // }
         StartShooting(EWeaponFunction::Primary);
     });
     PlayerInputComponent->KeyBindings.Add(KBP_PrimaryShootKey);
@@ -306,11 +216,6 @@ void UWeaponManagerComponentBase::SetupPlayerInput(class UInputComponent* Player
     KBR_PrimaryShootKey.bExecuteWhenPaused = false;
     KBR_PrimaryShootKey.KeyDelegate.GetDelegateWithKeyForManualSet().BindLambda([=](const FKey& Key)
     {
-//        WeaponComponent->StopShooting();
-        // if(CurrentWeapon)
-        // {
-        //     CurrentWeapon->StopShooting();
-        // }
         StopShooting();
     });
     InputComponent->KeyBindings.Add(KBR_PrimaryShootKey);
@@ -321,11 +226,6 @@ void UWeaponManagerComponentBase::SetupPlayerInput(class UInputComponent* Player
 
     KBP_SecondaryShootKey.KeyDelegate.GetDelegateWithKeyForManualSet().BindLambda([=](const FKey& Key)
     {
-//        WeaponComponent->StartShooting(EWeaponFunction::Secondary);
-        // if(CurrentWeapon)
-        // {
-        //     CurrentWeapon->StartShooting(EWeaponFunction::Secondary);
-        // }
         StartShooting(EWeaponFunction::Secondary);
     });
     PlayerInputComponent->KeyBindings.Add(KBP_SecondaryShootKey);
@@ -335,11 +235,6 @@ void UWeaponManagerComponentBase::SetupPlayerInput(class UInputComponent* Player
     KBR_SecondaryShootKey.bExecuteWhenPaused = false;
     KBR_SecondaryShootKey.KeyDelegate.GetDelegateWithKeyForManualSet().BindLambda([=](const FKey& Key)
     {
-//        WeaponComponent->StopShooting();
-        // if(CurrentWeapon)
-        // {
-        //     CurrentWeapon->StopShooting();
-        // }
         StopShooting();
     });
     InputComponent->KeyBindings.Add(KBR_SecondaryShootKey);
@@ -375,9 +270,7 @@ void UWeaponManagerComponentBase::SetupPlayerInput(class UInputComponent* Player
 
     KBP_InitializeWeaponsKey.KeyDelegate.GetDelegateWithKeyForManualSet().BindLambda([=](const FKey& Key)
     {
-//        UDbg::DbgMsg(FString("InitializeWeaponsKey PRESSED"));
         this->InitializeWeapons();
-        // WeaponComponent->OnAlternateCrosshair(true);
     });
     PlayerInputComponent->KeyBindings.Add(KBP_InitializeWeaponsKey);
     
@@ -439,6 +332,15 @@ void UWeaponManagerComponentBase::SetCurrentWeapon(int32 WeaponID, bool PlayAudi
 //                }
 //
                 CurrentWeapon = Weapon;
+
+                AWeaponSystemHUD* MyHUD = Cast<AWeaponSystemHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+                if(MyHUD)
+                {   
+                    if(MyHUD->CrosshairUserWidget)
+                    {
+                        MyHUD->CrosshairUserWidget->ShowCrosshair(WeaponID);
+                    }
+                }
 //
 //                AWeaponSystemCharacterBase* MyOwner = Cast<AWeaponSystemCharacterBase>(this->GetOwner());
 //                if(CurrentWeapon && MyOwner && MyOwner->IsPlayerControlled())
@@ -532,22 +434,5 @@ void UWeaponManagerComponentBase::InitializeWeapons()
     for(UBaseWeaponComponent* WeaponImpl: WeaponArsenalImpl)
     {
         WeaponImpl->AmmoCount = WeaponImpl->InitialAmmoCount;
-        // WeaponDefinition()->WeaponDefinition()->
-//         UBaseWeaponComponent* NewWeapon = Cast<UBaseWeaponComponent>(Weapon->GetDefaultObject());
-        
-//         UBaseWeaponComponent* NewWeaponImpl = NewObject<UBaseWeaponComponent>(this, NewWeapon->GetClass(), *NewWeapon->GetClass()->GetName());
-            
-//         NewWeaponImpl->OnShotFiredDelegate.AddDynamic(this, &UWeaponManagerComponentBase::OnShotFired);
-        
-//         NewWeaponImpl->OnWeaponReloading.AddDynamic(this, &UWeaponManagerComponentBase::WeaponReloading);
-// //        NewWeaponImpl->OnProjectileFireDelegate.AddDynamic(this, &UWeaponManagerComponentBase::ProjectileFired);
-// //        NewWeaponImpl->OnProjectileHitDelegate.AddDynamic(this, &UWeaponManagerComponentBase::ProjectileHit);
-//         NewWeaponImpl->RegisterComponent();
-//         WeaponArsenalImpl.AddUnique(NewWeaponImpl);
-//         if(idx == 0)
-//         {
-//             CurrentWeapon = NewWeaponImpl;
-//         }
-//         idx++;
     }
 }

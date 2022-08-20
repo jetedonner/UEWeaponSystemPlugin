@@ -16,6 +16,9 @@ class UEWEAPONSYSTEMPLUGIN_API UWeaponManagerComponentExt : public UWeaponManage
 	GENERATED_BODY()
 	
 protected:
+	// Called when the game starts
+	virtual void BeginPlay() override;
+	
 	FTimerHandle ShootingTimerHandle;
     
     class UtilityTimer* TimerUtil = new UtilityTimer();
