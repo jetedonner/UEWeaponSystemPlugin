@@ -31,6 +31,9 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Score System")
     float Score = 0.0f;
     
+	UFUNCTION(BlueprintCallable, Category="Score System")
+    void SetScore(float Value);
+
     UFUNCTION(BlueprintCallable, Category="Score System")
     void AddScore(float Value);
     

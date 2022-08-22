@@ -14,6 +14,7 @@
 #include "Health/FloatingHealthBarWidget.h"
 #include "GameFramework/Character.h"
 #include "Components/CapsuleComponent.h"
+#include "WeaponSystem/HUD/WeaponSystemHUD.h"
 #include "HealthManagerComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FReceivedAnyDamageDelegate, float, Damage, const class UDamageType*, DamageType, class AController*, InstigatedBy, AActor*, DamageCauser);
@@ -51,11 +52,6 @@ public:
 	UPROPERTY(BlueprintGetter=GetDied, Category="Health System")
     bool Died;
 
-//    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health System")
-//    bool Died = false;
-
-//    virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-//
    	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health System")
    	UFloatingHealthBarWidget* FloatingHealthBar;
     
@@ -64,6 +60,9 @@ public:
     
     UFUNCTION(BlueprintCallable, Category="Health System")
     void DecreaseHealth(float Value, float& NewHealth);
+
+	UFUNCTION(BlueprintCallable, Category="Health System")
+	void SetHealth(float Value);
     
 	UPROPERTY(BlueprintAssignable, Category="Health System")
     FReceivedAnyDamageDelegate OnReceivedAnyDamageDelegate;

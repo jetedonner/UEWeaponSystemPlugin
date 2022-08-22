@@ -35,13 +35,13 @@ AWeaponPickupActor::AWeaponPickupActor(const FObjectInitializer& ObjectInitializ
         StaticMeshComponent->SetupAttachment(CollisionSphere);
     }
     
-//    if(!ParticleSystemComponent)
-//    {
-//        ParticleSystemComponent = ObjectInitializer.CreateDefaultSubobject<UParticleSystemComponent>(this, TEXT("ParticleSystemComponent"));
-//        //ParticleSystemComponent->SetMobility(EComponentMobility::Movable);
-//        ParticleSystemComponent->SetRelativeLocation_Direct(FVector(0.0f, 0.0f, -CollisionRadius));
-//        ParticleSystemComponent->SetupAttachment(CollisionSphere);
-//    }
+   if(!ParticleSystemComponent)
+   {
+       ParticleSystemComponent = ObjectInitializer.CreateDefaultSubobject<UParticleSystemComponent>(this, TEXT("ParticleSystemComponent"));
+       //ParticleSystemComponent->SetMobility(EComponentMobility::Movable);
+       ParticleSystemComponent->SetRelativeLocation_Direct(FVector(0.0f, 0.0f, -CollisionRadius));
+       ParticleSystemComponent->SetupAttachment(CollisionSphere);
+   }
 
     if(!RotatingMovement)
     {
@@ -101,20 +101,46 @@ void AWeaponPickupActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherA
 
 void AWeaponPickupActor::OnPickup(AActor* OtherActor)
 {
-    AWeaponSystemCharacter* PickupCharacter = Cast<AWeaponSystemCharacter>(OtherActor);
-    if(PickupCharacter)
+    AWeaponSystemCharacter* WeaponSystemCharacter = Cast<AWeaponSystemCharacter>(OtherActor);
+    if(WeaponSystemCharacter)
     {
         FWeaponDefinition* CurrentWeaponDefinition = WeaponDefinition.GetRow<FWeaponDefinition>("");
         
         if(CurrentWeaponDefinition)
         {
             int32 DefPickUpCount = (PickUpCount < 0 ? CurrentWeaponDefinition->PickUpCount : PickUpCount);
-            PickupCharacter->WeaponManagerComponent->PickupWeapon(CurrentWeaponDefinition->WeaponID, DefPickUpCount);
+            WeaponSystemCharacter->WeaponManagerComponent->PickupWeapon(CurrentWeaponDefinition->WeaponID, DefPickUpCount);
             if(PickupSound)
             {
                 UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, PickupSound, GetActorLocation(), FRotator::ZeroRotator, 1.0, 1.0, 0.0f, nullptr, nullptr, true);
             }
-            
+
+            if(ShowMovingScoreWidget)
+            {
+                // AWeaponSystemProjectile* WeaponSystemProjectile = Cast<AWeaponSystemProjectile>(OtherActor);
+                // if(WeaponSystemProjectile)
+                // {
+                UScoreHelper::SpawnMovingScoreWidget(GetWorld(), HitScore, GetActorLocation(), GetActorRotation());
+
+                    // AWeaponSystemCharacter* WeaponSystemCharacter = Cast<AWeaponSystemCharacter>(WeaponSystemProjectile->GetInstigator());
+                    // if(WeaponSystemCharacter)
+                    // {
+                WeaponSystemCharacter->ScoreManagerComponent->AddScore(HitScore);
+                    // }
+                    // else 
+                    // {
+                    //     UDbg::DbgMsg(FString::Printf(TEXT("WeaponSystemProjectile->GetInstigator() IIISSSS NULL")), 5.0f, FColor::Purple);
+                    // }
+                // }
+                // else
+                // {
+                //     UDbg::DbgMsg(FString::Printf(TEXT("AHitableActorBase::OnHit => NOT A WeaponSystemProjectile!")), 5.0f, FColor::Purple);
+                // }
+            }
+            else
+            {
+                // UDbg::DbgMsg(FString::Printf(TEXT("AHitableActorBase::OnHit => ShowMovingScoreWidget == FALSE!")), 5.0f, FColor::Purple);
+            }
 //            if(PickupEffect)
 //            {
 //                FVector PickupEffectLocation = GetActorLocation();

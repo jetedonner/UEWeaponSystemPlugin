@@ -5,6 +5,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/RotatingMovementComponent.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "Score/MovingScoreWidgetBase.h"
+#include "Score/ScoreHelper.h"
 #include "WeaponPickupActor.generated.h"
 
 UCLASS()
@@ -25,9 +28,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
     
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Event|Hit")
+    bool HasScore = true;
     
-    
-//    void SetPickUpCount();
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Event|Hit", meta=(EditCondition="HasScore"))
+    float HitScore = 100.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Event|Hit", meta=(EditCondition="HasScore"))
+    bool ShowMovingScoreWidget = true;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon System")
     class UStaticMeshComponent* StaticMeshComponent;
@@ -44,12 +52,6 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon System")
     float CollisionRadius = 100.0f;
     
-//    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon System")
-//    UParticleSystemComponent* ParticleSystemComponent;
-//
-//    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon System")
-//    UParticleSystem* PickupEffect;
-    
     UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(RequiredAssetDataTags="RowStructure=WeaponDefinition"), Category="Weapon System")
     FDataTableRowHandle WeaponDefinition;
     
@@ -58,7 +60,16 @@ public:
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
     class USoundCue* PickupSound;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon System")
+    class UParticleSystemComponent* ParticleSystemComponent;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon System")
+    class UParticleSystem* PickupEffect;
     
+    // UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+    // class UParticleSystemComponent* ParticleSystemComponent;
+
     UFUNCTION(BlueprintCallable, Category="Weapon System")
     void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
     

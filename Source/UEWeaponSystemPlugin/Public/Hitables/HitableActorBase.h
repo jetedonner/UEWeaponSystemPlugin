@@ -60,12 +60,6 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Event|Hit")
     bool DestroyOnHit = false;
     
-//    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Event|Hit")
-//    bool ShowMovingScore = true;
-    
-//    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InfoTriggerBox", meta = (AllowPrivateAccess = "true"))
-//    TArray<TSubclassOf<AWeaponSystemCharacterBase>> TriggeringActors;
-    
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Event|Hit")
     class UShapeComponent* CollisionComponent;
     
@@ -74,18 +68,6 @@ public:
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Event|Hit")
     class UStaticMeshComponent* MeshComponent;
-    
-//    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Event|Hit")
-//    class UWidgetComponent* MovingScoreWidgetComponent;
-//
-//    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Event|Hit")
-//    TSubclassOf<UUserWidget> MovingScoreWidgetClass;
-//
-//    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Event|Hit")
-//    UMovingScoreWidgetBase* MovingScoreWidgetBase;
-    
-//    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Event|Hit")
-//    int32 MovingScoreWidgetIdx = 0;
     
     UFUNCTION(BlueprintCallable, Category="Weapon System")
     void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
@@ -97,11 +79,6 @@ public:
     void OnComponentGotHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
     
     void OnComponentGotHit_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
-
-    // UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="Event|Hit")
-    // virtual void OnGotHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit) override;
-    
-    // void OnGotHit_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
 
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Weapon System")
     void OnHitted(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

@@ -13,6 +13,7 @@
 #include "WeaponSystem/Definition/WeaponDefinition.h"
 //#include "WeaponSystem/HUD/WeaponSystemHUD.h"
 #include "Utils/UtilityTimer.h"
+#include "Utils/Dbg.h"
 #include "WeaponSystem/WeaponComponent.h"
 #include "BaseWeaponComponent.generated.h"
 
@@ -66,31 +67,41 @@ public:
     
     UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category="Weapon System")
     int32 AmmoCount;
+
+    UFUNCTION(BlueprintPure, BlueprintInternalUseOnly, Category="Weapon System")
+    int32 GetClipAmmoCount() { return AmmoCount % WeaponDefinition()->ClipSize; }
     
     UPROPERTY(BlueprintGetter=GetClipAmmoCount, Category="Weapon System")
     int32 ClipAmmoCount;
     
-    UFUNCTION(BlueprintPure, BlueprintInternalUseOnly, Category="Weapon System")
-    int32 GetClipAmmoCount()
-    {
-        if(AmmoCount > 0)
-        {
-            int32 ClipAmmoCountVar = AmmoCount % WeaponDefinition()->ClipSize;
-            if(ClipAmmoCountVar == 0)
-            {
-                return WeaponDefinition()->ClipSize;
-            }
-            else
-            {
-                return ClipAmmoCountVar;
-            }
-            return AmmoCount % WeaponDefinition()->ClipSize;
-        }
-        else
-        {
-            return AmmoCount;
-        }
-    }
+    // UPROPERTY(BlueprintGetter=GetClipAmmoCount, Category="Weapon System")
+    // int32 ClipAmmoCount;
+    
+    // UFUNCTION(BlueprintPure, BlueprintInternalUseOnly, Category="Weapon System")
+    // int32 GetClipAmmoCount()
+    // {
+    //     if(AmmoCount > 0)
+    //     {
+    //         int32 ClipAmmoCountVar = AmmoCount % WeaponDefinition()->ClipSize;
+            
+    //         UDbg::DbgMsg(FString::Printf(TEXT("WeaponDefinition()->ClipSize %d"), WeaponDefinition()->ClipSize), 5.0f, FColor::Purple);
+
+    //         if(ClipAmmoCountVar == 0)
+    //         {
+    //             return WeaponDefinition()->ClipSize;
+    //         }
+    //         else
+    //         {
+    //             return ClipAmmoCountVar;
+    //         }
+    //         // return AmmoCount % WeaponDefinition()->ClipSize;
+    //     }
+    //     else
+    //     {
+    //         UDbg::DbgMsg(FString::Printf(TEXT("WeaponDefinition()->ClipSize %d"), WeaponDefinition()->ClipSize), 5.0f, FColor::Purple);
+    //         return AmmoCount;
+    //     }
+    // }
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
     UAudioComponent* ShotAudioComponent;

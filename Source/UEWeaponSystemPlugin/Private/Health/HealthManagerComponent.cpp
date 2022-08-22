@@ -14,21 +14,29 @@ UHealthManagerComponent::UHealthManagerComponent()
     PrimaryComponentTick.bCanEverTick = true;
 }
 
+void UHealthManagerComponent::BeginPlay()
+{
+    Super::BeginPlay();
+
+    SetHealth(Health);
+}
+
+void UHealthManagerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+    Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+}
+
 void UHealthManagerComponent::SetupParent(ACharacter* InParent)
 {
     if(InParent)
     {
-        if(InParent)
-        {
-            UDbg::DbgMsg(FString::Printf(TEXT("UHealthManagerComponent::SetupParent => InParent SET")), 5.0f, FColor::Purple); 
-            InParent->GetCapsuleComponent()->OnComponentHit.AddDynamic(this, &UHealthManagerComponent::OnHit);
-        }
+        UDbg::DbgMsg(FString::Printf(TEXT("UHealthManagerComponent::SetupParent => InParent SET")), 5.0f, FColor::Purple); 
+        InParent->GetCapsuleComponent()->OnComponentHit.AddDynamic(this, &UHealthManagerComponent::OnHit);
     }
     else
     {
         UDbg::DbgMsg(FString::Printf(TEXT("UHealthManagerComponent::SetupParent => InParent NOT SET")), 5.0f, FColor::Purple);
     }
-    // UDbg::DbgMsg(FString::Printf(TEXT("UHealthManagerComponent::SetupParent => %s"), *InParent->GetName()), 5.0f, FColor::Purple);
 }
 
 void UHealthManagerComponent::Activate(bool bReset /* = false */)
@@ -53,18 +61,8 @@ void UHealthManagerComponent::OnHit(UPrimitiveComponent* HitComponent, AActor* O
         float NewHealth = 0.0f;
         DecreaseHealth(2.0f, NewHealth);
     
-    UDbg::DbgMsg(FString::Printf(TEXT("NEeeeeeeeeeeeeeeeWWWWWWWWW HHHHHHHEEEEEAAALLLLHHHHTTTTT => %f"), NewHealth), 15.0f, FColor::Purple);
+    // UDbg::DbgMsg(FString::Printf(TEXT("NEeeeeeeeeeeeeeeeWWWWWWWWW HHHHHHHEEEEEAAALLLLHHHHTTTTT => %f"), NewHealth), 15.0f, FColor::Purple);
 //    }
-}
-
-void UHealthManagerComponent::BeginPlay()
-{
-    Super::BeginPlay();
-}
-
-void UHealthManagerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-    Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
 void UHealthManagerComponent::ApplyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
@@ -78,12 +76,33 @@ void UHealthManagerComponent::ApplyDamage(AActor* DamagedActor, float Damage, co
 void UHealthManagerComponent::IncreaseHealth(float Value, float& NewHealth)
 {
     NewHealth = (Health += Value);
-    Cast<UFloatingHealthBarWidget>(FloatingHealthBar)->Health = Health;
+    SetHealth(NewHealth);
+    // Cast<UFloatingHealthBarWidget>(FloatingHealthBar)->Health = Health;
 }
 
 void UHealthManagerComponent::DecreaseHealth(float Value, float& NewHealth)
 {
-    NewHealth = (Health -= Value);
-    Cast<UFloatingHealthBarWidget>(FloatingHealthBar)->Health = Health;
+    // NewHealth = (Health -= Value);
+    SetHealth((NewHealth = (Health -= Value)));
+    // Cast<UFloatingHealthBarWidget>(FloatingHealthBar)->Health = Health;
 //    Died = (Health <= 0.0f);
+}
+
+void UHealthManagerComponent::SetHealth(float Value)
+{
+    Health = Value;
+
+    if(FloatingHealthBar)
+    {
+        Cast<UFloatingHealthBarWidget>(FloatingHealthBar)->Health = Health;
+    }
+    
+	AWeaponSystemHUD* WeaponSystemHUD = Cast<AWeaponSystemHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	if(WeaponSystemHUD)
+    {   
+		if(WeaponSystemHUD->InfoHUDWidget)
+		{
+			WeaponSystemHUD->InfoHUDWidget->Health = Health;
+		}	
+	}
 }

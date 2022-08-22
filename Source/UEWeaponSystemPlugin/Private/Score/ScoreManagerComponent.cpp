@@ -31,13 +31,26 @@ void UScoreManagerComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
+void UScoreManagerComponent::SetScore(float Value)
+{
+    Score = Value;
+
+	AWeaponSystemHUD* WeaponSystemHUD = Cast<AWeaponSystemHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	if(WeaponSystemHUD)
+    {   
+		if(WeaponSystemHUD->InfoHUDWidget)
+		{
+			WeaponSystemHUD->InfoHUDWidget->Score = Score;
+		}	
+	}
+}
+
 void UScoreManagerComponent::AddScore(float Value)
 {
-    Score += Value;
-//    NewScore = Score;
+    SetScore(Score + Value);
 }
 
 void UScoreManagerComponent::ResetScore()
 {
-    Score = 0.0f;
+    SetScore(0.0f);
 }

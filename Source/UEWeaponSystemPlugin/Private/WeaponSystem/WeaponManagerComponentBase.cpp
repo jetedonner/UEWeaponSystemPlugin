@@ -333,12 +333,18 @@ void UWeaponManagerComponentBase::SetCurrentWeapon(int32 WeaponID, bool PlayAudi
 //
                 CurrentWeapon = Weapon;
 
-                AWeaponSystemHUD* MyHUD = Cast<AWeaponSystemHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
-                if(MyHUD)
+                AWeaponSystemHUD* WeaponSystemHUD = Cast<AWeaponSystemHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+                if(WeaponSystemHUD)
                 {   
-                    if(MyHUD->CrosshairUserWidget)
+                    if(WeaponSystemHUD->CrosshairUserWidget)
                     {
-                        MyHUD->CrosshairUserWidget->ShowCrosshair(WeaponID);
+                        WeaponSystemHUD->CrosshairUserWidget->ShowCrosshair(WeaponID);
+                    }
+
+                    if(WeaponSystemHUD->InfoHUDWidget)
+                    {
+                        WeaponSystemHUD->InfoHUDWidget->AmmoCount = CurrentWeapon->AmmoCount;
+                        WeaponSystemHUD->InfoHUDWidget->ClipAmmoCount = CurrentWeapon->ClipAmmoCount;
                     }
                 }
 //
@@ -424,7 +430,7 @@ void UWeaponManagerComponentBase::OnShotFired(FWeaponDefinition ShotWeaponDefini
 
 void UWeaponManagerComponentBase::WeaponReloading(float Timeout)
 {
-//    UDbg::DbgMsg(FString::Printf(TEXT("UWeaponManagerComponentBase::OnShotFired")), 5.0f, FColor::Green);
+    UDbg::DbgMsg(FString::Printf(TEXT("UWeaponManagerComponentBase::WeaponReloading(float Timeout)")), 5.0f, FColor::Green);
     this->OnWeaponReloading.Broadcast(Timeout);
 }
 
