@@ -8,6 +8,7 @@
 
 
 #include "Health/HealthManagerComponent.h"
+// #include "WeaponSystem/WeaponSystemProjectile.h"
 
 UHealthManagerComponent::UHealthManagerComponent()
 {
@@ -53,13 +54,13 @@ void UHealthManagerComponent::OnHit(UPrimitiveComponent* HitComponent, AActor* O
 {
 //    UDbg::DbgMsg(FString::Printf(TEXT("OnHit OnHit OnHit OnHit OnHit OnHit OnHit => %s"), *GetOwner()->GetName()), 15.0f, FColor::Purple);
     
-//    AWeaponSystemProjectileBase* ProjectileBase = Cast<AWeaponSystemProjectileBase>(OtherActor);
+//    AWeaponSystemProjectile* ProjectileBase = Cast<AWeaponSystemProjectile>(OtherActor);
 //    if(ProjectileBase)
 //    {
 //        OwnerCharacter->GetMesh()->OnComponentHit.AddDynamic(this, &UHealthManagerComponent::OnHit);
         //ApplyDamage(GetOwner(), 5);
         float NewHealth = 0.0f;
-        DecreaseHealth(2.0f, NewHealth);
+        DecreaseHealth(2.5f /*ProjectileBase->DamageFactor*/, NewHealth);
     
     // UDbg::DbgMsg(FString::Printf(TEXT("NEeeeeeeeeeeeeeeeWWWWWWWWW HHHHHHHEEEEEAAALLLLHHHHTTTTT => %f"), NewHealth), 15.0f, FColor::Purple);
 //    }
@@ -75,8 +76,8 @@ void UHealthManagerComponent::ApplyDamage(AActor* DamagedActor, float Damage, co
 
 void UHealthManagerComponent::IncreaseHealth(float Value, float& NewHealth)
 {
-    NewHealth = (Health += Value);
-    SetHealth(NewHealth);
+    // NewHealth = (Health += Value);
+    SetHealth((NewHealth = (Health += Value)));
     // Cast<UFloatingHealthBarWidget>(FloatingHealthBar)->Health = Health;
 }
 
@@ -97,12 +98,13 @@ void UHealthManagerComponent::SetHealth(float Value)
         Cast<UFloatingHealthBarWidget>(FloatingHealthBar)->Health = Health;
     }
     
-	AWeaponSystemHUD* WeaponSystemHUD = Cast<AWeaponSystemHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-	if(WeaponSystemHUD)
-    {   
-		if(WeaponSystemHUD->InfoHUDWidget)
-		{
-			WeaponSystemHUD->InfoHUDWidget->Health = Health;
-		}	
-	}
+    if(GetOwner()->GetInstigatorController() == GetWorld()->GetFirstPlayerController())
+    {
+        AWeaponSystemHUD* WeaponSystemHUD = Cast<AWeaponSystemHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+        
+        if(WeaponSystemHUD && WeaponSystemHUD->InfoHUDWidget)
+        {   
+            WeaponSystemHUD->InfoHUDWidget->Health = Health;
+        }
+    }
 }

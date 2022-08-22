@@ -6,7 +6,7 @@
 //  Copyright © 1991 - 2022 DaVe Inc. kimhauser.ch, All rights reserved.
 //
 
-#include "WeaponSystem/WeaponSystemProjectile.h"
+#include "WeaponSystem/Projectiles/WeaponSystemProjectile.h"
 
 // Sets default values
 AWeaponSystemProjectile::AWeaponSystemProjectile()
@@ -116,15 +116,10 @@ void AWeaponSystemProjectile::Tick(float DeltaTime)
 void AWeaponSystemProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
     UDbg::DbgMsg(FString::Printf(TEXT("Projectile OnHit: %s / Owner: %s"), *OtherActor->GetName(), *this->GetOwner()->GetName()));
+    
     if(OtherActor == this->GetOwner())
     {
         return;
-    }
-
-
-    if(OtherActor->Implements<UHitableInterface>())
-    {
-        UDbg::DbgMsg(FString::Printf(TEXT("OtherActor->Implements<UHitableInterface>() IIIIIITTTTTT IMPLEMENTS !!!!!!!!!!!!")));
     }
 
     if (OtherActor != nullptr && OtherActor != this && OtherComponent != nullptr)
@@ -136,15 +131,24 @@ void AWeaponSystemProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* O
         UGameplayStatics::ApplyDamage(OtherActor, DamageFactor, GetOwner()->GetInstigatorController(), this, UDamageType::StaticClass());
     }
     
-    if(ImpactTargetSound)
+
+    if(OtherActor->Implements<UHitableInterface>())
     {
-//        UDbg::DbgMsg(FString::Printf(TEXT("Projectile ImpactTargetSound IS SET")));
-        UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, ImpactTargetSound, Hit.ImpactPoint, FRotator::ZeroRotator, 1.0, 1.0, 0.0f, nullptr, nullptr, true);
+        if(ImpactTargetSound)
+        {
+            // UAudioComponent* AudioComponent = 
+            UGameplayStatics::SpawnSoundAtLocation(this, ImpactTargetSound, Hit.ImpactPoint, FRotator::ZeroRotator, 1.0, 1.0, 0.0f, nullptr, nullptr, true);
+        }
     }
     else
     {
-        UDbg::DbgMsg(FString::Printf(TEXT("Projectile ImpactTargetSound IS NOT SET")));
+        if(ImpactFailSound)
+        {
+            // UAudioComponent* AudioComponent = 
+            UGameplayStatics::SpawnSoundAtLocation(this, ImpactFailSound, Hit.ImpactPoint, FRotator::ZeroRotator, 1.0, 1.0, 0.0f, nullptr, nullptr, true);
+        }
     }
+    
     
     if(ImpactEffect)
     {

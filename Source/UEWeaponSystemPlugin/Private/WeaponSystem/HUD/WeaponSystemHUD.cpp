@@ -81,12 +81,12 @@ void AWeaponSystemHUD::ShowCrosshair(bool Show)
     {
         if(Show)
         {
-            UDbg::DbgMsg(FString::Printf(TEXT("Showing CrosshairUserWidget!")));
+            // UDbg::DbgMsg(FString::Printf(TEXT("Showing CrosshairUserWidget!")));
             CrosshairUserWidget->SetVisibility(ESlateVisibility::Visible);
         }
         else
         {
-            UDbg::DbgMsg(FString::Printf(TEXT("Hiding CrosshairUserWidget!")));
+            // UDbg::DbgMsg(FString::Printf(TEXT("Hiding CrosshairUserWidget!")));
             CrosshairUserWidget->SetVisibility(ESlateVisibility::Hidden);
         }
     }

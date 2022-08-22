@@ -209,6 +209,7 @@ void UBaseWeaponComponent::FireShot()
                 {
                     FVector LaunchDirection = MuzzleRotation.Vector();
                     Projectile->DamageFactor = WeaponFunctionDefinition.DamageFactor;
+                    // Projectile->WeaponFunctionDefinition = WeaponFunctionDefinition;
                     Projectile->FireInDirection(LaunchDirection);
 
                     OnShotFiredDelegate.Broadcast(*FoundWeaponDefinition, WeaponFunctionDefinition, CurrentWeaponFunction);
@@ -227,43 +228,41 @@ void UBaseWeaponComponent::FireShot()
                         AmmoCount--;
                     }
                     
+                    AWeaponSystemHUD* WeaponSystemHUD = Cast<AWeaponSystemHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
                     if(AmmoCount > -1)
                     {
                         if(AmmoCount > 0 && (AmmoCount % FoundWeaponDefinition->ClipSize) == 0)
                         {
                             IsReloading = true;
+                            // UDbg::DbgMsg(FString::Printf(TEXT("RELOADING!!!!!!")));
                             GetWorld()->GetTimerManager().SetTimer(ReloadingStartTimerHandle, this, &UBaseWeaponComponent::StartReloading, 0.01f, true, 0.01f);
                             this->OnWeaponReloading.Broadcast(FoundWeaponDefinition->ReloadTimeout);
+                            // AWeaponSystemHUD* WeaponSystemHUD = Cast<AWeaponSystemHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+                            if(WeaponSystemHUD && WeaponSystemHUD->InfoHUDWidget)
+                            {
+                                WeaponSystemHUD->InfoHUDWidget->OnShowReloadProgressBar(WeaponDefinition()->ReloadTimeout);
+                            }
+                            else
+                            {
+                                UDbg::DbgMsg(FString::Printf(TEXT("WeaponSystemHUD IS NULL")));
+                            }
                         }
                     }
 
-                    AWeaponSystemHUD* WeaponSystemHUD = Cast<AWeaponSystemHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-                    if(WeaponSystemHUD)
+                    if(WeaponSystemHUD && WeaponSystemHUD->InfoHUDWidget)
                     {
-                        if(WeaponSystemHUD->InfoHUDWidget)
+                        if(!IsReloading)
                         {
                             WeaponSystemHUD->InfoHUDWidget->OnShowReloadProgressBar(WeaponFunctionDefinition.Cadence);
-                            WeaponSystemHUD->InfoHUDWidget->AmmoCount = AmmoCount;
-                            WeaponSystemHUD->InfoHUDWidget->ClipAmmoCount = ClipAmmoCount;
                         }
+                        WeaponSystemHUD->InfoHUDWidget->AmmoCount = AmmoCount;
+                        WeaponSystemHUD->InfoHUDWidget->ClipAmmoCount = GetClipAmmoCount();// (AmmoCount %  WeaponDefinition()->ClipSize);// ClipAmmoCount;
                     }
-
-                //                     AWeaponSystemHUD* WeaponSystemHUD = Cast<AWeaponSystemHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
-                // if(WeaponSystemHUD)
-                // {   
-                //     if(WeaponSystemHUD->CrosshairUserWidget)
-                //     {
-                //         WeaponSystemHUD->CrosshairUserWidget->ShowCrosshair(WeaponID);
-                //     }
-
-                //     if(WeaponSystemHUD->InfoHUDWidget)
-                //     {
-                //         WeaponSystemHUD->InfoHUDWidget->AmmoCount = CurrentWeapon->AmmoCount;
-                //         WeaponSystemHUD->InfoHUDWidget->ClipAmmoCount = CurrentWeapon->ClipAmmoCount;
-                //     }
-                // }
+                    else
+                    {
+                        UDbg::DbgMsg(FString::Printf(TEXT("WeaponSystemHUD IS NULL")));
+                    }
                 }
-
             }
         }
     }

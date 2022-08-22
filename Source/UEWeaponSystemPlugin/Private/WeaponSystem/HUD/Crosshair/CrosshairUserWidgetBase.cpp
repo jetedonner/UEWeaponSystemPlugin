@@ -41,8 +41,7 @@ void UCrosshairUserWidgetBase::FillAnimationsMap()
                 {
                     FName AnimName = WidgetAnim->MovieScene->GetFName();
                     AnimationsMap.Add(AnimName, WidgetAnim);
-                    
-                    UDbg::DbgMsg(FString::Printf(TEXT("Adding Widget Animation to Map => %s"), *AnimName.ToString()), 5.0f, FColor::Red);
+                    // UDbg::DbgMsg(FString::Printf(TEXT("Adding Widget Animation to Map => %s"), *AnimName.ToString()), 5.0f, FColor::Red);
                 }
             }
         }
@@ -62,11 +61,7 @@ UWidgetAnimation* UCrosshairUserWidgetBase::GetAnimationByName(FName AnimationNa
 }
 
 
-bool UCrosshairUserWidgetBase::PlayAnimationByName(FName AnimationName,
-    float StartAtTime,
-    int32 NumLoopsToPlay,
-    EUMGSequencePlayMode::Type PlayMode,
-    float PlaybackSpeed)
+bool UCrosshairUserWidgetBase::PlayAnimationByName(FName AnimationName, float StartAtTime, int32 NumLoopsToPlay, EUMGSequencePlayMode::Type PlayMode, float PlaybackSpeed)
 {
     UWidgetAnimation* WidgetAnim = GetAnimationByName(AnimationName);
     if (WidgetAnim)

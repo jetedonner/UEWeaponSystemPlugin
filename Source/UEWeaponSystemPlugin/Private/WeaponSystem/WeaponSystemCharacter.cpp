@@ -131,14 +131,25 @@ void AWeaponSystemCharacter::BeginPlay()
         WeaponManagerComponent->MuzzleOffset = MuzzlePosition->GetRelativeLocation();
     }
     
-    HealthManagerComponent->SetupParent(this);
+    // HealthManagerComponent->SetupParent(this);
 
 	Super::BeginPlay();
 
     HealthManagerComponent->FloatingHealthBar = Cast<UFloatingHealthBarWidget>(FloatingHealthBar->GetUserWidgetObject());
+    
     Cast<AActor>(this)->OnTakeAnyDamage.AddDynamic(this, &AWeaponSystemCharacter::OnTakeAnyDamage);
-    UDbg::DbgMsg(FString::Printf(TEXT("WeaponManagerComponent->MuzzleOffset => %s"), *MuzzlePosition->GetRelativeLocation().ToString()));
+    
+    // UDbg::DbgMsg(FString::Printf(TEXT("WeaponManagerComponent->MuzzleOffset => %s"), *MuzzlePosition->GetRelativeLocation().ToString()));
+    
     this->GetCapsuleComponent()->OnComponentHit.AddDynamic(this, &AWeaponSystemCharacter::OnHitted);
+    
+    ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+    if(this == PlayerCharacter)
+    {
+        FloatingHealthBar->SetVisibility(false);
+    }
+
+    // Cast<AActor>(this)->OnTakeAnyDamage.AddDynamic(this, &AWeaponSystemCharacterBase::OnTakeAnyDamageNG);
     // CollisionComponent->OnComponentHit.AddDynamic(this, &AWeaponSystemCharacter::OnHitted);
 }
 
@@ -146,22 +157,26 @@ void AWeaponSystemCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
     
-    ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-    if(this == PlayerCharacter)
-    {
-        FloatingHealthBar->SetVisibility(false);
-        // FVector MovingScoreWidgetLoc = FloatingHealthBar->GetComponentLocation();
-        // FVector PlayerLoc = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->GetCameraLocation(); //PlayerCharacter->GetRootComponent()->GetComponentLocation();
+    // TODO: SetVisible to BeginPlay
+    // ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+    // if(this == PlayerCharacter)
+    // {
+    //     FloatingHealthBar->SetVisibility(false);
+    //     // FVector MovingScoreWidgetLoc = FloatingHealthBar->GetComponentLocation();
+    //     // FVector PlayerLoc = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->GetCameraLocation(); //PlayerCharacter->GetRootComponent()->GetComponentLocation();
         
-        // FRotator MovingScoreWidgetRot = UKismetMathLibrary::FindLookAtRotation(MovingScoreWidgetLoc, PlayerLoc);
-        // FRotator MovingScoreWidgetRotNew = FRotator(0, MovingScoreWidgetRot.Yaw, 0);
+    //     // FRotator MovingScoreWidgetRot = UKismetMathLibrary::FindLookAtRotation(MovingScoreWidgetLoc, PlayerLoc);
+    //     // FRotator MovingScoreWidgetRotNew = FRotator(0, MovingScoreWidgetRot.Yaw, 0);
         
-        // FloatingHealthBar->SetWorldRotation(MovingScoreWidgetRotNew);
-    }
-    else
+    //     // FloatingHealthBar->SetWorldRotation(MovingScoreWidgetRotNew);
+    // }
+    // else
+    // {
+    if(FloatingHealthBar->IsWidgetVisible())
     {
-        UHUDFunc::RotateToPlayer(FloatingHealthBar, PlayerCharacter);
+        UHUDFunc::RotateToPlayer(FloatingHealthBar, UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
     }
+    // }
 }
 
 void AWeaponSystemCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -188,7 +203,7 @@ void AWeaponSystemCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 
 void AWeaponSystemCharacter::OnTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
-    UDbg::DbgMsg(FString(TEXT("AWeaponSystemCharacter::OnTakeAnyDamage!!!")), 5.0f, FColor::Yellow);
+    // UDbg::DbgMsg(FString(TEXT("AWeaponSystemCharacter::OnTakeAnyDamage!!!")), 5.0f, FColor::Yellow);
 
     if(HealthManagerComponent)
     {
@@ -209,5 +224,5 @@ void AWeaponSystemCharacter::OnTakeAnyDamage(AActor* DamagedActor, float Damage,
 
 void AWeaponSystemCharacter::OnHitted_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	UDbg::DbgMsg(FString::Printf(TEXT("AHitableActorBaseNG::OnHitted_Implementation")), 5.0f, FColor::Green);
+	// UDbg::DbgMsg(FString::Printf(TEXT("AHitableActorBaseNG::OnHitted_Implementation")), 5.0f, FColor::Green);
 }

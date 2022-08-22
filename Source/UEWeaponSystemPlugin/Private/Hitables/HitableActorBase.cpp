@@ -202,5 +202,5 @@ void AHitableActorBase::ExecActorHitHandler(AActor* OtherActor, const FHitResult
 
 void AHitableActorBase::OnHitted_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	UDbg::DbgMsg(FString::Printf(TEXT("AHitableActorBase::OnHitted_Implementation")), 5.0f, FColor::Green);
+	// UDbg::DbgMsg(FString::Printf(TEXT("AHitableActorBase::OnHitted_Implementation")), 5.0f, FColor::Green);
 }

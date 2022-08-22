@@ -36,13 +36,10 @@ void UScoreManagerComponent::SetScore(float Value)
     Score = Value;
 
 	AWeaponSystemHUD* WeaponSystemHUD = Cast<AWeaponSystemHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-	if(WeaponSystemHUD)
-    {   
-		if(WeaponSystemHUD->InfoHUDWidget)
-		{
-			WeaponSystemHUD->InfoHUDWidget->Score = Score;
-		}	
-	}
+	if(WeaponSystemHUD && WeaponSystemHUD->InfoHUDWidget)
+	{
+		WeaponSystemHUD->InfoHUDWidget->Score = Score;
+	}	
 }
 
 void UScoreManagerComponent::AddScore(float Value)

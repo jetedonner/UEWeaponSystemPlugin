@@ -16,6 +16,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/DecalComponent.h"
 #include "WeaponSystem/Definition/DecalStruct.h"
+// #include "WeaponSystem/Definition/WeaponFunctionDefinition.h"
 #include "WeaponSystemProjectile.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FProjectileHitDelegate, AActor*, ProjectileActor, AActor*, OtherActor, FVector, Location);
@@ -42,18 +43,21 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(RequiredAssetDataTags="RowStructure=WeaponDefinition"), Category="Weapon System")
     FDataTableRowHandle WeaponDefinition;
 
+    // UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+    // FWeaponFunctionDefinition WeaponFunctionDefinition;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
     float DamageFactor = 5.0;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon System")
     bool DestroyOnHit = true;
     
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon System")
-    bool ApplyRadialDamage = true;
+    // UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon System")
+    // bool ApplyRadialDamage = true;
     
     // Function that is called when the projectile hits something.
     UFUNCTION()
-    void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+    virtual void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
     
     UPROPERTY(BlueprintAssignable, Category="Weapon System")
     FProjectileHitDelegate OnProjectileHitDelegate;

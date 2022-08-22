@@ -15,7 +15,7 @@
 #include "Engine/Texture2D.h"
 #include "Materials/MaterialInterface.h"
 #include "Blueprint/UserWidget.h"
-#include "WeaponSystem/WeaponSystemProjectile.h"
+#include "WeaponSystem/Projectiles/WeaponSystemProjectile.h"
 //#include "WeaponSystem/Definition/DecalStruct.h"
 #include "WeaponFunctionDefinition.generated.h"
 

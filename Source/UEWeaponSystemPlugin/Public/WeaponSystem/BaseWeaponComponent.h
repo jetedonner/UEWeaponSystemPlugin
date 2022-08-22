@@ -69,10 +69,29 @@ public:
     int32 AmmoCount;
 
     UFUNCTION(BlueprintPure, BlueprintInternalUseOnly, Category="Weapon System")
-    int32 GetClipAmmoCount() { return AmmoCount % WeaponDefinition()->ClipSize; }
+    int32 GetClipAmmoCount()
+    { 
+        // UE_LOG(LogTemp, Warning, TEXT("GetClipAmmoCount() %d"), WeaponDefinition()->ClipSize);
+        int32 ClipCount = AmmoCount % WeaponDefinition()->ClipSize;
+        if(AmmoCount > 0)
+        {
+            if(ClipCount > 0)
+            {
+                return ClipCount;
+            }
+            else
+            {
+                return WeaponDefinition()->ClipSize;
+            }
+        }
+        else
+        {
+            return AmmoCount;
+        }
+    }
     
-    UPROPERTY(BlueprintGetter=GetClipAmmoCount, Category="Weapon System")
-    int32 ClipAmmoCount;
+    // UPROPERTY(BlueprintGetter=GetClipAmmoCount, Category="Weapon System")
+    // int32 ClipAmmoCount;
     
     // UPROPERTY(BlueprintGetter=GetClipAmmoCount, Category="Weapon System")
     // int32 ClipAmmoCount;

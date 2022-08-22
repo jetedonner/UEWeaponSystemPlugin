@@ -344,7 +344,7 @@ void UWeaponManagerComponentBase::SetCurrentWeapon(int32 WeaponID, bool PlayAudi
                     if(WeaponSystemHUD->InfoHUDWidget)
                     {
                         WeaponSystemHUD->InfoHUDWidget->AmmoCount = CurrentWeapon->AmmoCount;
-                        WeaponSystemHUD->InfoHUDWidget->ClipAmmoCount = CurrentWeapon->ClipAmmoCount;
+                        WeaponSystemHUD->InfoHUDWidget->ClipAmmoCount = CurrentWeapon->GetClipAmmoCount();
                     }
                 }
 //
@@ -424,13 +424,11 @@ void UWeaponManagerComponentBase::PickupWeapon(int32 WeaponID, int32 AmmoCount)
 
 void UWeaponManagerComponentBase::OnShotFired(FWeaponDefinition ShotWeaponDefinition, FWeaponFunctionDefinition ShotWeaponFunctionDefinition, EWeaponFunction ShotWeaponFunction)
 {
-//    UDbg::DbgMsg(FString::Printf(TEXT("UWeaponManagerComponentBase::OnShotFired")), 5.0f, FColor::Green);
     WeaponComponent->OnShotFiredDelegate.Broadcast(ShotWeaponDefinition, ShotWeaponFunctionDefinition, ShotWeaponFunction);
 }
 
 void UWeaponManagerComponentBase::WeaponReloading(float Timeout)
 {
-    UDbg::DbgMsg(FString::Printf(TEXT("UWeaponManagerComponentBase::WeaponReloading(float Timeout)")), 5.0f, FColor::Green);
     this->OnWeaponReloading.Broadcast(Timeout);
 }
 
