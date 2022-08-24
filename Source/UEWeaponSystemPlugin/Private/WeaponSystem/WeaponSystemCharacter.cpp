@@ -44,6 +44,8 @@ AWeaponSystemCharacter::AWeaponSystemCharacter()
             FloatingHealthBar->SetupAttachment(this->GetRootComponent());
             FloatingHealthBar->SetRelativeLocation(FVector(0.0f, 0.0f, 130.0f));
             FloatingHealthBar->SetRelativeScale3D(FVector(0.3f, 0.3f, 0.3f));
+            // FloatingHealthBar->InitWidget();
+            // Cast<UFloatingHealthBarWidget>(FloatingHealthBar->GetUserWidgetObject())->ParentWidgetComponent = FloatingHealthBar;
         }
     }
 
@@ -101,6 +103,8 @@ AWeaponSystemCharacter::AWeaponSystemCharacter(const FObjectInitializer& ObjectI
             FloatingHealthBar->SetupAttachment(this->GetRootComponent());
             FloatingHealthBar->SetRelativeLocation(FVector(0.0f, 0.0f, 130.0f));
             FloatingHealthBar->SetRelativeScale3D(FVector(0.3f, 0.3f, 0.3f));
+            // FloatingHealthBar->InitWidget();
+            // Cast<UFloatingHealthBarWidget>(FloatingHealthBar->GetUserWidgetObject())->ParentWidgetComponent = FloatingHealthBar;
             // HealthManagerComponent->FloatingHealthBar = Cast<UFloatingHealthBarWidget>(FloatingHealthBar->GetUserWidgetObject());
         }
     }
@@ -130,7 +134,12 @@ void AWeaponSystemCharacter::BeginPlay()
     {
         WeaponManagerComponent->MuzzleOffset = MuzzlePosition->GetRelativeLocation();
     }
-    
+
+    if(FloatingHealthBar)
+    {
+        FloatingHealthBar->InitWidget();
+        Cast<UFloatingHealthBarWidget>(FloatingHealthBar->GetUserWidgetObject())->ParentWidgetComponent = FloatingHealthBar;
+    }
     // HealthManagerComponent->SetupParent(this);
 
 	Super::BeginPlay();
