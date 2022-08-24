@@ -7,19 +7,22 @@
 //
 
 #include "Utils/Dbg.h"
-//#include "Utils/GlobalDefinitions.h"
 
 void UDbg::DbgMsg(const FString& DebugMessage, float Duration, FColor TextColor, const bool ConsoleOnly)
 {
-    UDevHelper* DevHelper = NewObject<UDevHelper>(UDevHelper::StaticClass());
-    
-    if(DevHelper->DebugMode)
-    {
-        UE_LOG(WeaponSysPlugin, Log, TEXT("%s"), *DebugMessage);
+    #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
+
+        UDevHelper* DevHelper = NewObject<UDevHelper>(UDevHelper::StaticClass());
         
-        if(!ConsoleOnly && DevHelper->OnScreeLog)
+        if(DevHelper->DebugMode)
         {
-            GEngine->AddOnScreenDebugMessage(-1, Duration, TextColor, DebugMessage);
+            UE_LOG(WeaponSysPlugin, Log, TEXT("%s"), *DebugMessage);
+            
+            if(!ConsoleOnly && DevHelper->OnScreeLog)
+            {
+                GEngine->AddOnScreenDebugMessage(-1, Duration, TextColor, DebugMessage);
+            }
         }
-    }
+
+    #endif
 }

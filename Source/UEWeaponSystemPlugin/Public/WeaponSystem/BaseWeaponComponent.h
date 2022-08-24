@@ -66,6 +66,32 @@ public:
     int32 InitialAmmoCount = 30;
     
     UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category="Weapon System")
+    int32 _AmmoCount;
+
+    UFUNCTION(BlueprintGetter)
+    int32 GetAmmoCount()
+    {
+        return _AmmoCount; 
+    }
+
+    UFUNCTION(BlueprintSetter)
+    void SetAmmoCount(int32 NewAmmoCount)
+    {
+        _AmmoCount = NewAmmoCount;
+        
+        AWeaponSystemHUD* WeaponSystemHUD = Cast<AWeaponSystemHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+        if(WeaponSystemHUD && WeaponSystemHUD->InfoHUDWidget)
+        {
+            // if(!IsReloading)
+            // {
+            //     WeaponSystemHUD->InfoHUDWidget->OnShowReloadProgressBar(WeaponFunctionDefinition.Cadence);
+            // }
+            WeaponSystemHUD->InfoHUDWidget->AmmoCount = AmmoCount;
+            WeaponSystemHUD->InfoHUDWidget->ClipAmmoCount = GetClipAmmoCount();// (AmmoCount %  WeaponDefinition()->ClipSize);// ClipAmmoCount;
+        }
+    }
+
+    UPROPERTY(BlueprintReadWrite, BlueprintGetter=GetAmmoCount, BlueprintSetter=SetAmmoCount, Category="Weapon System")
     int32 AmmoCount;
 
     UFUNCTION(BlueprintPure, BlueprintInternalUseOnly, Category="Weapon System")

@@ -39,6 +39,8 @@ public:
     
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+    virtual void OutsideWorldBounds() override;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(RequiredAssetDataTags="RowStructure=WeaponDefinition"), Category="Weapon System")
     FDataTableRowHandle WeaponDefinition;

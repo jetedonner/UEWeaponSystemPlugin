@@ -397,14 +397,14 @@ void UWeaponManagerComponentBase::StopShooting()
 
 void UWeaponManagerComponentBase::PickupWeapon(int32 WeaponID, int32 AmmoCount)
 {
-    UBaseWeaponComponent* const* DaWeapon = WeaponArsenalImpl.FindByPredicate( [&](UBaseWeaponComponent* Result){ return WeaponID == Result->WeaponDefinition()->WeaponID; } );
+    UBaseWeaponComponent* const* FoundWeapon = WeaponArsenalImpl.FindByPredicate( [&](UBaseWeaponComponent* Result){ return WeaponID == Result->WeaponDefinition()->WeaponID; } );
     
-    if(DaWeapon)
+    if(FoundWeapon)
     {
-        UDbg::DbgMsg(FString::Printf(TEXT("PickupWeapon EXISTS AND FOUND")), 5.0f, FColor::Green);
+        // UDbg::DbgMsg(FString::Printf(TEXT("PickupWeapon EXISTS AND FOUND")), 5.0f, FColor::Green);
         if(AmmoCount >= 0)
         {
-            (*DaWeapon)->AmmoCount += AmmoCount;
+            (*FoundWeapon)->AmmoCount += AmmoCount;
         }
         
         if(CurrentWeapon->WeaponDefinition()->WeaponID != WeaponID)

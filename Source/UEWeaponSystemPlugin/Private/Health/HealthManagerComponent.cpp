@@ -40,16 +40,6 @@ void UHealthManagerComponent::SetupParent(ACharacter* InParent)
     }
 }
 
-void UHealthManagerComponent::Activate(bool bReset /* = false */)
-{
-   Super::Activate(bReset);
-//    ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner());
-//    if(OwnerCharacter)
-//    {
-//        OwnerCharacter->GetMesh()->OnComponentHit.AddDynamic(this, &UHealthManagerComponent::OnHit);
-//    }
-}
-
 void UHealthManagerComponent::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 //    UDbg::DbgMsg(FString::Printf(TEXT("OnHit OnHit OnHit OnHit OnHit OnHit OnHit => %s"), *GetOwner()->GetName()), 15.0f, FColor::Purple);
@@ -76,17 +66,12 @@ void UHealthManagerComponent::ApplyDamage(AActor* DamagedActor, float Damage, co
 
 void UHealthManagerComponent::IncreaseHealth(float Value, float& NewHealth)
 {
-    // NewHealth = (Health += Value);
     SetHealth((NewHealth = (Health += Value)));
-    // Cast<UFloatingHealthBarWidget>(FloatingHealthBar)->Health = Health;
 }
 
 void UHealthManagerComponent::DecreaseHealth(float Value, float& NewHealth)
 {
-    // NewHealth = (Health -= Value);
     SetHealth((NewHealth = (Health -= Value)));
-    // Cast<UFloatingHealthBarWidget>(FloatingHealthBar)->Health = Health;
-//    Died = (Health <= 0.0f);
 }
 
 void UHealthManagerComponent::SetHealth(float Value)
