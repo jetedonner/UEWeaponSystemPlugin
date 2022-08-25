@@ -28,6 +28,18 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
     
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+    bool SpawnAtRandomLocation = false;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+    bool RespawnAfterPickup = true;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System", meta=(UIMin="3.0", UIMax="900.0", EditCondition="RespawnAfterPickup"))
+    float RespawnTimeout;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System", meta=(EditCondition="RespawnAfterPickup"))
+    FFloatRange RespawnTimeoutRange;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Event|Hit")
     bool HasScore = true;
     

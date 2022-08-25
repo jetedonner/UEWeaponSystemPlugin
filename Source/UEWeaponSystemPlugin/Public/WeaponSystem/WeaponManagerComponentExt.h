@@ -10,7 +10,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class UEWEAPONSYSTEMPLUGIN_API UWeaponManagerComponentExt : public UWeaponManagerComponentBase
 {
 	GENERATED_BODY()

@@ -19,7 +19,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FReceivedAnyDamageDelegate, float, Damage, const class UDamageType*, DamageType, class AController*, InstigatedBy, AActor*, DamageCauser);
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class UEWEAPONSYSTEMPLUGIN_API UHealthManagerComponent : public USceneComponent
 {
 	GENERATED_BODY()
@@ -52,6 +52,9 @@ public:
 
    	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health System")
    	UFloatingHealthBarWidget* FloatingHealthBar;
+
+	UPROPERTY(EditAnywhere, Category="Health System", meta=(UseComponentPicker, AllowedClasses="UFloatingHealthBarWidget"))
+	FComponentReference TargetCameraComponent;
     
     UFUNCTION(BlueprintCallable, Category="Health System")
     void IncreaseHealth(float Value, float& NewHealth);

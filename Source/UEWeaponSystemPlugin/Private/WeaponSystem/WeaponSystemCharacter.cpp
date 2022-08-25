@@ -41,7 +41,8 @@ AWeaponSystemCharacter::AWeaponSystemCharacter()
             FloatingHealthBar->bEditableWhenInherited = true;
             FloatingHealthBar->SetWidgetClass(FloatingHealthBarWidget.Class);
             FloatingHealthBar->SetWidgetSpace(EWidgetSpace::World);
-            FloatingHealthBar->SetupAttachment(this->GetRootComponent());
+            FloatingHealthBar->SetupAttachment(this->GetMesh());
+            // FloatingHealthBar->AttachToComponent(this->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("head_Jnt_4_3"));
             FloatingHealthBar->SetRelativeLocation(FVector(0.0f, 0.0f, 130.0f));
             FloatingHealthBar->SetRelativeScale3D(FVector(0.3f, 0.3f, 0.3f));
             // FloatingHealthBar->InitWidget();
@@ -100,7 +101,8 @@ AWeaponSystemCharacter::AWeaponSystemCharacter(const FObjectInitializer& ObjectI
             FloatingHealthBar->bEditableWhenInherited = true;
             FloatingHealthBar->SetWidgetClass(FloatingHealthBarWidget.Class);
             FloatingHealthBar->SetWidgetSpace(EWidgetSpace::World);
-            FloatingHealthBar->SetupAttachment(this->GetRootComponent());
+            FloatingHealthBar->SetupAttachment(this->GetMesh());
+            // FloatingHealthBar->AttachToComponent(this->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("head_Jnt_4_3"));
             FloatingHealthBar->SetRelativeLocation(FVector(0.0f, 0.0f, 130.0f));
             FloatingHealthBar->SetRelativeScale3D(FVector(0.3f, 0.3f, 0.3f));
             // FloatingHealthBar->InitWidget();
@@ -212,7 +214,7 @@ void AWeaponSystemCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 
 void AWeaponSystemCharacter::OnTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
-    // UDbg::DbgMsg(FString(TEXT("AWeaponSystemCharacter::OnTakeAnyDamage!!!")), 5.0f, FColor::Yellow);
+    // UDbg::DbgMsg(FString(TEXT("AWeaponSystemCharacter::OnTakeAnyDamage SOURCE!!!")), 15.0f, FColor::Red);
 
     if(HealthManagerComponent)
     {
@@ -229,7 +231,13 @@ void AWeaponSystemCharacter::OnTakeAnyDamage(AActor* DamagedActor, float Damage,
             }
         }
     }
+    // OnTakeAnyDamageForward(DamagedActor, Damage, DamageType, InstigatedBy, DamageCauser);
 }
+
+// void AWeaponSystemCharacter::OnTakeAnyDamageForward_Implementation(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+// {
+
+// }
 
 void AWeaponSystemCharacter::OnHitted_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {

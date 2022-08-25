@@ -186,7 +186,8 @@ void UBaseWeaponComponent::FireShot()
         TSubclassOf<AWeaponSystemProjectile> ProjectileClass = WeaponFunctionDefinition.Projectile;
         if (ProjectileClass)
         {
-            AActor* ActorRef = GetWorld()->GetFirstPlayerController()->GetPawn();
+            
+            AActor* ActorRef = GetOwner();// GetWorld()->GetFirstPlayerController()->GetPawn();
             FVector CameraLocation;
             FRotator CameraRotation;
             ActorRef->GetActorEyesViewPoint(CameraLocation, CameraRotation);

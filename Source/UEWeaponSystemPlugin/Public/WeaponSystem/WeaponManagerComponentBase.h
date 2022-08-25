@@ -19,7 +19,7 @@
 
 DECLARE_DELEGATE(FSetupKeyDelegate)
 
-UCLASS(Blueprintable)
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class UEWEAPONSYSTEMPLUGIN_API UWeaponManagerComponentBase : public UActorComponent
 {
 	GENERATED_BODY()
@@ -96,6 +96,7 @@ public:
     
     void SetupPlayerInput(class UInputComponent* PlayerInputComponent, class UInputComponent* InputComponent);
     
+    UFUNCTION(BlueprintCallable, Category="Weapon System")
     void SetCurrentWeapon(int32 WeaponID, bool PlayAudio = true);
     
     UFUNCTION(BlueprintCallable, Category="Weapon System")

@@ -40,7 +40,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health System")
     UHealthManagerComponent* HealthManagerComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite /*EditAnywhere, BlueprintReadWrite*/, Category="Weapon System")
     class UWidgetComponent* FloatingHealthBar;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Score System")
@@ -60,6 +60,14 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Weapon System")
     void OnTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
+	// UPROPERTY(BlueprintAssignable, Category="Weapon System")
+	// FTakeAnyDamageSignature OnTakeAnyDamageExt;
+
+	// UFUNCTION(BlueprintImplementableEvent, Category="Weapon System")
+    // void OnTakeAnyDamageForward(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
+	// void OnTakeAnyDamageForward_Implementation(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Weapon System")
     void OnHitted(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

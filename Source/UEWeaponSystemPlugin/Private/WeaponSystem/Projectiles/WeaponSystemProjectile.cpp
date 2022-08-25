@@ -122,6 +122,27 @@ void AWeaponSystemProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* O
 
     if (OtherActor != nullptr && OtherActor != this && OtherComponent != nullptr)
     {
+        AWeaponSystemCharacter* WeaponSystemCharacter = Cast<AWeaponSystemCharacter>(OtherActor->GetInstigator());
+        if(WeaponSystemCharacter)
+        {
+            if(WeaponSystemCharacter->HealthManagerComponent && !WeaponSystemCharacter->HealthManagerComponent->Died)
+            {
+                // WeaponSystemCharacter->HealthManagerComponent->ApplyDamage(OtherActor, this->DamageFactor, UDamageType::StaticClass(), this->GetInstigator(), this);
+                // WeaponSystemCharacter->ScoreManagerComponent->AddScore(HitScore);
+                // UDbg::DbgMsg(FString::Printf(TEXT("UGameplayStatics::ApplyDamage !!!")), 5.0f, FColor::Purple);
+                // if(OtherComponent->IsSimulatingPhysics())
+                // {
+                //     OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);
+                // }
+                // UGameplayStatics::ApplyDamage(OtherActor, DamageFactor, GetOwner()->GetInstigatorController(), this, UDamageType::StaticClass());
+            }
+        }
+        else 
+        {
+            UDbg::DbgMsg(FString::Printf(TEXT("OtherActor->GetInstigator() IS NULL!!!")), 5.0f, FColor::Purple);
+        }
+        
+        UDbg::DbgMsg(FString::Printf(TEXT("UGameplayStatics::ApplyDamage !!!")), 5.0f, FColor::Purple);
         if(OtherComponent->IsSimulatingPhysics())
         {
             OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);

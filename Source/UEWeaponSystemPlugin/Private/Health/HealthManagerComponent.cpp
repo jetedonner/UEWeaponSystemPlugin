@@ -58,20 +58,27 @@ void UHealthManagerComponent::OnHit(UPrimitiveComponent* HitComponent, AActor* O
 
 void UHealthManagerComponent::ApplyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
-    float NewHealth = 0.0f;
-    DecreaseHealth(Damage, NewHealth);
+    if(Health > 0)
+    {
+        float NewHealth = 0.0f;
+        DecreaseHealth(Damage, NewHealth);   
+    }
+    else
+    {
+       UDbg::DbgMsg(FString::Printf(TEXT("UHealthManagerComponent::ApplyDamage => After death!")), 5.0f, FColor::Purple); 
+    }
     this->OnReceivedAnyDamageDelegate.Broadcast(Damage, DamageType, InstigatedBy, DamageCauser);
-    
+    // UDbg::DbgMsg(FString::Printf(TEXT("UHealthManagerComponent::ApplyDamage => NewHealth: %f / %f!!!"), NewHealth, Health), 15.0f, FColor::Purple);
 }
 
 void UHealthManagerComponent::IncreaseHealth(float Value, float& NewHealth)
 {
-    SetHealth((NewHealth = (Health += Value)));
+    SetHealth((NewHealth = (Health + Value)));
 }
 
 void UHealthManagerComponent::DecreaseHealth(float Value, float& NewHealth)
 {
-    SetHealth((NewHealth = (Health -= Value)));
+    SetHealth((NewHealth = (Health - Value)));
 }
 
 void UHealthManagerComponent::SetHealth(float Value)
