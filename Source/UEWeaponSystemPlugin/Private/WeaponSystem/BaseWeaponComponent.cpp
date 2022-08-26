@@ -239,18 +239,21 @@ void UBaseWeaponComponent::FireShot()
                             GetWorld()->GetTimerManager().SetTimer(ReloadingStartTimerHandle, this, &UBaseWeaponComponent::StartReloading, 0.01f, true, 0.01f);
                             this->OnWeaponReloading.Broadcast(FoundWeaponDefinition->ReloadTimeout);
                             // AWeaponSystemHUD* WeaponSystemHUD = Cast<AWeaponSystemHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-                            if(WeaponSystemHUD && WeaponSystemHUD->InfoHUDWidget)
+                            if(this->GetOwner() == GetWorld()->GetFirstPlayerController()->GetPawn())
                             {
-                                WeaponSystemHUD->InfoHUDWidget->OnShowReloadProgressBar(WeaponDefinition()->ReloadTimeout);
-                            }
-                            else
-                            {
-                                UDbg::DbgMsg(FString::Printf(TEXT("WeaponSystemHUD IS NULL")));
+                                if(WeaponSystemHUD && WeaponSystemHUD->InfoHUDWidget)
+                                {
+                                    WeaponSystemHUD->InfoHUDWidget->OnShowReloadProgressBar(WeaponDefinition()->ReloadTimeout);
+                                }
+                                else
+                                {
+                                    UDbg::DbgMsg(FString::Printf(TEXT("WeaponSystemHUD IS NULL")));
+                                }
                             }
                         }
                     }
 
-                    if(WeaponSystemHUD && WeaponSystemHUD->InfoHUDWidget)
+                    if(WeaponSystemHUD && WeaponSystemHUD->InfoHUDWidget && (this->GetOwner() == GetWorld()->GetFirstPlayerController()->GetPawn()))
                     {
                         if(!IsReloading)
                         {

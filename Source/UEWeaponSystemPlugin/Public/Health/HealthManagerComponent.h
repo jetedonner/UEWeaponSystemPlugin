@@ -62,6 +62,8 @@ public:
 	UPROPERTY(EditAnywhere, Category="Health System", meta=(UseComponentPicker, AllowedClasses="UFloatingHealthBarWidget"))
 	FComponentReference FloatingHealthBarWidgetComponent;
     
+	// USceneComponent* GetComponent(FComponentReference& Component, AActor* OwningActor);
+
     UFUNCTION(BlueprintCallable, Category="Health System")
     void IncreaseHealth(float Value, float& NewHealth);
     

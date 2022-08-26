@@ -45,10 +45,38 @@ void UHealthManagerComponent::BeginPlay()
 {
     Super::BeginPlay();
 
-    FloatingHealthBarWidgetComponentInst = Cast<UFloatingHealthBarWidgetComponent>(FloatingHealthBarWidgetComponent.GetComponent(GetOwner()));
+    this->FloatingHealthBarWidgetComponentInst = this->GetOwner()->FindComponentByClass<UFloatingHealthBarWidgetComponent>();
+    if(this->FloatingHealthBarWidgetComponentInst)
+    {
+        UDbg::DbgMsg(FString::Printf(TEXT("FloatingHealthBarWidgetComponentInst SET")), 5.0f, FColor::Purple); 
+
+        if(this->FloatingHealthBarWidgetComponentInst->GetWidget())
+        {
+            
+            UDbg::DbgMsg(FString::Printf(TEXT("FloatingHealthBarWidget SET")), 5.0f, FColor::Green); 
+            
+            UFloatingHealthBarWidget* MyFloatingHealthBarWidget = Cast<UFloatingHealthBarWidget>(this->FloatingHealthBarWidgetComponentInst->GetWidget());
+            if(MyFloatingHealthBarWidget)
+            {
+                this->FloatingHealthBar = MyFloatingHealthBarWidget;
+                UDbg::DbgMsg(FString::Printf(TEXT("FloatingHealthBarWidget SET AND CASTED")), 5.0f, FColor::Green); 
+            }
+        }
+        else
+        {
+            UDbg::DbgMsg(FString::Printf(TEXT("FloatingHealthBarWidget NOT SET")), 5.0f, FColor::Green); 
+        }
+    }
+    else
+    {
+        UDbg::DbgMsg(FString::Printf(TEXT("FloatingHealthBarWidgetComponentInst NOT SET")), 5.0f, FColor::Purple); 
+    }
+    // FloatingHealthBarWidgetComponentInst = Cast<UFloatingHealthBarWidgetComponent>(GetComponent(FloatingHealthBarWidgetComponent, GetOwner()));
     
     // FloatingHealthBar = Cast<UFloatingHealthBarWidget>(FloatingHealthBarWidgetComponentInst->GetWidget());
     // FloatingHealthBarWidgetComponentInst->FloatingHealthBar = FloatingHealthBar;
+
+
     // UFloatingHealthBarWidgetComponent* FloatingHealthBarWidgetComponent = Cast<UFloatingHealthBarWidgetComponent>(GetOwner()->GetComponentByClass(UFloatingHealthBarWidgetComponent::StaticClass()));
     // if(FloatingHealthBarWidgetComponent)
     // {
@@ -60,6 +88,43 @@ void UHealthManagerComponent::BeginPlay()
     // }
     SetHealth(Health);
 }
+
+// /*!
+// 	Work around for FComponentReference.GetComponent not working correctly
+// 	https://answers.unrealengine.com/questions/179994/fcomponentreference-works-only-for-uprimitivecompo.html
+// */
+// USceneComponent* UHealthManagerComponent::GetComponent(FComponentReference& Component, AActor* OwningActor)
+// {
+// 	USceneComponent* Result = NULL;
+// 	// // Component is specified directly, use that
+// 	// if (Component.OverrideComponent.IsValid())
+// 	// {
+// 	// 	Result = Component.OverrideComponent.Get();
+// 	// }
+// 	// else
+// 	// {
+// 		// Look in Actor if specified, OwningActor if not
+// 		AActor* SearchActor = (Component.OtherActor != NULL) ? Component.OtherActor : OwningActor;
+// 		if (SearchActor)
+// 		{
+// 			if (Component.ComponentProperty != NAME_None)
+// 			{
+// 				UObjectPropertyBase* ObjProp = FindField<UObjectPropertyBase>(SearchActor->GetClass(), Component.ComponentProperty);
+// 				if (ObjProp != NULL)
+// 				{
+// 					// .. and return the component that is there
+// 					Result = Cast<USceneComponent>(ObjProp->GetObjectPropertyValue_InContainer(SearchActor));
+// 				}
+// 			}
+// 			else
+// 			{
+// 				Result = Cast<USceneComponent>(SearchActor->GetRootComponent());
+// 			}
+// 		}
+// 	// }
+
+// 	return Result;
+// }
 
 void UHealthManagerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
@@ -100,14 +165,23 @@ void UHealthManagerComponent::ApplyDamage(AActor* DamagedActor, float Damage, co
     if(Health > 0)
     {
         float NewHealth = 0.0f;
-        DecreaseHealth(Damage, NewHealth);   
+        DecreaseHealth(Damage, NewHealth);
+        
+        if(this->FloatingHealthBar)
+        {
+            this->FloatingHealthBar->Health = NewHealth;
+            UDbg::DbgMsg(FString::Printf(TEXT("FloatingHealthBar IS NOT NULL => SETTING %f!"), NewHealth), 5.0f, FColor::Green);      
+        }
+        else
+        {
+            UDbg::DbgMsg(FString::Printf(TEXT("FloatingHealthBar IS NULL!")), 5.0f, FColor::Purple);      
+        }
     }
     else
     {
        UDbg::DbgMsg(FString::Printf(TEXT("UHealthManagerComponent::ApplyDamage => After death!")), 5.0f, FColor::Purple); 
     }
     this->OnReceivedAnyDamageDelegate.Broadcast(Damage, DamageType, InstigatedBy, DamageCauser);
-    // UDbg::DbgMsg(FString::Printf(TEXT("UHealthManagerComponent::ApplyDamage => NewHealth: %f / %f!!!"), NewHealth, Health), 15.0f, FColor::Purple);
 }
 
 void UHealthManagerComponent::IncreaseHealth(float Value, float& NewHealth)
@@ -127,6 +201,10 @@ void UHealthManagerComponent::SetHealth(float Value)
     if(FloatingHealthBar)
     {
         Cast<UFloatingHealthBarWidget>(FloatingHealthBar)->Health = Health;
+    }
+    else
+    {
+        UDbg::DbgMsg(FString::Printf(TEXT("FloatingHealthBar IS NULL!")), 5.0f, FColor::Purple);      
     }
     
     if(GetOwner()->GetInstigatorController() == GetWorld()->GetFirstPlayerController())
