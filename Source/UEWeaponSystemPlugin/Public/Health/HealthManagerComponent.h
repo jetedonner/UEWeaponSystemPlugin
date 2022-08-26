@@ -15,6 +15,7 @@
 #include "GameFramework/Character.h"
 #include "Components/CapsuleComponent.h"
 #include "WeaponSystem/HUD/WeaponSystemHUD.h"
+#include "Health/FloatingHealthBarWidgetComponent.h"
 #include "HealthManagerComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FReceivedAnyDamageDelegate, float, Damage, const class UDamageType*, DamageType, class AController*, InstigatedBy, AActor*, DamageCauser);
@@ -31,6 +32,8 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+	// virtual void InitializeComponent() override;
 
 public:	
 	// Called every frame
@@ -53,8 +56,11 @@ public:
    	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health System")
    	UFloatingHealthBarWidget* FloatingHealthBar;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health System")
+   	UFloatingHealthBarWidgetComponent* FloatingHealthBarWidgetComponentInst;
+
 	UPROPERTY(EditAnywhere, Category="Health System", meta=(UseComponentPicker, AllowedClasses="UFloatingHealthBarWidget"))
-	FComponentReference TargetCameraComponent;
+	FComponentReference FloatingHealthBarWidgetComponent;
     
     UFUNCTION(BlueprintCallable, Category="Health System")
     void IncreaseHealth(float Value, float& NewHealth);

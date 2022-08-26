@@ -43,6 +43,9 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite /*EditAnywhere, BlueprintReadWrite*/, Category="Weapon System")
     class UWidgetComponent* FloatingHealthBar;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite /*EditAnywhere, BlueprintReadWrite*/, Category="Weapon System")
+    class UFloatingHealthBarWidgetComponent* FloatingHealthBarWidgetComponent;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Score System")
     UScoreManagerComponent* ScoreManagerComponent;
     

@@ -122,6 +122,7 @@ void AWeaponSystemProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* O
 
     if (OtherActor != nullptr && OtherActor != this && OtherComponent != nullptr)
     {
+        // Replace with IHitable-Interface
         AWeaponSystemCharacter* WeaponSystemCharacter = Cast<AWeaponSystemCharacter>(OtherActor->GetInstigator());
         if(WeaponSystemCharacter)
         {
@@ -141,7 +142,7 @@ void AWeaponSystemProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* O
         {
             UDbg::DbgMsg(FString::Printf(TEXT("OtherActor->GetInstigator() IS NULL!!!")), 5.0f, FColor::Purple);
         }
-        
+
         UDbg::DbgMsg(FString::Printf(TEXT("UGameplayStatics::ApplyDamage !!!")), 5.0f, FColor::Purple);
         if(OtherComponent->IsSimulatingPhysics())
         {

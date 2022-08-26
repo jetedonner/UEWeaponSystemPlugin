@@ -29,8 +29,8 @@ UFloatingHealthBarWidgetComponent::UFloatingHealthBarWidgetComponent():Super()
             // this->SetupAttachment(this->GetRootComponent());
             // this->SetRelativeLocation(FVector(0.0f, 0.0f, 130.0f));
             // this->SetRelativeScale3D(FVector(0.3f, 0.3f, 0.3f));
-            // FloatingHealthBar->InitWidget();
-            // Cast<UFloatingHealthBarWidget>(FloatingHealthBar->GetUserWidgetObject())->ParentWidgetComponent = FloatingHealthBar;
+            this->InitWidget();
+            this->FloatingHealthBar = Cast<UFloatingHealthBarWidget>(this->GetWidget());
         }
     // }
 }
@@ -54,6 +54,8 @@ UFloatingHealthBarWidgetComponent::UFloatingHealthBarWidgetComponent(const FObje
             // FloatingHealthBar->SetupAttachment(this->GetRootComponent());
             // FloatingHealthBar->SetRelativeLocation(FVector(0.0f, 0.0f, 130.0f));
             // FloatingHealthBar->SetRelativeScale3D(FVector(0.3f, 0.3f, 0.3f));
+            this->InitWidget();
+            this->FloatingHealthBar = Cast<UFloatingHealthBarWidget>(this->GetWidget());
         }
     // }
 }

@@ -6,7 +6,7 @@
 //  Copyright © 1991 - 2022 DaVe Inc. kimhauser.ch, All rights reserved.
 //
 
-#include "WeaponSystem/WeaponSystemCharacter.h"
+#include "WeaponSystem/Player/WeaponSystemCharacter.h"
 
 // Sets default values
 AWeaponSystemCharacter::AWeaponSystemCharacter()
@@ -20,6 +20,17 @@ AWeaponSystemCharacter::AWeaponSystemCharacter()
         WeaponManagerComponent->bEditableWhenInherited = true;
         this->AddOwnedComponent(WeaponManagerComponent);
     }
+
+
+    if(!FloatingHealthBarWidgetComponent)
+    {
+        FloatingHealthBarWidgetComponent = CreateDefaultSubobject<UFloatingHealthBarWidgetComponent>(TEXT("FloatingHealthBarWidgetComponent"));
+        FloatingHealthBarWidgetComponent->bEditableWhenInherited = true;
+        FloatingHealthBarWidgetComponent->SetupAttachment(this->GetMesh());
+        // HealthManagerComponent->OnReceivedAnyDamageDelegate.AddDynamic(this, &AWeaponSystemCharacterBase::OnReceivedAnyDamage);
+        // this->AddOwnedComponent(FloatingHealthBarWidgetComponent);
+        // HealthManagerComponent->SetupParent(this);
+    }
     
     if(!HealthManagerComponent)
     {
@@ -29,6 +40,18 @@ AWeaponSystemCharacter::AWeaponSystemCharacter()
         this->AddOwnedComponent(HealthManagerComponent);
         // HealthManagerComponent->SetupParent(this);
     }
+
+    // if(!FloatingHealthBarWidgetComponent)
+    // {
+    //     FloatingHealthBarWidgetComponent = CreateDefaultSubobject<UFloatingHealthBarWidgetComponent>(TEXT("FloatingHealthBarWidgetComponent"));
+    //     FloatingHealthBarWidgetComponent->bEditableWhenInherited = true;
+    //     FloatingHealthBarWidgetComponent->SetupAttachment(this->GetMesh());
+    //     // HealthManagerComponent->OnReceivedAnyDamageDelegate.AddDynamic(this, &AWeaponSystemCharacterBase::OnReceivedAnyDamage);
+    //     // this->AddOwnedComponent(FloatingHealthBarWidgetComponent);
+    //     // HealthManagerComponent->SetupParent(this);
+    // }
+
+    
 
     if(!FloatingHealthBar && this != UGameplayStatics::GetPlayerCharacter(GetWorld(), 0))
     {
@@ -79,6 +102,16 @@ AWeaponSystemCharacter::AWeaponSystemCharacter(const FObjectInitializer& ObjectI
         WeaponManagerComponent = ObjectInitializer.CreateDefaultSubobject<UWeaponManagerComponentExt>(this, TEXT("Weapon Manager Component"));
         WeaponManagerComponent->bEditableWhenInherited = true;
         this->AddOwnedComponent(WeaponManagerComponent);
+    }
+
+    if(!FloatingHealthBarWidgetComponent)
+    {
+        FloatingHealthBarWidgetComponent = CreateDefaultSubobject<UFloatingHealthBarWidgetComponent>(TEXT("FloatingHealthBarWidgetComponent"));
+        FloatingHealthBarWidgetComponent->bEditableWhenInherited = true;
+        FloatingHealthBarWidgetComponent->SetupAttachment(this->GetMesh());
+        // HealthManagerComponent->OnReceivedAnyDamageDelegate.AddDynamic(this, &AWeaponSystemCharacterBase::OnReceivedAnyDamage);
+        // this->AddOwnedComponent(FloatingHealthBarWidgetComponent);
+        // HealthManagerComponent->SetupParent(this);
     }
 
     if(!HealthManagerComponent)

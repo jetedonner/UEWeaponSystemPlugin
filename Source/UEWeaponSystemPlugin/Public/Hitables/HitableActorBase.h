@@ -19,7 +19,7 @@
 #include "Components/WidgetComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Utils/GlobalDefinitions.h"
-#include "WeaponSystem/WeaponSystemCharacter.h"
+#include "WeaponSystem/Player/WeaponSystemCharacter.h"
 #include "Score/MovingScoreWidgetBase.h"
 #include "Score/ScoreHelper.h"
 #include "Common/HitableInterface.h"

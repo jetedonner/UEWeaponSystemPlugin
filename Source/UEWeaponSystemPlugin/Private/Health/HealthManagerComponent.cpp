@@ -13,12 +13,51 @@
 UHealthManagerComponent::UHealthManagerComponent()
 {
     PrimaryComponentTick.bCanEverTick = true;
+
+    // UFloatingHealthBarWidgetComponent* FloatingHealthBarWidgetComponent = Cast<UFloatingHealthBarWidgetComponent>(GetOwner()->GetComponentByClass(UFloatingHealthBarWidgetComponent::StaticClass()));
+    // if(FloatingHealthBarWidgetComponent)
+    // {
+    //     UE_LOG(LogTemp, Warning, TEXT("FloatingHealthBarWidgetComponent FOUND  ..."));
+    // }
+    // else
+    // {
+    //     UE_LOG(LogTemp, Warning, TEXT("FloatingHealthBarWidgetComponent NOT FOUND %s  ..."), *GetOwner()->GetName());
+    // }
+    
 }
+
+// void UHealthManagerComponent::InitializeComponent()
+// {
+//     Super::InitializeComponent();
+
+//     UFloatingHealthBarWidgetComponent* FloatingHealthBarWidgetComponent = Cast<UFloatingHealthBarWidgetComponent>(GetOwner()->GetComponentByClass(UFloatingHealthBarWidgetComponent::StaticClass()));
+//     if(FloatingHealthBarWidgetComponent)
+//     {
+//         UE_LOG(LogTemp, Warning, TEXT("FloatingHealthBarWidgetComponent FOUND  ..."));
+//     }
+//     else
+//     {
+//         UE_LOG(LogTemp, Warning, TEXT("FloatingHealthBarWidgetComponent NOT FOUND %s  ..."), *GetOwner()->GetName());
+//     }
+// }
 
 void UHealthManagerComponent::BeginPlay()
 {
     Super::BeginPlay();
 
+    FloatingHealthBarWidgetComponentInst = Cast<UFloatingHealthBarWidgetComponent>(FloatingHealthBarWidgetComponent.GetComponent(GetOwner()));
+    
+    // FloatingHealthBar = Cast<UFloatingHealthBarWidget>(FloatingHealthBarWidgetComponentInst->GetWidget());
+    // FloatingHealthBarWidgetComponentInst->FloatingHealthBar = FloatingHealthBar;
+    // UFloatingHealthBarWidgetComponent* FloatingHealthBarWidgetComponent = Cast<UFloatingHealthBarWidgetComponent>(GetOwner()->GetComponentByClass(UFloatingHealthBarWidgetComponent::StaticClass()));
+    // if(FloatingHealthBarWidgetComponent)
+    // {
+    //     UE_LOG(LogTemp, Warning, TEXT("FloatingHealthBarWidgetComponent FOUND  ..."));
+    // }
+    // else
+    // {
+    //     UE_LOG(LogTemp, Warning, TEXT("FloatingHealthBarWidgetComponent NOT FOUND %s  ..."), *GetOwner()->GetName());
+    // }
     SetHealth(Health);
 }
 
