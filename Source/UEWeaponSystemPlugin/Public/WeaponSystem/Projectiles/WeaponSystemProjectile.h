@@ -93,6 +93,9 @@ public:
     
     UPROPERTY(BlueprintReadOnly, Category="Weapon System")
     class UDecalComponent* ImpactDecalObject;
+
+    UFUNCTION(BlueprintCallable, Category="Weapon System")
+    void SpawnRandomDecalAtLocation(FVector DecalLocation, FVector ImpactNormal, UPrimitiveComponent* OtherComponent);
     
     void FireInDirection(const FVector& ShootDirection);
     

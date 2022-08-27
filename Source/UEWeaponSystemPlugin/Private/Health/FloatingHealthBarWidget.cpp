@@ -11,7 +11,6 @@
 void UFloatingHealthBarWidget::NativeConstruct()
 {
     Super::NativeConstruct();
-    // SetTickMode(ETickMode::Enabled);
 }
 
 void UFloatingHealthBarWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)

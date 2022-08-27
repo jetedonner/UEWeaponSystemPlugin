@@ -99,6 +99,8 @@ void UWeaponManagerComponentBase::TickComponent(float DeltaTime, ELevelTick Tick
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
     
+    return;
+    
     APawn* MyOwner = Cast<APawn>(GetOwner());
     if(!MyOwner->IsPlayerControlled())
     {

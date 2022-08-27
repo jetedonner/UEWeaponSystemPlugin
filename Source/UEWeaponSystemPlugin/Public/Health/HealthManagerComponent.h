@@ -19,6 +19,7 @@
 #include "HealthManagerComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FReceivedAnyDamageDelegate, float, Damage, const class UDamageType*, DamageType, class AController*, InstigatedBy, AActor*, DamageCauser);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDiedDelegate, AActor*, Causer);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class UEWEAPONSYSTEMPLUGIN_API UHealthManagerComponent : public USceneComponent
@@ -36,10 +37,6 @@ protected:
 	// virtual void InitializeComponent() override;
 
 public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	void SetupParent(ACharacter* InParent);
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health System")
     float Health = 100.0f;
@@ -54,15 +51,13 @@ public:
     bool Died;
 
    	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health System")
-   	UFloatingHealthBarWidget* FloatingHealthBar;
+   	class UFloatingHealthBarWidget* FloatingHealthBar;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health System")
    	UFloatingHealthBarWidgetComponent* FloatingHealthBarWidgetComponentInst;
 
 	UPROPERTY(EditAnywhere, Category="Health System", meta=(UseComponentPicker, AllowedClasses="UFloatingHealthBarWidget"))
 	FComponentReference FloatingHealthBarWidgetComponent;
-    
-	// USceneComponent* GetComponent(FComponentReference& Component, AActor* OwningActor);
 
     UFUNCTION(BlueprintCallable, Category="Health System")
     void IncreaseHealth(float Value, float& NewHealth);
@@ -76,9 +71,10 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="Health System")
     FReceivedAnyDamageDelegate OnReceivedAnyDamageDelegate;
 
+	UPROPERTY(BlueprintAssignable, Category="Health System")
+	FDiedDelegate OnDiedDelegate;
+
     UFUNCTION(BlueprintCallable, Category="Health System")
     void ApplyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
     
-    UFUNCTION(BlueprintCallable, Category="Weapon System")
-    void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 };

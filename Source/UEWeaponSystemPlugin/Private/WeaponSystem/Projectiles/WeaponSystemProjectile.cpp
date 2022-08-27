@@ -113,8 +113,6 @@ void AWeaponSystemProjectile::OutsideWorldBounds()
 
 void AWeaponSystemProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
-    // UDbg::DbgMsg(FString::Printf(TEXT("Projectile OnHit: %s / Owner: %s"), *OtherActor->GetName(), *this->GetOwner()->GetName()));
-    
     if(OtherActor == this->GetOwner())
     {
         return;
@@ -122,55 +120,46 @@ void AWeaponSystemProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* O
 
     if (OtherActor != nullptr && OtherActor != this && OtherComponent != nullptr)
     {
-        // Replace with IHitable-Interface
-        AWeaponSystemCharacter* WeaponSystemCharacter = Cast<AWeaponSystemCharacter>(OtherActor->GetInstigator());
-        if(WeaponSystemCharacter)
-        {
-            if(WeaponSystemCharacter->HealthManagerComponent && !WeaponSystemCharacter->HealthManagerComponent->Died)
-            {
-                // WeaponSystemCharacter->HealthManagerComponent->ApplyDamage(OtherActor, this->DamageFactor, UDamageType::StaticClass(), this->GetInstigator(), this);
-                // WeaponSystemCharacter->ScoreManagerComponent->AddScore(HitScore);
-                // UDbg::DbgMsg(FString::Printf(TEXT("UGameplayStatics::ApplyDamage !!!")), 5.0f, FColor::Purple);
-                // if(OtherComponent->IsSimulatingPhysics())
-                // {
-                //     OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);
-                // }
-                // UGameplayStatics::ApplyDamage(OtherActor, DamageFactor, GetOwner()->GetInstigatorController(), this, UDamageType::StaticClass());
-            }
-        }
-        else 
-        {
-            UDbg::DbgMsg(FString::Printf(TEXT("OtherActor->GetInstigator() IS NULL!!!")), 5.0f, FColor::Purple);
-        }
-
-        UDbg::DbgMsg(FString::Printf(TEXT("UGameplayStatics::ApplyDamage !!!")), 5.0f, FColor::Purple);
         if(OtherComponent->IsSimulatingPhysics())
         {
             OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);
         }
-        UGameplayStatics::ApplyDamage(OtherActor, DamageFactor, GetOwner()->GetInstigatorController(), this, UDamageType::StaticClass());
-    }   
 
-    if(OtherActor->Implements<UHitableInterface>())
-    {
-        if(ImpactTargetSound)
+        if(OtherActor->Implements<UHitableInterface>())
         {
-            UGameplayStatics::SpawnSoundAtLocation(this, ImpactTargetSound, Hit.ImpactPoint, FRotator::ZeroRotator, 1.0, 1.0, 0.0f, nullptr, nullptr, true);
+            UDbg::DbgMsg(FString::Printf(TEXT("UGameplayStatics::ApplyDamage !!!")), 5.0f, FColor::Purple);
+            UGameplayStatics::ApplyDamage(OtherActor, DamageFactor, GetOwner()->GetInstigatorController(), this, UDamageType::StaticClass());
+            if(ImpactTargetSound)
+            {
+                UGameplayStatics::SpawnSoundAtLocation(this, ImpactTargetSound, Hit.ImpactPoint, FRotator::ZeroRotator, 1.0, 1.0, 0.0f, nullptr, nullptr, true);
+            }
         }
-    }
-    else
-    {
-        if(ImpactFailSound)
+        else
         {
-            UGameplayStatics::SpawnSoundAtLocation(this, ImpactFailSound, Hit.ImpactPoint, FRotator::ZeroRotator, 1.0, 1.0, 0.0f, nullptr, nullptr, true);
+            if(ImpactFailSound)
+            {
+                UGameplayStatics::SpawnSoundAtLocation(this, ImpactFailSound, Hit.ImpactPoint, FRotator::ZeroRotator, 1.0, 1.0, 0.0f, nullptr, nullptr, true);
+            }
         }
-    } 
+    }   
     
     if(ImpactEffect)
     {
         UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, GetActorLocation(), FRotator(1), true, EPSCPoolMethod::AutoRelease, true);
     }
     
+    this->SpawnRandomDecalAtLocation(Hit.ImpactPoint, Hit.ImpactNormal, OtherComponent);
+
+    this->OnProjectileHitDelegate.Broadcast(this, OtherActor, Hit.Location);
+    
+    if(DestroyOnHit)
+    {
+        this->Destroy();
+    }
+}
+
+void AWeaponSystemProjectile::SpawnRandomDecalAtLocation(FVector DecalLocation, FVector ImpactNormal, UPrimitiveComponent* OtherComponent)
+{
     if(ImpactDecals.Num() > 0)
     {
         int32 Idx = FMath::RandRange(0, ImpactDecals.Num() - 1);
@@ -178,9 +167,7 @@ void AWeaponSystemProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* O
         FDecalStruct ImpactDecal = ImpactDecals[Idx];
         UMaterialInterface* Decal = Cast<UMaterialInterface>(ImpactDecal.ImpactDecalMaterial);
         
-        FVector DecalLocation = Hit.ImpactPoint;
-        
-        FRotator RandomDecalRotation = UKismetMathLibrary::MakeRotFromX(Hit.ImpactNormal);
+        FRotator RandomDecalRotation = UKismetMathLibrary::MakeRotFromX(ImpactNormal);
         RandomDecalRotation.Roll += FMath::RandRange(-180.0f, 180.0f);
         
         float RandDecalLifeSpan = FMath::RandRange(ImpactDecal.DecalLifeSpanMin, ImpactDecal.DecalLifeSpanMax);
@@ -192,29 +179,19 @@ void AWeaponSystemProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* O
             ImpactDecalObject->SetFadeOut(RandDecalLifeSpan - ImpactDecal.DecalFadeOutDuration, ImpactDecal.DecalFadeOutDuration, false);
         }
     }
-    
-    this->OnProjectileHitDelegate.Broadcast(this, OtherActor, Hit.Location);
-    
-    if(DestroyOnHit)
-    {
-        this->Destroy();
-    }
 }
 
 void AWeaponSystemProjectile::FireInDirection(const FVector& ShootDirection)
 {
-    LineTraceProjectile();
+    // LineTraceProjectile();
     
     ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
-    
-//    if(ShotSound)
-//    {
-//        ShotAudioComponent = UGameplayStatics::SpawnSoundAtLocation(this, ShotSound, GetActorLocation(), FRotator::ZeroRotator, 1.0, 1.0, 0.0f, nullptr, nullptr, true);
-//    }
 }
 
 void AWeaponSystemProjectile::LineTraceProjectile()
 {
+    // return;
+
     APlayerCameraManager* CameraManager = Cast<APlayerCameraManager>(UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0));
     if (CameraManager)
     {
