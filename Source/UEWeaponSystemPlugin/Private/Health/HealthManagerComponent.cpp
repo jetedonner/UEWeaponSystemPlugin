@@ -8,9 +8,14 @@
 
 #include "Health/HealthManagerComponent.h"
 
-UHealthManagerComponent::UHealthManagerComponent()
+UHealthManagerComponent::UHealthManagerComponent():Super()
 {
     PrimaryComponentTick.bCanEverTick = true;
+}
+
+UHealthManagerComponent::UHealthManagerComponent(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+{
+
 }
 
 // void UHealthManagerComponent::InitializeComponent()

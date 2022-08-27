@@ -17,7 +17,7 @@
 #include "WeaponSystem/HUD/WeaponSystemHUD.h"
 #include "WeaponComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAlternateCrosshairDelegate, bool, Pressed);
+// DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAlternateCrosshairDelegate, bool, Pressed);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnShotFiredDelegate, FWeaponDefinition, ShotWeaponDefinition, FWeaponFunctionDefinition, ShotWeaponFunctionDefinition, EWeaponFunction, ShotWeaponFunction);
 
@@ -107,8 +107,8 @@ public:
     UFUNCTION(BlueprintCallable, Category="Weapon System")
     void OnAlternateCrosshair(bool Pressed);
     
-    UPROPERTY(BlueprintAssignable, Category="Weapon System")
-    FOnAlternateCrosshairDelegate OnAlternateCrosshairDelegate;
+    // UPROPERTY(BlueprintAssignable, Category="Weapon System")
+    // FOnAlternateCrosshairDelegate OnAlternateCrosshairDelegate;
     
     UPROPERTY(BlueprintAssignable, Category="Weapon System")
     FOnShotFiredDelegate OnShotFiredDelegate;

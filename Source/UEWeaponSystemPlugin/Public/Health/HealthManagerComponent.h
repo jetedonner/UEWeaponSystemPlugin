@@ -29,9 +29,10 @@ class UEWEAPONSYSTEMPLUGIN_API UHealthManagerComponent : public USceneComponent
 public:	
 	// Sets default values for this component's properties
 	UHealthManagerComponent();
+	UHealthManagerComponent(const FObjectInitializer& ObjectInitializer);
 
 protected:
-	// Called when the game starts
+
 	virtual void BeginPlay() override;
 
 	// virtual void InitializeComponent() override;

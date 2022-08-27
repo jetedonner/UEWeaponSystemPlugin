@@ -28,7 +28,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health System")
-   	UFloatingHealthBarWidget* FloatingHealthBar;
+   	class UFloatingHealthBarWidget* FloatingHealthBar;
 	
 public:
 	// UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Health System")

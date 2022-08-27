@@ -19,6 +19,8 @@
 
 DECLARE_DELEGATE(FSetupKeyDelegate)
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAlternateCrosshairDelegate, bool, Pressed);
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class UEWEAPONSYSTEMPLUGIN_API UWeaponManagerComponentBase : public UActorComponent
 {
@@ -116,4 +118,7 @@ public:
     
     UPROPERTY(BlueprintAssignable, Category="Weapon System")
     FWeaponReloadingDelegate OnWeaponReloading;
+
+    UPROPERTY(BlueprintAssignable, Category="Weapon System")
+    FOnAlternateCrosshairDelegate OnAlternateCrosshairDelegate;
 };

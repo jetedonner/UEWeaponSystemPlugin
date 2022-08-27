@@ -248,8 +248,7 @@ void UWeaponManagerComponentBase::SetupPlayerInput(class UInputComponent* Player
 
     KBP_AlternateCrosshairKey.KeyDelegate.GetDelegateWithKeyForManualSet().BindLambda([=](const FKey& Key)
     {
-//        UDbg::DbgMsg(FString("AlternateCrosshairKey PRESSED"));
-        WeaponComponent->OnAlternateCrosshair(true);
+        this->OnAlternateCrosshairDelegate.Broadcast(true);
     });
     PlayerInputComponent->KeyBindings.Add(KBP_AlternateCrosshairKey);
     
@@ -258,14 +257,10 @@ void UWeaponManagerComponentBase::SetupPlayerInput(class UInputComponent* Player
     KBR_AlternateCrosshairKey.bExecuteWhenPaused = false;
     KBR_AlternateCrosshairKey.KeyDelegate.GetDelegateWithKeyForManualSet().BindLambda([=](const FKey& Key)
     {
-//        UDbg::DbgMsg(FString("AlternateCrosshairKey RELEASED"));
-        WeaponComponent->OnAlternateCrosshair(false);
+        this->OnAlternateCrosshairDelegate.Broadcast(false);
     });
     InputComponent->KeyBindings.Add(KBR_AlternateCrosshairKey);
     
-
-    
-    // InitializeWeaponsKey
     FInputKeyBinding KBP_InitializeWeaponsKey(FInputChord(InitializeWeaponsKey, false, false, false, false), EInputEvent::IE_Pressed);
     KBP_InitializeWeaponsKey.bConsumeInput = true;
     KBP_InitializeWeaponsKey.bExecuteWhenPaused = false;
@@ -298,13 +293,11 @@ void UWeaponManagerComponentBase::SetupPlayerInput(class UInputComponent* Player
             KBP.bExecuteWhenPaused = false;
             KBP.KeyDelegate.GetDelegateWithKeyForManualSet().BindLambda([=](const FKey& Key)
             {
-                // WeaponComponent->SetCurrentWeapon(*WeaponDefinition);
                 SetCurrentWeapon(WeaponDefinition->WeaponID);
             });
             PlayerInputComponent->KeyBindings.Add(KBP);
             if(idx == 0)
             {
-                // WeaponComponent->SetCurrentWeapon(*WeaponDefinition);
                 SetCurrentWeapon(WeaponDefinition->WeaponID);
             }
             idx++;
@@ -332,7 +325,7 @@ void UWeaponManagerComponentBase::SetCurrentWeapon(int32 WeaponID, bool PlayAudi
 //                {
 //                    GetWorld()->GetTimerManager().ClearTimer(ShootingTimerHandle);
 //                }
-//
+
                 CurrentWeapon = Weapon;
 
                 AWeaponSystemHUD* WeaponSystemHUD = Cast<AWeaponSystemHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
@@ -436,7 +429,7 @@ void UWeaponManagerComponentBase::WeaponReloading(float Timeout)
 
 void UWeaponManagerComponentBase::InitializeWeapons()
 {
-    int32 idx = 0;
+    // int32 idx = 0;
     for(UBaseWeaponComponent* WeaponImpl: WeaponArsenalImpl)
     {
         WeaponImpl->AmmoCount = WeaponImpl->InitialAmmoCount;

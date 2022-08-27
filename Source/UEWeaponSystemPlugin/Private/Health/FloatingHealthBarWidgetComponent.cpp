@@ -11,13 +11,13 @@
 UFloatingHealthBarWidgetComponent::UFloatingHealthBarWidgetComponent():Super()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	// PrimaryActorTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = true;
 
     // if(!FloatingHealthBarWidget)// && this != UGameplayStatics::GetPlayerCharacter(GetWorld(), 0))
     // {
         // FloatingHealthBar = CreateDefaultSubobject<UWidgetComponent>(FName("FloatingHealthBar Component"));
         
-        static ConstructorHelpers::FClassFinder<UUserWidget> FloatingHealthBarWidget(TEXT("/UEWeaponSystemPlugin/Widgets/FloatingHealthBar"));
+        static ConstructorHelpers::FClassFinder<UFloatingHealthBarWidget> FloatingHealthBarWidget(TEXT("/UEWeaponSystemPlugin/Widgets/FloatingHealthBar"));
         
         if(FloatingHealthBarWidget.Class)
         {
@@ -33,13 +33,13 @@ UFloatingHealthBarWidgetComponent::UFloatingHealthBarWidgetComponent():Super()
 
 UFloatingHealthBarWidgetComponent::UFloatingHealthBarWidgetComponent(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-    // PrimaryActorTick.bCanEverTick = true;
+    PrimaryComponentTick.bCanEverTick = true;
 
     // if(!FloatingHealthBar)// && this != UGameplayStatics::GetPlayerCharacter(GetWorld(), 0))
     // {
         // FloatingHealthBar = ObjectInitializer.CreateDefaultSubobject<UWidgetComponent>(this, FName("FloatingHealthBar Component"));
         
-        static ConstructorHelpers::FClassFinder<UUserWidget> FloatingHealthBarWidget(TEXT("/UEWeaponSystemPlugin/Widgets/FloatingHealthBar"));
+        static ConstructorHelpers::FClassFinder<UFloatingHealthBarWidget> FloatingHealthBarWidget(TEXT("/UEWeaponSystemPlugin/Widgets/FloatingHealthBar"));
         
         if(FloatingHealthBarWidget.Class)
         {

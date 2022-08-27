@@ -325,5 +325,5 @@ void UWeaponComponent::FinishReloading()
 
 void UWeaponComponent::OnAlternateCrosshair(bool Pressed)
 {
-    this->OnAlternateCrosshairDelegate.Broadcast(Pressed);
+    // this->OnAlternateCrosshairDelegate.Broadcast(Pressed);
 }
