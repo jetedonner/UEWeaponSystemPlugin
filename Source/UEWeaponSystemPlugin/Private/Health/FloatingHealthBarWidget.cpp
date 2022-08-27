@@ -16,10 +16,4 @@ void UFloatingHealthBarWidget::NativeConstruct()
 void UFloatingHealthBarWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
     Super::NativeTick(MyGeometry, InDeltaTime);
-    
-    // if(ParentWidgetComponent)
-    // {
-    //     UDbg::DbgMsg(FString::Printf(TEXT("UFloatingHealthBarWidget::NativeTick")), 5.0f, FColor::Purple); 
-    //     UHUDFunc::RotateToPlayer(Cast<USceneComponent>(ParentWidgetComponent), UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-    // }
 }

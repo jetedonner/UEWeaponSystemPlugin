@@ -1,3 +1,10 @@
+//
+//  HitableInterface.h
+//  UE4 WeaponSystem Plugin
+//
+//  Created by Kim David Hauser on 27.08.22.
+//  Copyright © 1991 - 2022 DaVe Inc. kimhauser.ch, All rights reserved.
+//
 
 
 #pragma once
@@ -26,12 +33,6 @@ class UEWEAPONSYSTEMPLUGIN_API IHitableInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-
-	//UFUNCTION(BlueprintNativeEvent, Category="Event|Hit")
-    // virtual void OnGotHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
-
-    // UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Weapon System")
-    // void OnGotHitted();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Weapon System")
     void OnHitted(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

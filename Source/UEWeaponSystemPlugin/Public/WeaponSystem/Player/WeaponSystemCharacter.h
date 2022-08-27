@@ -19,7 +19,7 @@
 #include "WeaponSystemCharacter.generated.h"
 
 UCLASS(Blueprintable)
-class UEWEAPONSYSTEMPLUGIN_API AWeaponSystemCharacter : public ACharacter
+class UEWEAPONSYSTEMPLUGIN_API AWeaponSystemCharacter : public ACharacter, public IHitableInterface
 {
 	GENERATED_BODY()
 
@@ -52,10 +52,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon System")
     class USoundCue* DieSound;
     
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintCallable, Category="Weapon System")

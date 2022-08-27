@@ -1,5 +1,5 @@
 //
-//  UHealthManagerComponent.h
+//  HealthManagerComponent.h
 //  UEWeaponSystemPlugin
 //
 //  Created by Kim David Hauser on 13.08.22.
@@ -57,7 +57,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health System")
    	UFloatingHealthBarWidgetComponent* FloatingHealthBarWidgetComponentInst;
 
-	UPROPERTY(EditAnywhere, Category="Health System", meta=(UseComponentPicker, AllowedClasses="UFloatingHealthBarWidget"))
+	UPROPERTY(EditAnywhere, Category="Health System", meta=(UseComponentPicker, AllowedClasses="UFloatingHealthBarWidgetComponent"))
 	FComponentReference FloatingHealthBarWidgetComponent;
 
     UFUNCTION(BlueprintCallable, Category="Health System")
@@ -68,6 +68,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Health System")
 	void SetHealth(float Value);
+
+	UFUNCTION(BlueprintCallable, Category="Health System")
+	void UpdateHealthBar(float Value);
+
+	UFUNCTION(BlueprintCallable, Category="Health System")
+	void UpdateHUD(float Value);
     
 	UPROPERTY(BlueprintAssignable, Category="Health System")
     FReceivedAnyDamageDelegate OnReceivedAnyDamageDelegate;

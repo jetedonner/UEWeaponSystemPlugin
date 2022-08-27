@@ -155,8 +155,9 @@ void AWeaponSystemCharacter::OnTakeAnyDamage(AActor* DamagedActor, float Damage,
     {
         if(!this->HealthManagerComponent->Died)
         {
-            // HealthManagerComponent->ApplyDamage(DamagedActor, Damage, DamageType, InstigatedBy, DamageCauser);
-            
+            HealthManagerComponent->ApplyDamage(DamagedActor, Damage, DamageType, InstigatedBy, DamageCauser);
+            // HealthManagerComponent->UpdateHUD(HealthManagerComponent->Health);
+
             if(this->HealthManagerComponent->Died)
             {
                 if(DieSound)

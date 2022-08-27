@@ -15,23 +15,20 @@ UHealthManagerComponent::UHealthManagerComponent():Super()
 
 UHealthManagerComponent::UHealthManagerComponent(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-
+    PrimaryComponentTick.bCanEverTick = true;
 }
 
 // void UHealthManagerComponent::InitializeComponent()
 // {
 //     Super::InitializeComponent();
-
+//
 //     // this->FloatingHealthBarWidgetComponentInst = this->GetOwner()->FindComponentByClass<UFloatingHealthBarWidgetComponent>();
 //     // if(this->FloatingHealthBarWidgetComponentInst)
 //     // {
 //     //     UDbg::DbgMsg(FString::Printf(TEXT("FloatingHealthBarWidgetComponentInst SET")), 5.0f, FColor::Purple); 
-
 //     //     if(this->FloatingHealthBarWidgetComponentInst->GetWidget())
 //     //     {
-            
 //     //         UDbg::DbgMsg(FString::Printf(TEXT("FloatingHealthBarWidget SET")), 5.0f, FColor::Green); 
-            
 //     //         UFloatingHealthBarWidget* MyFloatingHealthBarWidget = Cast<UFloatingHealthBarWidget>(this->FloatingHealthBarWidgetComponentInst->GetWidget());
 //     //         if(MyFloatingHealthBarWidget)
 //     //         {
@@ -87,18 +84,26 @@ void UHealthManagerComponent::BeginPlay()
             UDbg::DbgMsg(FString::Printf(TEXT("FloatingHealthBarWidgetComponentInst NOT SET")), 5.0f, FColor::Purple); 
         }
     }
-    else
-    {
+    // else
+    // {
 
-    }
+    // }
 
     AActor* ParentActor = Cast<AActor>(GetOwner());
     if(ParentActor)
     {
         ParentActor->OnTakeAnyDamage.AddDynamic(this, &UHealthManagerComponent::ApplyDamage);
     }
+    else
+    {
+        UDbg::DbgMsg(FString::Printf(TEXT("UHealthManagerComponent GetOwner() NOT a ACTOR")), 5.0f, FColor::Red);
+    }
 
-    SetHealth(Health);
+    // SetHealth(Health);
+
+    UpdateHealthBar(Health);
+
+    UpdateHUD(Health);
 }
 
 void UHealthManagerComponent::ApplyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
@@ -108,16 +113,17 @@ void UHealthManagerComponent::ApplyDamage(AActor* DamagedActor, float Damage, co
         float NewHealth = 0.0f;
         DecreaseHealth(Damage, NewHealth);
         
-        if(this->FloatingHealthBar)
-        {
-            this->FloatingHealthBar->Health = NewHealth;
-            UDbg::DbgMsg(FString::Printf(TEXT("FloatingHealthBar IS NOT NULL => SETTING %f!"), NewHealth), 5.0f, FColor::Green);
-        }
-        else
-        {
-            UDbg::DbgMsg(FString::Printf(TEXT("FloatingHealthBar IS NULL!")), 5.0f, FColor::Purple);      
-        }
+        // if(this->FloatingHealthBar)
+        // {
+        //     this->FloatingHealthBar->Health = NewHealth;
+        //     UDbg::DbgMsg(FString::Printf(TEXT("FloatingHealthBar IS NOT NULL => SETTING %f!"), NewHealth), 5.0f, FColor::Green);
+        // }
+        // else
+        // {
+        //     UDbg::DbgMsg(FString::Printf(TEXT("FloatingHealthBar IS NULL!")), 5.0f, FColor::Purple);      
+        // }
         this->OnReceivedAnyDamageDelegate.Broadcast(Damage, DamageType, InstigatedBy, DamageCauser);
+
         if(NewHealth <= 0.0f)
         {
             this->OnDiedDelegate.Broadcast(DamageCauser);
@@ -143,22 +149,40 @@ void UHealthManagerComponent::SetHealth(float Value)
 {
     Health = Value;
 
+    UpdateHealthBar(Health);
+
+    UpdateHUD(Health);
+}
+
+void UHealthManagerComponent::UpdateHealthBar(float Value)
+{
     if(FloatingHealthBar)
     {
-        Cast<UFloatingHealthBarWidget>(FloatingHealthBar)->Health = Health;
+        FloatingHealthBar->Health = Value;
     }
     else
     {
         UDbg::DbgMsg(FString::Printf(TEXT("FloatingHealthBar IS NULL!")), 5.0f, FColor::Purple);      
     }
-    
+}
+
+void UHealthManagerComponent::UpdateHUD(float Value)
+{
     if(GetOwner()->GetInstigatorController() == GetWorld()->GetFirstPlayerController())
     {
         AWeaponSystemHUD* WeaponSystemHUD = Cast<AWeaponSystemHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-        
         if(WeaponSystemHUD && WeaponSystemHUD->InfoHUDWidget)
         {   
-            WeaponSystemHUD->InfoHUDWidget->Health = Health;
+            WeaponSystemHUD->InfoHUDWidget->Health = Value;
+            UDbg::DbgMsg(FString::Printf(TEXT("WeaponSystemHUD->InfoHUDWidget->Health = Value!!!!")), 5.0f, FColor::Red);
         }
+        else
+        {
+            UDbg::DbgMsg(FString::Printf(TEXT("WeaponSystemHUD->InfoHUDWidget NOT Found!")), 5.0f, FColor::Red);
+        }
+    }
+    else
+    {
+        UDbg::DbgMsg(FString::Printf(TEXT("Owner IS NOT Player!")), 5.0f, FColor::Red);
     }
 }
